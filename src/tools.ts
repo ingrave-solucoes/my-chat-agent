@@ -8,6 +8,7 @@ import { z } from "zod/v3";
 import type { Chat } from "./server";
 import { getCurrentAgent } from "agents";
 import { scheduleSchema } from "agents/schedule";
+import { ChatwootClient, getChatwootConversationId } from "./chatwoot";
 
 /**
  * Weather information tool that requires human confirmation
@@ -109,6 +110,90 @@ const cancelScheduledTask = tool({
 });
 
 /**
+ * Chatwoot Tools (optional - only available when Chatwoot is configured)
+ */
+
+/**
+ * Tool to send a private note in Chatwoot conversation
+ * Private notes are only visible to agents, not customers
+ */
+const sendChatwootNote = tool({
+  description:
+    "Send a private note in the Chatwoot conversation (only visible to agents)",
+  inputSchema: z.object({
+    note: z.string().describe("The private note content")
+  }),
+  execute: async ({ note }) => {
+    if (
+      !process.env.CHATWOOT_API_KEY ||
+      !process.env.CHATWOOT_BASE_URL ||
+      !process.env.CHATWOOT_ACCOUNT_ID
+    ) {
+      return "Chatwoot is not configured";
+    }
+
+    const { agent } = getCurrentAgent<Chat>();
+    const conversationId = getChatwootConversationId(agent!.messages);
+
+    if (!conversationId) {
+      return "This conversation is not associated with Chatwoot";
+    }
+
+    try {
+      const client = new ChatwootClient(
+        process.env.CHATWOOT_BASE_URL,
+        process.env.CHATWOOT_API_KEY,
+        process.env.CHATWOOT_ACCOUNT_ID
+      );
+
+      await client.sendMessage(conversationId, note, true);
+      return "Private note sent successfully";
+    } catch (error) {
+      console.error("Error sending Chatwoot note", error);
+      return `Error sending note: ${error}`;
+    }
+  }
+});
+
+/**
+ * Tool to resolve/close a Chatwoot conversation
+ */
+const resolveChatwootConversation = tool({
+  description: "Resolve (close) the current Chatwoot conversation",
+  inputSchema: z.object({}),
+  execute: async () => {
+    if (
+      !process.env.CHATWOOT_API_KEY ||
+      !process.env.CHATWOOT_BASE_URL ||
+      !process.env.CHATWOOT_ACCOUNT_ID
+    ) {
+      return "Chatwoot is not configured";
+    }
+
+    const { agent } = getCurrentAgent<Chat>();
+    const conversationId = getChatwootConversationId(agent!.messages);
+
+    if (!conversationId) {
+      return "This conversation is not associated with Chatwoot";
+    }
+
+    try {
+      const client = new ChatwootClient(
+        process.env.CHATWOOT_BASE_URL,
+        process.env.CHATWOOT_API_KEY,
+        process.env.CHATWOOT_ACCOUNT_ID
+      );
+
+      await client.toggleConversationStatus(conversationId, "resolved");
+      return "Conversation resolved successfully";
+    } catch (error) {
+      console.error("Error resolving Chatwoot conversation", error);
+      return `Error resolving conversation: ${error}`;
+    }
+  }
+});
+
+/**
  * Export all available tools
  * These will be provided to the AI model to describe available capabilities
  */
@@ -117,7 +202,9 @@ export const tools = {
   getLocalTime,
   scheduleTask,
   getScheduledTasks,
-  cancelScheduledTask
+  cancelScheduledTask,
+  sendChatwootNote,
+  resolveChatwootConversation
 } satisfies ToolSet;
 
 /**

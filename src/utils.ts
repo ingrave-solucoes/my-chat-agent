@@ -25,7 +25,7 @@ export async function processToolCalls<Tools extends ToolSet>({
   executions
 }: {
   tools: Tools; // used for type inference
-  dataStream: UIMessageStreamWriter;
+  dataStream: UIMessageStreamWriter | null;
   messages: UIMessage[];
   executions: Record<
     string,
@@ -77,12 +77,14 @@ export async function processToolCalls<Tools extends ToolSet>({
             return part;
           }
 
-          // Forward updated tool result to the client.
-          dataStream.write({
-            type: "tool-output-available",
-            toolCallId: part.toolCallId,
-            output: result
-          });
+          // Forward updated tool result to the client (if streaming).
+          if (dataStream) {
+            dataStream.write({
+              type: "tool-output-available",
+              toolCallId: part.toolCallId,
+              output: result
+            });
+          }
 
           // Return updated tool part with the actual result.
           return {

@@ -16,6 +16,13 @@ import {
 import { openai } from "@ai-sdk/openai";
 import { processToolCalls, cleanupMessages } from "./utils";
 import { tools, executions } from "./tools";
+import type { ChatwootWebhookEvent } from "./chatwoot-types";
+import {
+  ChatwootClient,
+  chatwootMessageToUIMessage,
+  validateWebhookSignature,
+  getChatwootAgentId
+} from "./chatwoot";
 // import { env } from "cloudflare:workers";
 
 const model = openai("gpt-4o-2024-11-20");
@@ -103,6 +110,74 @@ If the user asks to schedule a task, use the schedule tool to schedule the task.
       }
     ]);
   }
+
+  /**
+   * Process incoming message from Chatwoot and generate AI response
+   */
+  async processChatwootMessage(event: ChatwootWebhookEvent) {
+    const uiMessage = chatwootMessageToUIMessage(event);
+    if (!uiMessage) {
+      return;
+    }
+
+    // Add the user message to conversation history
+    await this.saveMessages([...this.messages, uiMessage]);
+
+    // Collect all tools
+    const allTools = {
+      ...tools,
+      ...this.mcp.getAITools()
+    };
+
+    // Clean up incomplete tool calls
+    const cleanedMessages = cleanupMessages(this.messages);
+
+    // Process pending tool calls
+    const processedMessages = await processToolCalls({
+      messages: cleanedMessages,
+      dataStream: null,
+      tools: allTools,
+      executions
+    });
+
+    // Generate AI response
+    const result = await streamText({
+      system: `You are a helpful assistant responding to customer inquiries via Chatwoot.
+
+${getSchedulePrompt({ date: new Date() })}
+
+Provide clear, helpful, and professional responses.`,
+      messages: convertToModelMessages(processedMessages),
+      model,
+      tools: allTools,
+      stopWhen: stepCountIs(10)
+    });
+
+    // Collect the full response text
+    let fullResponse = "";
+    for await (const chunk of result.textStream) {
+      fullResponse += chunk;
+    }
+
+    // Save assistant's response to conversation history
+    const assistantMessage = {
+      id: generateId(),
+      role: "assistant" as const,
+      parts: [
+        {
+          type: "text" as const,
+          text: fullResponse
+        }
+      ],
+      metadata: {
+        createdAt: new Date()
+      }
+    };
+
+    await this.saveMessages([...this.messages, assistantMessage]);
+
+    return fullResponse;
+  }
 }
 
 /**
@@ -112,12 +187,79 @@ export default {
   async fetch(request: Request, env: Env, _ctx: ExecutionContext) {
     const url = new URL(request.url);
 
+    // Health check for OpenAI key
     if (url.pathname === "/check-open-ai-key") {
       const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
       return Response.json({
         success: hasOpenAIKey
       });
     }
+
+    // Chatwoot webhook endpoint
+    if (url.pathname === "/chatwoot/webhook" && request.method === "POST") {
+      try {
+        // Validate webhook signature if configured
+        const webhookSecret = process.env.CHATWOOT_WEBHOOK_SECRET;
+        if (!validateWebhookSignature(request, webhookSecret)) {
+          return new Response("Unauthorized", { status: 401 });
+        }
+
+        const event: ChatwootWebhookEvent = await request.json();
+
+        // Only process message_created events
+        if (event.event !== "message_created") {
+          return Response.json({
+            status: "ignored",
+            reason: "not a message_created event"
+          });
+        }
+
+        // Ignore outgoing messages (bot's own messages)
+        if (event.message?.message_type === "outgoing") {
+          return Response.json({
+            status: "ignored",
+            reason: "outgoing message"
+          });
+        }
+
+        // Get or create agent for this conversation
+        const conversationId = event.conversation?.id;
+        if (!conversationId) {
+          return Response.json({ status: "error", reason: "no conversation_id" }, { status: 400 });
+        }
+
+        // Get Durable Object for this conversation
+        const agentId = getChatwootAgentId(conversationId);
+        const durableObjectId = env.Chat.idFromName(agentId);
+        const agentStub = env.Chat.get(durableObjectId);
+
+        // Process the message and generate response
+        const response = await agentStub.processChatwootMessage(event);
+
+        // Send response back to Chatwoot
+        if (response) {
+          const chatwootClient = new ChatwootClient(
+            process.env.CHATWOOT_BASE_URL || "",
+            process.env.CHATWOOT_API_KEY || "",
+            process.env.CHATWOOT_ACCOUNT_ID || ""
+          );
+
+          await chatwootClient.sendMessage(conversationId, response);
+        }
+
+        return Response.json({ status: "success" });
+      } catch (error) {
+        console.error("Error processing Chatwoot webhook:", error);
+        return Response.json(
+          {
+            status: "error",
+            message: error instanceof Error ? error.message : "Unknown error"
+          },
+          { status: 500 }
+        );
+      }
+    }
+
     if (!process.env.OPENAI_API_KEY) {
       console.error(
         "OPENAI_API_KEY is not set, don't forget to set it locally in .dev.vars, and use `wrangler secret bulk .dev.vars` to upload it to production"
