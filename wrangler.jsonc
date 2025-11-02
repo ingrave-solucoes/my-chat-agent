@@ -24,5 +24,53 @@
       "tag": "v1",
       "new_sqlite_classes": ["Chat"]
     }
-  ]
+  ],
+  "services": [
+    {
+      "binding": "PAYMENT_SERVICE",
+      "service": "holy-mouse-3f4c"
+    }
+  ],
+  "workflows": [
+    {
+      "binding": "CUSTOMER_SUPPORT_WORKFLOW",
+      "name": "customer-support-workflow",
+      "class_name": "CustomerSupportWorkflow"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "bucket-my-agent"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "MY_QUEUE",
+        "queue": "queue-my-agent"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "queue-my-agent",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+        "dead_letter_queue": "queue-my-agent-dlq"
+      }
+    ]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    }
+  }
 }

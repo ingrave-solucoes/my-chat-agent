@@ -4,6 +4,13 @@ declare namespace Cloudflare {
 	interface Env {
 		Chat: DurableObjectNamespace<import("./src/server").Chat>;
 		AI: Ai;
+		PAYMENT_SERVICE: Fetcher;
+		R2_BUCKET: R2Bucket;
+		MY_QUEUE: Queue;
 	}
 }
-interface Env extends Cloudflare.Env {}
+interface Env extends Cloudflare.Env {
+	ELEVENLABS_API_KEY?: string;
+	CLOUDFLARE_ACCOUNT_ID?: string;
+	AI_GATEWAY_ID?: string;
+}

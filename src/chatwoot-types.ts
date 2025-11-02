@@ -4,9 +4,12 @@
 export interface ChatwootWebhookEvent {
   event: string;
   id: number;
+  content: string;
+  content_type: "text" | "input_select" | "cards" | "form";
+  message_type: "incoming" | "outgoing";
+  created_at: string;
   account?: ChatwootAccount;
   conversation?: ChatwootConversation;
-  message?: ChatwootMessage;
   sender?: ChatwootContact;
 }
 
