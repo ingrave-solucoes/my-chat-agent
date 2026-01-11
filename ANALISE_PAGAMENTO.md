@@ -19,7 +19,9 @@ O sistema possui dois Workers no Cloudflare:
 ### 2. Problemas Encontrados
 
 #### Problema 1: Token do Mercado Pago Vazio
+
 **Sintoma**:
+
 ```
 [Payment] ENV keys: [ 'MERCADO_PAGO_ACCESS_TOKEN' ]
 [Payment] Has token: false
@@ -28,13 +30,16 @@ O sistema possui dois Workers no Cloudflare:
 **Causa**: O secret `MERCADO_PAGO_ACCESS_TOKEN` estava registrado no Cloudflare, mas com valor vazio ou nulo.
 
 **Solução**: Reconfiguração do secret com o token correto:
+
 ```bash
 echo "TEST-5003921581515395-100617-668af2b42f5c4165bb1242bd59e2e466-1017864194" | \
   npx wrangler secret put MERCADO_PAGO_ACCESS_TOKEN
 ```
 
 #### Problema 2: Falta de back_urls no auto_return
+
 **Sintoma**:
+
 ```json
 {
   "message": "auto_return invalid. back_url.success must be defined",
@@ -46,13 +51,14 @@ echo "TEST-5003921581515395-100617-668af2b42f5c4165bb1242bd59e2e466-1017864194" 
 **Causa**: O Mercado Pago exige que quando `auto_return` está configurado, as URLs de retorno (`back_urls`) também devem ser fornecidas.
 
 **Solução**: Adicionado código para incluir automaticamente as `back_urls`:
+
 ```typescript
 // Add required back_urls when auto_return is set
 if (body.auto_return && !body.back_urls?.success) {
   body.back_urls = {
-    success: 'https://ingrave.com.br/pagamento/sucesso',
-    failure: 'https://ingrave.com.br/pagamento/falha',
-    pending: 'https://ingrave.com.br/pagamento/pendente',
+    success: "https://ingrave.com.br/pagamento/sucesso",
+    failure: "https://ingrave.com.br/pagamento/falha",
+    pending: "https://ingrave.com.br/pagamento/pendente",
     ...body.back_urls
   };
 }
@@ -79,6 +85,7 @@ MERCADO_PAGO_ACCESS_TOKEN=TEST-5003921581515395-100617-668af2b42f5c4165bb1242bd5
 ## ✅ Teste de Validação
 
 ### Comando de Teste
+
 ```bash
 curl -X POST https://holy-mouse-3f4c.ingravebot.workers.dev/payment/create \
   -H "Content-Type: application/json" \
@@ -98,6 +105,7 @@ curl -X POST https://holy-mouse-3f4c.ingravebot.workers.dev/payment/create \
 ```
 
 ### Resultado do Teste ✅
+
 ```json
 {
   "success": true,
@@ -112,32 +120,37 @@ curl -X POST https://holy-mouse-3f4c.ingravebot.workers.dev/payment/create \
 ### Fluxo Completo
 
 1. **Cliente solicita um plano**
+
    ```
    Cliente: "Quero assinar o Plano Básico"
    ```
 
 2. **Agente qualifica o cliente**
+
    ```
    Agente: "Ótima escolha! Para gerar o link de pagamento,
            preciso do seu email."
    ```
 
 3. **Cliente fornece email**
+
    ```
    Cliente: "Meu email é cliente@exemplo.com"
    ```
 
 4. **Agente usa a tool `createPayment`**
+
    ```typescript
    createPayment({
      title: "Plano Básico Ingrave - Mensal",
-     amount: 97.00,
+     amount: 97.0,
      currency: "BRL",
      customerEmail: "cliente@exemplo.com"
-   })
+   });
    ```
 
 5. **Agente envia o link**
+
    ```
    Agente: "Perfeito! Geramos o link de pagamento para você.
            Clique aqui para finalizar: [link do Mercado Pago]
@@ -151,17 +164,21 @@ curl -X POST https://holy-mouse-3f4c.ingravebot.workers.dev/payment/create \
 ### Worker de Pagamento (holy-mouse-3f4c)
 
 #### `POST /payment/create`
+
 Cria uma preferência de pagamento no Mercado Pago
 
 **Request:**
+
 ```json
 {
-  "items": [{
-    "title": "Produto ou Serviço",
-    "quantity": 1,
-    "unit_price": 100.00,
-    "currency_id": "BRL"
-  }],
+  "items": [
+    {
+      "title": "Produto ou Serviço",
+      "quantity": 1,
+      "unit_price": 100.0,
+      "currency_id": "BRL"
+    }
+  ],
   "payer": {
     "email": "cliente@email.com",
     "name": "Nome do Cliente"
@@ -171,6 +188,7 @@ Cria uma preferência de pagamento no Mercado Pago
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -181,15 +199,17 @@ Cria uma preferência de pagamento no Mercado Pago
 ```
 
 #### `GET /payment/status?id={payment_id}`
+
 Verifica o status de um pagamento
 
 **Response:**
+
 ```json
 {
   "id": 123456,
   "status": "approved",
   "status_detail": "accredited",
-  "amount": 97.00,
+  "amount": 97.0,
   "currency": "BRL",
   "description": "Plano Básico Ingrave - Mensal",
   "payer_email": "cliente@exemplo.com"
@@ -197,9 +217,11 @@ Verifica o status de um pagamento
 ```
 
 #### `GET /health`
+
 Verifica se o serviço está funcionando
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -248,6 +270,7 @@ Criar as seguintes páginas no site da Ingrave:
 ### 3. Configurar Webhooks do Mercado Pago
 
 No painel do Mercado Pago, configure:
+
 ```
 Webhook URL: https://holy-mouse-3f4c.ingravebot.workers.dev/payment/webhook
 ```
@@ -257,6 +280,7 @@ Isso permitirá receber notificações automáticas sobre mudanças no status do
 ### 4. Monitoramento
 
 Use o Cloudflare Dashboard para monitorar:
+
 - Requisições ao serviço de pagamento
 - Erros e exceções
 - Latência das chamadas

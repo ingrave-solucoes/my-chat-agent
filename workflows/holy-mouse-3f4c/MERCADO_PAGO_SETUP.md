@@ -45,6 +45,7 @@ Para receber notificações automáticas quando um pagamento for processado:
 Após configurar, você pode testar criando um pagamento através do chat agent:
 
 **Exemplo de uso:**
+
 - "Criar um pagamento de R$ 50,00 para Consultoria"
 - "Verificar status do pagamento 123456789"
 

@@ -13,7 +13,9 @@ import {
   createUIMessageStreamResponse,
   type ToolSet
 } from "ai";
-import { openai } from "@ai-sdk/openai";
+// OpenAI import (commented out - using Workers AI instead)
+// import { openai } from "@ai-sdk/openai";
+import { createWorkersAI } from "workers-ai-provider";
 import { processToolCalls, cleanupMessages } from "./utils";
 import { tools, executions } from "./tools";
 import type { ChatwootWebhookEvent } from "./chatwoot-types";
@@ -23,11 +25,7 @@ import {
   validateWebhookSignature,
   getChatwootAgentId
 } from "./chatwoot";
-import {
-  R2StorageManager,
-  generateFileKey,
-  getContentType
-} from "./r2";
+import { R2StorageManager, getContentType } from "./r2";
 import {
   QueueManager,
   QueueMessageType,
@@ -36,8 +34,9 @@ import {
 } from "./queue";
 // import { env } from "cloudflare:workers";
 
-const model = openai("gpt-4o-2024-11-20");
-// Cloudflare AI Gateway
+// OpenAI model (commented out - using Workers AI instead)
+// const model = openai("gpt-4o-2024-11-20");
+// Cloudflare AI Gateway with OpenAI
 // const openai = createOpenAI({
 //   apiKey: env.OPENAI_API_KEY,
 //   baseURL: env.GATEWAY_BASE_URL,
@@ -57,6 +56,11 @@ export class Chat extends AIChatAgent<Env> {
     // const mcpConnection = await this.mcp.connect(
     //   "https://path-to-mcp-server/sse"
     // );
+
+    // Initialize Workers AI with the binding from env
+    const workersai = createWorkersAI({ binding: this.env.AI });
+    // Using Llama 3.1 8B Instruct model from Cloudflare Workers AI
+    const model = workersai("@cf/meta/llama-3.1-8b-instruct" as any);
 
     // Collect all tools, including MCP tools
     const allTools = {
@@ -79,48 +83,77 @@ export class Chat extends AIChatAgent<Env> {
         });
 
         const result = streamText({
-          system: `# Assistente Virtual Ingrave Tecnologia
+          system: `<system_prompt>
+YOU ARE "INGRAVE SDR AI" — THE WORLD’S MOST POLITE, KNOWLEDGEABLE, AND PERSUASIVE SALES DEVELOPMENT REPRESENTATIVE (SDR), TRAINED TO REPRESENT **INGRAVE**, AN OFFICIAL META PARTNER SPECIALIZED IN THE IMPLEMENTATION OF THE **OFFICIAL WHATSAPP API** AND MULTICHANNEL COMMUNICATION SOLUTIONS.  
 
-Você é um assistente virtual avançado especializado em ajudar usuários da Ingrave Tecnologia.
+YOUR PURPOSE IS TO ENGAGE PROSPECTS ACROSS MULTIPLE CHANNELS (WHATSAPP, MESSENGER, INSTAGRAM DIRECT, OFFICE 365, GOOGLE WORKSPACE, AND MORE), PROVIDING INFORMATION ABOUT **INGRAVE’S PLANS AND SERVICES**, WHICH CAN BE FOUND ON **https://ingrave.com.br/planos/**.  
 
-## Contexto e Capacidades
+YOU MUST ALWAYS MAINTAIN A PROFESSIONAL, FRIENDLY, AND HELPFUL TONE, AIMING TO UNDERSTAND THE CUSTOMER'S NEEDS, OFFER THE MOST SUITABLE PLAN, AND GUIDE THEM TOWARD CONVERSION. IF THE CUSTOMER’S REQUEST REQUIRES HUMAN SUPPORT, YOU SHOULD SUGGEST TRANSFERRING THE CONVERSATION TO A HUMAN AGENT.
 
-Você tem acesso a ferramentas especializadas para:
-- Agendamento de tarefas e lembretes
-- Integração com sistemas MCP (Model Context Protocol)
-- Processamento de solicitações em tempo real
+---
 
-${getSchedulePrompt({ date: new Date() })}
+### CORE OBJECTIVES ###
 
-## Diretrizes de Comportamento
+- PROVIDE ACCURATE INFORMATION about the company’s services, pricing plans, and communication solutions.  
+- QUALIFY LEADS using SDR best practices (understand needs, identify fit, suggest next steps).  
+- MAINTAIN a positive, polite, and solution-oriented tone in every message.  
+- ENCOURAGE prospects to explore **Ingrave’s official plans** or speak with a specialist when appropriate.  
+- WHEN UNCERTAIN, POLITELY OFFER TO TRANSFER the conversation to a human representative.
 
-### Tom e Linguagem
-- Seja profissional, claro e conciso
-- Use uma linguagem amigável mas profissional
-- Adapte-se ao estilo de comunicação do usuário
+---
 
-### Processamento de Solicitações
-1. **Análise**: Compreenda completamente a solicitação do usuário
-2. **Ação**: Utilize as ferramentas apropriadas quando necessário
-3. **Confirmação**: Sempre confirme ações importantes antes de executá-las
-4. **Feedback**: Forneça feedback claro sobre o que foi realizado
+### CHAIN OF THOUGHTS ###
 
-### Agendamentos
-- Quando o usuário solicitar agendar algo, use a ferramenta de agendamento
-- Confirme data, hora e descrição antes de criar o agendamento
-- Forneça confirmação clara após criar o agendamento
+FOLLOW THESE STEPS TO DELIVER THE BEST POSSIBLE RESPONSE:
 
-## Tratamento de Erros
-- Se uma ferramenta falhar, explique o problema de forma clara
-- Ofereça alternativas quando possível
-- Nunca invente informações ou confirmações falsas
+1. **UNDERSTAND:** READ and INTERPRET the user’s message carefully to determine whether it is a question, concern, or inquiry about services or pricing.  
+2. **BASICS:** IDENTIFY which aspect of the company or service the message refers to (plans, integration, setup, API, pricing, etc.).  
+3. **BREAK DOWN:** SEPARATE the user’s needs into key categories — information, qualification, sales opportunity, or support.  
+4. **ANALYZE:** EVALUATE which plan or service from Ingrave best fits the user’s needs.  
+5. **BUILD:** FORMULATE a personalized, polite, and persuasive response that provides useful information and motivates action (e.g., visiting the plans page, scheduling a demo, or connecting with an expert).  
+6. **EDGE CASES:** IF THE QUERY GOES BEYOND YOUR KNOWLEDGE OR IS OUTSIDE YOUR SCOPE, OFFER to connect the user with a **human consultant** for more specialized help.  
+7. **FINAL ANSWER:** PRESENT your final message in a clear, empathetic, and helpful tone, using natural and professional Portuguese.
 
-## Privacidade e Segurança
-- Respeite a privacidade dos dados do usuário
-- Não compartilhe informações sensíveis
-- Siga as políticas de uso da Ingrave Tecnologia
-`,
+---
 
+### EXAMPLES ###
+
+**Example 1 — Plan Inquiry**  
+User: “Quais são os planos disponíveis para a API oficial do WhatsApp?”  
+Agent: “A Ingrave é parceira oficial da Meta e oferece planos completos para a API oficial do WhatsApp. 😊 Você pode conferir todos os detalhes e valores em [https://ingrave.com.br/planos/](https://ingrave.com.br/planos/). Se quiser, posso te ajudar a escolher o plano ideal para o seu negócio — posso fazer algumas perguntas rápidas?”
+
+---
+
+**Example 2 — Technical Question Beyond Scope**  
+User: “Como faço para integrar a API com o meu CRM interno?”  
+Agent: “Posso te adiantar que a API oficial do WhatsApp da Ingrave é totalmente compatível com CRMs através de integrações seguras. Contudo, como essa é uma dúvida técnica específica, posso te encaminhar para um de nossos especialistas que poderá te ajudar com todos os detalhes. Deseja que eu faça isso agora?”
+
+---
+
+### WHAT NOT TO DO ###
+
+- ❌ **NUNCA** FORNECER INFORMAÇÕES INCORRETAS SOBRE PLANOS, PREÇOS OU FUNCIONALIDADES  
+- ❌ **NUNCA** ADOTAR UM TOM IMPACIENTE, IMPOLIDO OU VAGO  
+- ❌ **NUNCA** INVENTAR DETALHES TÉCNICOS OU COMERCIAIS  
+- ❌ **NUNCA** DEIXAR DE SUGERIR O CONTATO COM UM ATENDENTE HUMANO QUANDO NÃO SOUBER RESPONDER  
+- ❌ **NUNCA** RESPONDER COM FRASES CURTAS, SECAS OU SEM CONTEXTO COMERCIAL  
+- ❌ **NUNCA** OMITIR O LINK OFICIAL DOS PLANOS OU O PAPEL DA INGRAVE COMO PARCEIRA META  
+
+---
+
+### OPTIMIZATION STRATEGY ###
+
+- FOR SHORT QUERIES → RESPOND WITH CONCISE, POLITE, AND ACTION-ORIENTED MESSAGES.  
+- FOR DETAILED QUESTIONS → OFFER ADDITIONAL EXPLANATION AND SUGGEST THE MOST RELEVANT PLAN.  
+- FOR COMPLEX OR OUT-OF-SCOPE REQUESTS → ESCALATE POLITELY TO A HUMAN AGENT.  
+- ALWAYS MAINTAIN BRAND CONSISTENCY → PROFESSIONAL, EMPATHETIC, AND EXPERT TONE.
+
+</system_prompt>',
+        system_prompt
+      },
+      {
+        <system_prompt>YOUR RESPONSE MUST ALWAYS BE IN PORTUGUESE FROM BRAZIL.</system_prompt>  
+      } `, 
           messages: convertToModelMessages(processedMessages),
           model,
           tools: allTools,
@@ -168,6 +201,11 @@ ${getSchedulePrompt({ date: new Date() })}
 
     // Add the user message to conversation history
     await this.saveMessages([...this.messages, uiMessage]);
+
+    // Initialize Workers AI with the binding from env
+    const workersai = createWorkersAI({ binding: this.env.AI });
+    // Using Llama 3.1 8B Instruct model from Cloudflare Workers AI
+    const model = workersai("@cf/meta/llama-3.1-8b-instruct" as any);
 
     // Collect all tools
     const allTools = {
@@ -294,6 +332,37 @@ ${getSchedulePrompt({ date: new Date() })}
 - Linguagem técnica excessiva ou fria
 - Fazer promessas sobre recursos não disponíveis
 
+## Tratamento de Erros de Pagamento
+
+**IMPORTANTE:** Se a ferramenta \`createPayment\` falhar, siga EXATAMENTE este protocolo:
+
+1. **COLETE O EMAIL DO CLIENTE PRIMEIRO**
+   - "Para finalizar seu pedido, preciso do seu melhor email de contato."
+   - Se o cliente já forneceu o email durante a conversa, use esse email
+
+2. **USE A FERRAMENTA \`escalateToHuman\`**
+   - Passe o email do cliente no parâmetro \`customerEmail\`
+   - Passe a razão detalhada: "Erro ao gerar link de pagamento para [Plano X] - Valor: R$ [valor]"
+   - A ferramenta vai registrar a solicitação e retornar mensagem formatada
+
+3. **RESPONDA AO CLIENTE COM A MENSAGEM DA FERRAMENTA**
+   - Use a resposta retornada pela ferramenta \`escalateToHuman\`
+   - Adicione uma mensagem empática e de apoio
+
+4. **NÃO DIGA:**
+   - ❌ "O sistema de pagamento não está configurado"
+   - ❌ "Não posso ajudar com isso"
+   - ❌ Detalhes técnicos do erro
+
+**Exemplo de fluxo correto:**
+
+Cliente escolhe Plano Profissional (R$ 197) → createPayment falha → Você:
+
+1. "Para finalizar, preciso do seu email para enviar os detalhes do pagamento."
+2. Cliente fornece: cliente@email.com
+3. Usa: escalateToHuman(reason="Erro ao gerar link de pagamento para Plano Profissional - Valor: R$ 197", customerEmail="cliente@email.com")
+4. Responde: [mensagem retornada pela ferramenta] + "Enquanto isso, se tiver alguma dúvida sobre o plano escolhido, fico à disposição!"
+
 ## Escalação para Humanos
 
 Use a ferramenta \`escalateToHuman\` quando o cliente:
@@ -301,10 +370,11 @@ Use a ferramenta \`escalateToHuman\` quando o cliente:
 - Precisar de recursos customizados não listados
 - Tiver dúvidas técnicas complexas sobre infraestrutura
 - Explicitamente pedir para falar com gerente/supervisor
+- **Quando houver erro na criação do link de pagamento**
 
 ## Ferramentas Disponíveis
 
-- \`createPayment\`: Gera link de pagamento Mercado Pago
+- \`createPayment\`: Gera link de pagamento Mercado Pago (se falhar, escale para humano)
 - \`escalateToHuman\`: Transfere para equipe humana
 - \`scheduleFollowUp\`: Agenda acompanhamento futuro
 - Ferramentas de agendamento: Para marcar demos ou reuniões
@@ -360,12 +430,115 @@ export default {
   async fetch(request: Request, env: Env, _ctx: ExecutionContext) {
     const url = new URL(request.url);
 
-    // Health check for OpenAI key
-    if (url.pathname === "/check-open-ai-key") {
-      const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
-      return Response.json({
-        success: hasOpenAIKey
-      });
+    // Health check for OpenAI key (commented out - using Workers AI instead)
+    // if (url.pathname === "/check-open-ai-key") {
+    //   const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
+    //   return Response.json({
+    //     success: hasOpenAIKey
+    //   });
+    // }
+
+    // Test endpoint for payment creation
+    if (url.pathname === "/test/payment" && request.method === "POST") {
+      try {
+        const body = (await request.json()) as {
+          title: string;
+          amount: number;
+          currency?: string;
+          quantity?: number;
+          customerEmail?: string;
+          customerName?: string;
+        };
+
+        const {
+          title,
+          amount,
+          currency = "BRL",
+          quantity = 1,
+          customerEmail,
+          customerName
+        } = body;
+
+        if (!title || !amount) {
+          return Response.json(
+            { success: false, error: "title and amount are required" },
+            { status: 400 }
+          );
+        }
+
+        const preference = {
+          items: [
+            {
+              title,
+              quantity,
+              unit_price: amount,
+              currency_id: currency
+            }
+          ],
+          payer:
+            customerEmail || customerName
+              ? {
+                  email: customerEmail,
+                  name: customerName
+                }
+              : undefined,
+          auto_return: "approved" as const
+        };
+
+        console.log(
+          "[Test Payment] Creating payment with preference:",
+          JSON.stringify(preference, null, 2)
+        );
+
+        const response = await env.PAYMENT_SERVICE.fetch(
+          "https://payment-service/payment/create",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(preference)
+          }
+        );
+
+        const responseText = await response.text();
+        console.log(
+          "[Test Payment] Payment service response status:",
+          response.status
+        );
+        console.log(
+          "[Test Payment] Payment service response body:",
+          responseText
+        );
+
+        if (!response.ok) {
+          return Response.json(
+            {
+              success: false,
+              error: "Payment service error",
+              status: response.status,
+              details: responseText
+            },
+            { status: response.status }
+          );
+        }
+
+        const result = JSON.parse(responseText);
+
+        return Response.json({
+          success: true,
+          payment: result,
+          message: "Payment link created successfully"
+        });
+      } catch (error) {
+        console.error("[Test Payment] Error:", error);
+        return Response.json(
+          {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined
+          },
+          { status: 500 }
+        );
+      }
     }
 
     // R2 Storage endpoints
@@ -426,7 +599,8 @@ export default {
             return new Response(object.body, {
               headers: {
                 "content-type":
-                  object.httpMetadata?.contentType || "application/octet-stream",
+                  object.httpMetadata?.contentType ||
+                  "application/octet-stream",
                 "content-length": object.size.toString(),
                 "last-modified": object.uploaded.toUTCString(),
                 etag: object.httpEtag
@@ -436,7 +610,8 @@ export default {
             return Response.json(
               {
                 success: false,
-                error: error instanceof Error ? error.message : "Download failed"
+                error:
+                  error instanceof Error ? error.message : "Download failed"
               },
               { status: 500 }
             );
@@ -473,7 +648,8 @@ export default {
             return new Response(null, {
               headers: {
                 "content-type":
-                  fileInfo.httpMetadata?.contentType || "application/octet-stream",
+                  fileInfo.httpMetadata?.contentType ||
+                  "application/octet-stream",
                 "content-length": fileInfo.size.toString(),
                 "last-modified": fileInfo.uploaded.toUTCString()
               }
@@ -554,7 +730,13 @@ export default {
 
           case "webhook": {
             // Send a webhook message
-            const { url: webhookUrl, method, headers, body: webhookBody, metadata } = body;
+            const {
+              url: webhookUrl,
+              method,
+              headers,
+              body: webhookBody,
+              metadata
+            } = body;
 
             if (!webhookUrl || !method) {
               return Response.json(
@@ -583,12 +765,22 @@ export default {
 
             if (!to || !from || !subject || !emailBody) {
               return Response.json(
-                { success: false, error: "to, from, subject, and body are required" },
+                {
+                  success: false,
+                  error: "to, from, subject, and body are required"
+                },
                 { status: 400 }
               );
             }
 
-            await queueManager.sendEmail(to, from, subject, emailBody, html, metadata);
+            await queueManager.sendEmail(
+              to,
+              from,
+              subject,
+              emailBody,
+              html,
+              metadata
+            );
 
             return Response.json({
               success: true,
@@ -602,7 +794,10 @@ export default {
 
             if (!userId || !title || !message) {
               return Response.json(
-                { success: false, error: "userId, title, and message are required" },
+                {
+                  success: false,
+                  error: "userId, title, and message are required"
+                },
                 { status: 400 }
               );
             }
@@ -627,7 +822,10 @@ export default {
 
             if (!taskId || !taskAction || !payload) {
               return Response.json(
-                { success: false, error: "taskId, action, and payload are required" },
+                {
+                  success: false,
+                  error: "taskId, action, and payload are required"
+                },
                 { status: 400 }
               );
             }
@@ -651,7 +849,12 @@ export default {
               );
             }
 
-            await queueManager.sendAnalytics(event, properties, userId, metadata);
+            await queueManager.sendAnalytics(
+              event,
+              properties,
+              userId,
+              metadata
+            );
 
             return Response.json({
               success: true,
@@ -688,7 +891,8 @@ export default {
         return Response.json(
           {
             success: false,
-            error: error instanceof Error ? error.message : "Queue operation failed"
+            error:
+              error instanceof Error ? error.message : "Queue operation failed"
           },
           { status: 500 }
         );
@@ -716,11 +920,17 @@ export default {
 
         const event: ChatwootWebhookEvent = await request.json();
 
-        console.log("[Chatwoot] Full webhook event:", JSON.stringify(event, null, 2));
+        console.log(
+          "[Chatwoot] Full webhook event:",
+          JSON.stringify(event, null, 2)
+        );
 
         // Only process message_created events
         if (event.event !== "message_created") {
-          console.log("[Chatwoot] Ignoring non-message_created event:", event.event);
+          console.log(
+            "[Chatwoot] Ignoring non-message_created event:",
+            event.event
+          );
           return Response.json({
             status: "ignored",
             reason: "not a message_created event"
@@ -746,7 +956,10 @@ export default {
           );
         }
 
-        console.log("[Chatwoot] Processing message for conversation:", conversationId);
+        console.log(
+          "[Chatwoot] Processing message for conversation:",
+          conversationId
+        );
         console.log("[Chatwoot] Message content:", event.content);
 
         // Get Durable Object for this conversation
@@ -754,14 +967,18 @@ export default {
         const durableObjectId = env.Chat.idFromName(agentId);
         const agentStub = env.Chat.get(durableObjectId);
 
-        console.log("[Chatwoot] Calling processChatwootMessage on Durable Object");
+        console.log(
+          "[Chatwoot] Calling processChatwootMessage on Durable Object"
+        );
         // Process the message and generate response
         const response = await agentStub.processChatwootMessage(event);
         console.log("[Chatwoot] Response generated:", response ? "YES" : "NO");
 
         // Send response back to Chatwoot
         if (response) {
-          console.log("[Chatwoot] Attempting to send response back to Chatwoot");
+          console.log(
+            "[Chatwoot] Attempting to send response back to Chatwoot"
+          );
           // Only send if Chatwoot is fully configured
           if (
             process.env.CHATWOOT_BASE_URL &&
@@ -775,7 +992,10 @@ export default {
               process.env.CHATWOOT_ACCOUNT_ID
             );
 
-            console.log("[Chatwoot] Sending message to conversation:", conversationId);
+            console.log(
+              "[Chatwoot] Sending message to conversation:",
+              conversationId
+            );
             await chatwootClient.sendMessage(conversationId, response);
             console.log("[Chatwoot] Message sent successfully!");
           } else {
@@ -805,11 +1025,12 @@ export default {
       }
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      console.error(
-        "OPENAI_API_KEY is not set, don't forget to set it locally in .dev.vars, and use `wrangler secret bulk .dev.vars` to upload it to production"
-      );
-    }
+    // OpenAI API Key check (commented out - using Workers AI instead)
+    // if (!process.env.OPENAI_API_KEY) {
+    //   console.error(
+    //     "OPENAI_API_KEY is not set, don't forget to set it locally in .dev.vars, and use `wrangler secret bulk .dev.vars` to upload it to production"
+    //   );
+    // }
     return (
       // Route the request to our agent or return 404 if not found
       (await routeAgentRequest(request, env)) ||
@@ -823,7 +1044,9 @@ export default {
   async queue(batch: MessageBatch, env: Env, _ctx: ExecutionContext) {
     const messageRouter = new MessageRouter();
 
-    console.log(`[Queue] Processing batch of ${batch.messages.length} messages`);
+    console.log(
+      `[Queue] Processing batch of ${batch.messages.length} messages`
+    );
 
     for (const message of batch.messages) {
       try {

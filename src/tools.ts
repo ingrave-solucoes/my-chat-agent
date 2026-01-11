@@ -202,7 +202,8 @@ const resolveChatwootConversation = tool({
  * Tool to create a payment link via Mercado Pago
  */
 const createPayment = tool({
-  description: "Create a payment link using Mercado Pago for the customer to complete their purchase",
+  description:
+    "Create a payment link using Mercado Pago for the customer to complete their purchase",
   inputSchema: z.object({
     title: z.string().describe("Product or service title"),
     amount: z.number().describe("Payment amount in the currency"),
@@ -210,9 +211,20 @@ const createPayment = tool({
     quantity: z.number().optional().describe("Quantity of items (default: 1)"),
     customerEmail: z.string().email().optional().describe("Customer email"),
     customerName: z.string().optional().describe("Customer name"),
-    externalReference: z.string().optional().describe("External reference ID for tracking")
+    externalReference: z
+      .string()
+      .optional()
+      .describe("External reference ID for tracking")
   }),
-  execute: async ({ title, amount, currency = "BRL", quantity = 1, customerEmail, customerName, externalReference }) => {
+  execute: async ({
+    title,
+    amount,
+    currency = "BRL",
+    quantity = 1,
+    customerEmail,
+    customerName,
+    externalReference
+  }) => {
     const { env } = getCurrentAgent<Chat>();
 
     if (!env?.PAYMENT_SERVICE) {
@@ -229,41 +241,69 @@ const createPayment = tool({
             currency_id: currency
           }
         ],
-        payer: customerEmail || customerName ? {
-          email: customerEmail,
-          name: customerName
-        } : undefined,
+        payer:
+          customerEmail || customerName
+            ? {
+                email: customerEmail,
+                name: customerName
+              }
+            : undefined,
         external_reference: externalReference,
         auto_return: "approved" as const
       };
 
-      const response = await env.PAYMENT_SERVICE.fetch("https://payment-service/payment/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(preference)
-      });
+      const response = await env.PAYMENT_SERVICE.fetch(
+        "https://payment-service/payment/create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(preference)
+        }
+      );
 
       if (!response.ok) {
-        const error = await response.text();
-        return `Failed to create payment: ${error}`;
+        const errorText = await response.text();
+        console.error("[Payment] Payment service error:", errorText);
+
+        // Try to parse error as JSON for better error handling
+        try {
+          const errorData = JSON.parse(errorText);
+          if (errorData.error) {
+            return `Não foi possível criar o link de pagamento. Motivo: ${errorData.error}`;
+          }
+        } catch {
+          // If not JSON, use the raw error text
+        }
+
+        return `Não foi possível criar o link de pagamento no momento. Por favor, tente novamente em alguns instantes ou solicite ajuda de um atendente humano.`;
       }
 
-      const result = await response.json() as {
+      const result = (await response.json()) as {
         success: boolean;
         preference_id: string;
         init_point: string;
         sandbox_init_point: string;
       };
 
-      return `Payment link created successfully!
+      // Check if we actually got a valid payment link
+      if (!result.init_point) {
+        console.error("[Payment] No payment link in response:", result);
+        return `Ocorreu um erro ao gerar o link de pagamento. Por favor, entre em contato com nossa equipe de suporte.`;
+      }
 
-Payment ID: ${result.preference_id}
-Payment Link: ${result.init_point}
+      return `✅ Link de pagamento criado com sucesso!
 
-Share this link with the customer to complete the payment.`;
+🔗 **Link de Pagamento:** ${result.init_point}
+
+Clique no link acima para finalizar seu pagamento de forma segura através do Mercado Pago.
+
+💳 **Valor:** R$ ${amount.toFixed(2)}
+📦 **Produto:** ${title}
+
+Após a confirmação do pagamento, você receberá todas as informações de acesso por e-mail.`;
     } catch (error) {
       console.error("Error creating payment", error);
-      return `Error creating payment: ${error}`;
+      return `Ocorreu um erro inesperado ao processar o pagamento. Por favor, tente novamente ou solicite ajuda de um atendente humano. Detalhes técnicos: ${error}`;
     }
   }
 });
@@ -292,7 +332,7 @@ const checkPaymentStatus = tool({
         return `Payment not found or error checking status`;
       }
 
-      const payment = await response.json() as {
+      const payment = (await response.json()) as {
         id: number;
         status: string;
         status_detail: string;
@@ -335,10 +375,16 @@ ${payment.status_detail ? `Details: ${payment.status_detail}` : ""}`;
  * Tool to schedule a follow-up message after a delay
  */
 const scheduleFollowUp = tool({
-  description: "Schedule an automated follow-up message to be sent to the customer after a specified delay",
+  description:
+    "Schedule an automated follow-up message to be sent to the customer after a specified delay",
   inputSchema: z.object({
-    delayMinutes: z.number().describe("Number of minutes to wait before sending the follow-up"),
-    message: z.string().optional().describe("Custom follow-up message (optional)")
+    delayMinutes: z
+      .number()
+      .describe("Number of minutes to wait before sending the follow-up"),
+    message: z
+      .string()
+      .optional()
+      .describe("Custom follow-up message (optional)")
   }),
   execute: async ({ delayMinutes, message }) => {
     const { agent, env } = getCurrentAgent<Chat>();
@@ -375,7 +421,8 @@ const scheduleFollowUp = tool({
  * Tool to escalate conversation to human agent
  */
 const escalateToHuman = tool({
-  description: "Escalate the current conversation to a human agent when the AI cannot help",
+  description:
+    "Escalate the current conversation to a human agent when the AI cannot help or when there are technical issues (like payment errors)",
   inputSchema: z.object({
     reason: z.string().describe("Reason for escalation")
   }),
@@ -383,12 +430,12 @@ const escalateToHuman = tool({
     const { agent, env } = getCurrentAgent<Chat>();
 
     if (!env?.CUSTOMER_SUPPORT_WORKFLOW) {
-      return "Workflow service is not configured";
+      return "Esta funcionalidade está disponível apenas via Chatwoot. Por favor, entre em contato através do nosso chat de suporte.";
     }
 
     const conversationId = getChatwootConversationId(agent!.messages);
     if (!conversationId) {
-      return "This conversation is not associated with Chatwoot";
+      return "Esta funcionalidade está disponível apenas via Chatwoot. Por favor, entre em contato através do nosso chat de suporte.";
     }
 
     try {
@@ -401,10 +448,15 @@ const escalateToHuman = tool({
         }
       });
 
-      return `Conversation escalated to human agent. Workflow ID: ${instance.id}`;
+      return `✅ Solicitação encaminhada com sucesso para nossa equipe de atendimento!
+
+📋 **Protocolo:** ${instance.id}
+📧 **Motivo:** ${reason}
+
+Um de nossos especialistas entrará em contato em breve para ajudá-lo.`;
     } catch (error) {
       console.error("Error escalating conversation", error);
-      return `Error escalating conversation: ${error}`;
+      return `Erro ao encaminhar sua solicitação. Por favor, entre em contato diretamente com nossa equipe de suporte.`;
     }
   }
 });
@@ -413,9 +465,13 @@ const escalateToHuman = tool({
  * Tool to send satisfaction survey after conversation
  */
 const sendSatisfactionSurvey = tool({
-  description: "Send a satisfaction survey to the customer after resolving their issue",
+  description:
+    "Send a satisfaction survey to the customer after resolving their issue",
   inputSchema: z.object({
-    delayMinutes: z.number().optional().describe("Delay before sending survey (default: 5 minutes)")
+    delayMinutes: z
+      .number()
+      .optional()
+      .describe("Delay before sending survey (default: 5 minutes)")
   }),
   execute: async ({ delayMinutes = 5 }) => {
     const { agent, env } = getCurrentAgent<Chat>();
@@ -451,11 +507,18 @@ const sendSatisfactionSurvey = tool({
  * ElevenLabs Text-to-Speech Tool
  */
 const textToSpeech = tool({
-  description: "Convert text to speech audio using ElevenLabs and send it to the customer via Chatwoot",
+  description:
+    "Convert text to speech audio using ElevenLabs and send it to the customer via Chatwoot",
   inputSchema: z.object({
     text: z.string().describe("The text to convert to speech"),
-    voiceId: z.string().optional().describe("Voice ID (default: Rachel - professional female voice)"),
-    language: z.enum(["portuguese", "english", "spanish"]).optional().describe("Language hint for better pronunciation (default: portuguese)")
+    voiceId: z
+      .string()
+      .optional()
+      .describe("Voice ID (default: Rachel - professional female voice)"),
+    language: z
+      .enum(["portuguese", "english", "spanish"])
+      .optional()
+      .describe("Language hint for better pronunciation (default: portuguese)")
   }),
   execute: async ({ text, voiceId, language = "portuguese" }) => {
     // Check if ElevenLabs is configured
@@ -513,7 +576,7 @@ const textToSpeech = tool({
         result.contentType
       );
 
-      return `Audio message sent successfully! Size: ${Math.round(result.audio.byteLength / 1024)}KB. The customer received the voice message: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"`;
+      return `Audio message sent successfully! Size: ${Math.round(result.audio.byteLength / 1024)}KB. The customer received the voice message: "${text.substring(0, 100)}${text.length > 100 ? "..." : ""}"`;
     } catch (error) {
       console.error("Error generating text-to-speech", error);
       return `Error generating audio: ${error}`;

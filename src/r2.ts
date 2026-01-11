@@ -129,10 +129,7 @@ export class R2StorageManager {
   /**
    * Convert R2 object to FileInfo
    */
-  private objectToFileInfo(
-    object: R2Object,
-    key: string
-  ): R2FileInfo {
+  private objectToFileInfo(object: R2Object, key: string): R2FileInfo {
     return {
       key,
       size: object.size,
@@ -146,10 +143,7 @@ export class R2StorageManager {
 /**
  * Helper function to generate unique file keys
  */
-export function generateFileKey(
-  filename: string,
-  prefix?: string
-): string {
+export function generateFileKey(filename: string, prefix?: string): string {
   const timestamp = Date.now();
   const randomStr = Math.random().toString(36).substring(2, 15);
   const cleanFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "_");

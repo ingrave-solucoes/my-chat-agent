@@ -374,10 +374,7 @@ export class MessageRouter {
     this.processors = new Map();
 
     // Register default processors
-    this.registerProcessor(
-      QueueMessageType.WEBHOOK,
-      new WebhookProcessor()
-    );
+    this.registerProcessor(QueueMessageType.WEBHOOK, new WebhookProcessor());
     this.registerProcessor(QueueMessageType.EMAIL, new EmailProcessor());
     this.registerProcessor(
       QueueMessageType.NOTIFICATION,
@@ -393,10 +390,7 @@ export class MessageRouter {
   /**
    * Register a custom processor for a message type
    */
-  registerProcessor(
-    type: QueueMessageType,
-    processor: MessageProcessor
-  ): void {
+  registerProcessor(type: QueueMessageType, processor: MessageProcessor): void {
     this.processors.set(type, processor);
   }
 
@@ -407,7 +401,9 @@ export class MessageRouter {
     const processor = this.processors.get(message.type);
 
     if (!processor) {
-      console.warn(`[Queue] No processor found for message type: ${message.type}`);
+      console.warn(
+        `[Queue] No processor found for message type: ${message.type}`
+      );
       return;
     }
 

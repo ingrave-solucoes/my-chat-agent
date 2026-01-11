@@ -7,6 +7,7 @@ Este agente foi configurado como um **Especialista em Vendas de Assinaturas** pa
 ## 🎯 Características do Agente
 
 ### Personalidade
+
 - **Educado e Gentil**: Sempre cordial e acolhedor
 - **Empático**: Demonstra interesse genuíno nas necessidades do cliente
 - **Consultivo**: Não força vendas, ajuda o cliente a descobrir a melhor opção
@@ -14,7 +15,9 @@ Este agente foi configurado como um **Especialista em Vendas de Assinaturas** pa
 - **Positivo**: Atitude motivadora e encorajadora
 
 ### Comportamento
+
 O agente foi instruído a:
+
 1. Cumprimentar o cliente de forma calorosa
 2. Fazer perguntas para entender as necessidades
 3. Recomendar o plano mais adequado
@@ -24,6 +27,7 @@ O agente foi instruído a:
 ## 💼 Planos Disponíveis
 
 ### 📦 Plano Básico - R$ 97,00/mês
+
 - Ideal para iniciantes e pequenos negócios
 - Recursos essenciais para começar
 - Suporte por email
@@ -31,6 +35,7 @@ O agente foi instruído a:
 - 1 usuário
 
 ### 🚀 Plano Profissional - R$ 197,00/mês
+
 - Perfeito para empresas em crescimento
 - Todos os recursos do Básico
 - Suporte prioritário via chat
@@ -40,6 +45,7 @@ O agente foi instruído a:
 - Relatórios personalizados
 
 ### 👑 Plano Empresarial - R$ 497,00/mês
+
 - Solução completa para grandes empresas
 - Todos os recursos do Profissional
 - Suporte VIP 24/7
@@ -65,9 +71,11 @@ O agente possui integração com **Mercado Pago** para gerar links de pagamento 
 ### Ferramentas Disponíveis
 
 #### `createPayment`
+
 Cria um link de pagamento via Mercado Pago
 
 **Parâmetros usados pelo agente:**
+
 - **Plano Básico**:
   - title: "Plano Básico Ingrave - Mensal"
   - amount: 97.00
@@ -81,19 +89,24 @@ Cria um link de pagamento via Mercado Pago
   - amount: 497.00
 
 #### `checkPaymentStatus`
+
 Verifica o status de um pagamento usando o ID
 
 #### `escalateToHuman`
+
 Encaminha conversa para agente humano quando:
+
 - Cliente solicita condições especiais
 - Necessita recursos customizados
 - Tem dúvidas técnicas avançadas
 - Pede para falar com gerente
 
 #### `scheduleFollowUp`
+
 Agenda mensagem de follow-up automática
 
 #### `sendSatisfactionSurvey`
+
 Envia pesquisa de satisfação após atendimento
 
 ## 🎨 Exemplos de Linguagem
@@ -101,6 +114,7 @@ Envia pesquisa de satisfação após atendimento
 ### ✅ Boas Práticas
 
 **Saudação:**
+
 ```
 "Olá! Fico muito feliz em ajudá-lo! 😊
 Meu nome é [Nome] e sou especialista em vendas da Ingrave.
@@ -108,12 +122,14 @@ Para recomendar o melhor plano, poderia me contar um pouco sobre seu negócio?"
 ```
 
 **Recomendação:**
+
 ```
 "Que ótimo! Baseado no que você me contou, acredito que o Plano Profissional
 seria perfeito para suas necessidades. Posso explicar por quê?"
 ```
 
 **Empatia:**
+
 ```
 "Entendo perfeitamente sua situação. O Plano Básico pode ser uma excelente
 forma de começar, e você sempre pode fazer upgrade quando precisar crescer! 🚀"
@@ -130,7 +146,9 @@ forma de começar, e você sempre pode fazer upgrade quando precisar crescer! �
 ## 🔧 Configuração Técnica
 
 ### Localização do Prompt
+
 O prompt do sistema está configurado em:
+
 ```
 src/server.ts - linha 146-251
 ```
@@ -151,11 +169,13 @@ Para **alterar informações dos planos**, edite o arquivo `src/server.ts` na se
 Para **alterar preços**, você precisa modificar duas áreas:
 
 1. **No prompt** (src/server.ts linha ~156-181):
+
 ```typescript
 ### Plano Básico - R$ 97,00/mês
 ```
 
 2. **Nos exemplos de pagamento** (src/server.ts linha ~216-219):
+
 ```typescript
 - Plano Básico: title="Plano Básico Ingrave - Mensal", amount=97.00
 ```
@@ -224,6 +244,7 @@ Para **alterar preços**, você precisa modificar duas áreas:
 ## 🆘 Suporte
 
 Para modificar o comportamento do agente:
+
 1. Edite o arquivo `src/server.ts`
 2. Localize a seção `system:` (linha 146)
 3. Modifique o prompt conforme necessário

@@ -74,10 +74,7 @@ export default {
 					const body: MercadoPagoPreference = await request.json();
 
 					if (!env.MERCADO_PAGO_ACCESS_TOKEN) {
-						return Response.json(
-							{ error: 'Mercado Pago not configured' },
-							{ status: 500, headers: corsHeaders }
-						);
+						return Response.json({ error: 'Mercado Pago not configured' }, { status: 500, headers: corsHeaders });
 					}
 
 					// Add required back_urls when auto_return is set
@@ -86,7 +83,7 @@ export default {
 							success: 'https://ingrave.com.br/pagamento/sucesso',
 							failure: 'https://ingrave.com.br/pagamento/falha',
 							pending: 'https://ingrave.com.br/pagamento/pendente',
-							...body.back_urls
+							...body.back_urls,
 						};
 					}
 
@@ -94,7 +91,7 @@ export default {
 					const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
 						method: 'POST',
 						headers: {
-							'Authorization': `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
+							Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
 							'Content-Type': 'application/json',
 						},
 						body: JSON.stringify(body),
@@ -104,18 +101,21 @@ export default {
 						const error = await mpResponse.text();
 						return Response.json(
 							{ error: 'Failed to create payment', details: error },
-							{ status: mpResponse.status, headers: corsHeaders }
+							{ status: mpResponse.status, headers: corsHeaders },
 						);
 					}
 
 					const preference = await mpResponse.json();
 
-					return Response.json({
-						success: true,
-						preference_id: preference.id,
-						init_point: preference.init_point,
-						sandbox_init_point: preference.sandbox_init_point,
-					}, { headers: corsHeaders });
+					return Response.json(
+						{
+							success: true,
+							preference_id: preference.id,
+							init_point: preference.init_point,
+							sandbox_init_point: preference.sandbox_init_point,
+						},
+						{ headers: corsHeaders },
+					);
 				}
 
 				case '/payment/status': {
@@ -123,44 +123,38 @@ export default {
 					const paymentId = url.searchParams.get('id');
 
 					if (!paymentId) {
-						return Response.json(
-							{ error: 'Payment ID is required' },
-							{ status: 400, headers: corsHeaders }
-						);
+						return Response.json({ error: 'Payment ID is required' }, { status: 400, headers: corsHeaders });
 					}
 
 					if (!env.MERCADO_PAGO_ACCESS_TOKEN) {
-						return Response.json(
-							{ error: 'Mercado Pago not configured' },
-							{ status: 500, headers: corsHeaders }
-						);
+						return Response.json({ error: 'Mercado Pago not configured' }, { status: 500, headers: corsHeaders });
 					}
 
 					const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
 						headers: {
-							'Authorization': `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
+							Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
 						},
 					});
 
 					if (!mpResponse.ok) {
-						return Response.json(
-							{ error: 'Payment not found' },
-							{ status: 404, headers: corsHeaders }
-						);
+						return Response.json({ error: 'Payment not found' }, { status: 404, headers: corsHeaders });
 					}
 
 					const payment: MercadoPagoPayment = await mpResponse.json();
 
-					return Response.json({
-						id: payment.id,
-						status: payment.status,
-						status_detail: payment.status_detail,
-						amount: payment.transaction_amount,
-						currency: payment.currency_id,
-						description: payment.description,
-						external_reference: payment.external_reference,
-						payer_email: payment.payer.email,
-					}, { headers: corsHeaders });
+					return Response.json(
+						{
+							id: payment.id,
+							status: payment.status,
+							status_detail: payment.status_detail,
+							amount: payment.transaction_amount,
+							currency: payment.currency_id,
+							description: payment.description,
+							external_reference: payment.external_reference,
+							payer_email: payment.payer.email,
+						},
+						{ headers: corsHeaders },
+					);
 				}
 
 				case '/payment/webhook': {
@@ -180,7 +174,7 @@ export default {
 							// Fetch full payment details
 							const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
 								headers: {
-									'Authorization': `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
+									Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
 								},
 							});
 
@@ -199,26 +193,26 @@ export default {
 				}
 
 				case '/health':
-					return Response.json({
-						status: 'ok',
-						service: 'payment-workflow',
-						timestamp: new Date().toISOString(),
-					}, { headers: corsHeaders });
+					return Response.json(
+						{
+							status: 'ok',
+							service: 'payment-workflow',
+							timestamp: new Date().toISOString(),
+						},
+						{ headers: corsHeaders },
+					);
 
 				default:
-					return Response.json(
-						{ error: 'Not Found' },
-						{ status: 404, headers: corsHeaders }
-					);
+					return Response.json({ error: 'Not Found' }, { status: 404, headers: corsHeaders });
 			}
 		} catch (error) {
 			console.error('[Payment Workflow] Error:', error);
 			return Response.json(
 				{
 					error: 'Internal server error',
-					message: error instanceof Error ? error.message : 'Unknown error'
+					message: error instanceof Error ? error.message : 'Unknown error',
 				},
-				{ status: 500, headers: corsHeaders }
+				{ status: 500, headers: corsHeaders },
 			);
 		}
 	},

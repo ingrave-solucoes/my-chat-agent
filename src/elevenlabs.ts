@@ -3,8 +3,8 @@
  */
 
 export interface ElevenLabsConfig {
-  accountId?: string;  // Optional - not used in direct API calls
-  gatewayId?: string;  // Optional - not used in direct API calls
+  accountId?: string; // Optional - not used in direct API calls
+  gatewayId?: string; // Optional - not used in direct API calls
   apiKey: string;
 }
 
@@ -44,7 +44,9 @@ export class ElevenLabsClient {
    * NOTE: Direct API call (not via AI Gateway) because ElevenLabs free tier
    * blocks requests from proxies/gateways
    */
-  async textToSpeech(options: TextToSpeechOptions): Promise<TextToSpeechResult> {
+  async textToSpeech(
+    options: TextToSpeechOptions
+  ): Promise<TextToSpeechResult> {
     const {
       text,
       voiceId = ElevenLabsClient.DEFAULT_VOICE_ID,

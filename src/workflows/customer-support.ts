@@ -1,4 +1,8 @@
-import { WorkflowEntrypoint, WorkflowEvent, WorkflowStep } from "cloudflare:workers";
+import {
+  WorkflowEntrypoint,
+  WorkflowEvent,
+  WorkflowStep
+} from "cloudflare:workers";
 
 /**
  * Workflow parameters for customer support automation
@@ -19,10 +23,7 @@ export class CustomerSupportWorkflow extends WorkflowEntrypoint<
   Env,
   CustomerSupportParams
 > {
-  async run(
-    event: WorkflowEvent<CustomerSupportParams>,
-    step: WorkflowStep
-  ) {
+  async run(event: WorkflowEvent<CustomerSupportParams>, step: WorkflowStep) {
     const { conversationId, customerId, action, delayMinutes, message } =
       event.params;
 
@@ -79,7 +80,9 @@ export class CustomerSupportWorkflow extends WorkflowEntrypoint<
 
     // Step 4: Log completion
     await step.do("log-completion", async () => {
-      console.log(`[Workflow] Completed ${action} for conversation ${conversationId}`);
+      console.log(
+        `[Workflow] Completed ${action} for conversation ${conversationId}`
+      );
       return { status: "completed", result };
     });
 

@@ -16,12 +16,14 @@ A integração permite que o agent converta mensagens de texto em áudio de alta
 ### 1. Obter Credenciais
 
 #### ElevenLabs API Key
+
 1. Acesse [ElevenLabs](https://elevenlabs.io/)
 2. Crie uma conta ou faça login
 3. Vá para [Settings > API Keys](https://elevenlabs.io/app/settings/api-keys)
 4. Copie sua API Key
 
 #### Cloudflare Account ID e AI Gateway ID
+
 1. Acesse o [Cloudflare Dashboard](https://dash.cloudflare.com/)
 2. Selecione sua conta
 3. O **Account ID** está visível na URL ou na barra lateral
@@ -189,6 +191,7 @@ Você pode monitorar o uso no Cloudflare Dashboard:
 ### Erro: "ElevenLabs integration is not configured"
 
 **Solução**: Verifique se todas as variáveis de ambiente estão configuradas:
+
 ```bash
 wrangler secret list
 ```
@@ -196,6 +199,7 @@ wrangler secret list
 ### Erro: "Chatwoot is not configured"
 
 **Solução**: Configure as variáveis do Chatwoot também (necessárias para enviar o áudio):
+
 ```bash
 CHATWOOT_BASE_URL=...
 CHATWOOT_API_KEY=...
@@ -209,6 +213,7 @@ CHATWOOT_ACCOUNT_ID=...
 ### Erro 401 do ElevenLabs
 
 **Solução**: Verifique se sua API key está correta e ativa:
+
 ```bash
 curl -X GET https://api.elevenlabs.io/v1/user \
   -H "xi-api-key: YOUR_API_KEY"
