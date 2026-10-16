@@ -349,6 +349,26 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
     };
   }
 
+  /* ---------- video (LiveAvatar) ---------- */
+
+  /** At most 3 video sessions per conversation, one at a time. */
+  async videoAllowed() {
+    const count = (await this.ctx.storage.get<number>("videoCount")) ?? 0;
+    return count < 3 && !(await this.ctx.storage.get<string>("videoSession"));
+  }
+
+  async videoStarted(sessionId: string) {
+    await this.ctx.storage.put("videoCount", ((await this.ctx.storage.get<number>("videoCount")) ?? 0) + 1);
+    await this.ctx.storage.put("videoSession", sessionId);
+  }
+
+  /** Forgets the running video session and returns its id so the Worker can stop it. */
+  async videoEnded() {
+    const id = await this.ctx.storage.get<string>("videoSession");
+    await this.ctx.storage.delete("videoSession");
+    return id;
+  }
+
   /* ---------- follow-up ---------- */
 
   /** Checks back after FOLLOW_UP_MINUTES of business time whether the team answered the lead. */

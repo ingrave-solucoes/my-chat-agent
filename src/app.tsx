@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
   WhatsappLogoIcon,
   MicrophoneIcon,
+  VideoCameraIcon,
   SpeakerHighIcon,
   SpinnerGapIcon,
   StopCircleIcon,
@@ -27,6 +28,7 @@ import type { IngraveAgent } from "./agent";
 import { ASSISTANT, type AgentState, type ChatContext, initialAgentState, type MessageMeta, type WidgetMessage } from "./shared";
 import { Markdown } from "./ui/Markdown";
 import { hintsFor } from "./pages";
+import { useVideoAvatar, VideoPanel } from "./ui/VideoAvatar";
 
 const SESSION_KEY = "ingrave-agent-session";
 const embedded = typeof window !== "undefined" && window.parent !== window;
@@ -369,6 +371,9 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const startedTracked = useRef(false);
   const [voiceOn, setVoiceOn] = useState(false);
+  const [videoOn, setVideoOn] = useState(false);
+  const video = useVideoAvatar(session);
+  const spokenByVideo = useRef<string | null>(null);
   const [recordingLabel, setRecordingLabel] = useState<string | null>(null);
   const [autoSpeakId, setAutoSpeakId] = useState<string | null>(null);
   const voiceTurn = useRef(false);
@@ -376,8 +381,11 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   // The "Ouvir" button only shows when the Worker has an ElevenLabs key.
   useEffect(() => {
     fetch("/health")
-      .then((response) => response.json() as Promise<{ voice?: boolean }>)
-      .then((health) => setVoiceOn(Boolean(health.voice)))
+      .then((response) => response.json() as Promise<{ voice?: boolean; video?: boolean }>)
+      .then((health) => {
+        setVoiceOn(Boolean(health.voice));
+        setVideoOn(Boolean(health.video));
+      })
       .catch(() => setVoiceOn(false));
   }, []);
 
@@ -450,10 +458,11 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
         track("agent_chat_start", { page: context.current.page ?? "" });
       }
       voiceTurn.current = byVoice;
+      if (video.state === "live") video.interrupt();
       sendMessage({ role: "user", parts: [{ type: "text", text: value }] });
       setInput("");
     },
-    [busy, agentState.mode, sendMessage]
+    [busy, agentState.mode, sendMessage, video]
   );
 
   const onLink = useCallback((href: string) => {
@@ -462,12 +471,28 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
 
   const lastMessage = messages[messages.length - 1];
 
-  // A question asked by voice gets its answer read aloud when the reply is complete.
+  // On video, Íris says every finished reply (hers or the team's).
   useEffect(() => {
-    if (busy || !voiceTurn.current || lastMessage?.role !== "assistant") return;
+    if (video.state !== "live" || busy || lastMessage?.role !== "assistant" || spokenByVideo.current === lastMessage.id) return;
+    spokenByVideo.current = lastMessage.id;
+    const meta = lastMessage.metadata as MessageMeta | undefined;
+    if (meta?.from === "system") return;
+    const text = lastMessage.parts.map((part) => (part.type === "text" ? part.text : "")).join("\n").trim();
+    void video.speak(text);
+  }, [busy, lastMessage, video]);
+  useEffect(() => {
+    // Replies already on screen when the video starts are not read out.
+    if (video.state === "live" && !spokenByVideo.current) spokenByVideo.current = lastMessage?.id ?? "";
+    if (video.state === "idle") spokenByVideo.current = null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video.state]);
+
+  // A question asked by voice gets its answer read aloud when the reply is complete (the video speaks for itself).
+  useEffect(() => {
+    if (busy || !voiceTurn.current || lastMessage?.role !== "assistant" || video.state === "live") return;
     voiceTurn.current = false;
     if (voiceOn) setAutoSpeakId(lastMessage.id);
-  }, [busy, lastMessage, voiceOn]);
+  }, [busy, lastMessage, voiceOn, video.state]);
   // "Digitando" until text shows up: while the model thinks, searches or calls a tool.
   const lastPart = lastMessage?.parts[lastMessage.parts.length - 1];
   const waitingForModel =
@@ -492,10 +517,17 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
           </div>
         </div>
         <div className="ia-header-actions">
+          {videoOn && video.state === "idle" && (
+            <button type="button" className="ia-video-btn" onClick={() => { track("agent_video_start"); void video.start(); }} title={`Conversar por vídeo com a ${ASSISTANT.name}`}>
+              <VideoCameraIcon size={16} weight="fill" /> <span>Vídeo</span>
+            </button>
+          )}
           <button type="button" className="ia-icon-btn" onClick={onReset} title="Nova conversa" aria-label="Nova conversa"><ArrowClockwiseIcon size={17} /></button>
           {embedded && <button type="button" className="ia-icon-btn" onClick={() => postToSite({ type: "ingrave-agent:close" })} title="Fechar" aria-label="Fechar"><XIcon size={17} /></button>}
         </div>
       </header>
+
+      <VideoPanel video={video} name={ASSISTANT.name} poster={ASSISTANT.avatar} />
 
       {banner && <div className="ia-banner"><HeadsetIcon size={15} /> {banner}</div>}
 
