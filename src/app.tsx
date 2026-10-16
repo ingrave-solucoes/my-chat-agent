@@ -24,7 +24,7 @@ import {
   ThumbsUpIcon,
 } from "@phosphor-icons/react";
 import type { IngraveAgent } from "./agent";
-import { type AgentState, type ChatContext, initialAgentState, type MessageMeta, type WidgetMessage } from "./shared";
+import { ASSISTANT, type AgentState, type ChatContext, initialAgentState, type MessageMeta, type WidgetMessage } from "./shared";
 import { Markdown } from "./ui/Markdown";
 import { hintsFor } from "./pages";
 
@@ -58,22 +58,11 @@ function postToSite(message: WidgetMessage) {
 }
 const track = (event: string, props: Record<string, unknown> = {}) => postToSite({ type: "ingrave-agent:track", event, props });
 
-function Logo({ size = 22 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 512 512" aria-hidden="true">
-      <path fill="#1f93ff" d="M403.3,218.6l-174.2,263.9c-11.8,17.9-38.4,17.3-49.3-1.3l-67.2-114.1-26.3-44.7-19.8-33.7c-4.5-9.1,5.8-18.3,14.4-13l25.9,15.9,50.2,30.8,39.6,24.2,156.7-158.7,50.2,30.7Z" />
-      <path fill="#2086c4" d="M509.5,57.7l-85.7,129.9-20.4,30.9-50.2-30.8,44.3-44.8,96.3-97.5c8.2-8.4,21.9,2.1,15.7,12.3Z" />
-      <path fill="#2086c4" d="M86.4,322.4l26.3,44.7-96.3,97.5c-8.4,8.5-22-2-15.9-12.3l85.8-129.9Z" />
-      <path fill="#1f93ff" d="M429.2,234.4l-25.9-15.9-50.2-30.8-39.6-24.2-156.7,158.7-50.2-30.8L280.8,27.5c11.8-17.9,38.4-17.3,49.2,1.3l67.2,114.1,26.3,44.7,19.8,33.7c4.5,9.2-5.6,18.4-14.2,13.1Z" />
-    </svg>
-  );
-}
-
 function Avatar({ meta }: { meta?: MessageMeta }) {
   if (meta?.from === "human") {
     return meta.avatarUrl ? <img className="ia-avatar" src={meta.avatarUrl} alt="" /> : <span className="ia-avatar ia-avatar-human"><UserCircleIcon size={18} weight="fill" /></span>;
   }
-  return <span className="ia-avatar"><Logo size={16} /></span>;
+  return <img className="ia-avatar ia-avatar-iris" src={ASSISTANT.avatar} alt="" />;
 }
 
 /* ---------- voice (ElevenLabs) ---------- */
@@ -479,7 +468,11 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
     voiceTurn.current = false;
     if (voiceOn) setAutoSpeakId(lastMessage.id);
   }, [busy, lastMessage, voiceOn]);
-  const waitingForModel = agentState.mode === "ai" && busy && (!lastMessage || lastMessage.role === "user");
+  // "Digitando" until text shows up: while the model thinks, searches or calls a tool.
+  const lastPart = lastMessage?.parts[lastMessage.parts.length - 1];
+  const waitingForModel =
+    agentState.mode === "ai" && busy && (!lastMessage || lastMessage.role === "user" || !(lastPart?.type === "text" && lastPart.text.trim()));
+  const typingLabel = typing ? `${typing} está digitando…` : waitingForModel ? `${ASSISTANT.name} está digitando…` : null;
   const banner = useMemo(() => {
     if (agentState.mode === "waiting") return agentState.outsideHours ? "Você está na fila da equipe. Estamos fora do horário agora, e a resposta chega aqui assim que voltarmos." : "Você está na fila. Alguém da equipe responde aqui em instantes.";
     if (agentState.mode === "human") return `${agentState.agent?.name ?? "Equipe Ingrave"} está no atendimento.`;
@@ -490,10 +483,12 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
     <div className="ia-shell">
       <header className="ia-header">
         <div className="ia-brand">
-          <span className="ia-brand-mark"><Logo size={20} /></span>
+          <span className={`ia-brand-photo ${connected ? "is-on" : ""}`}>
+            {agentState.mode === "human" && agentState.agent?.avatarUrl ? <img src={agentState.agent.avatarUrl} alt="" /> : <img src={ASSISTANT.avatar} alt="" />}
+          </span>
           <div>
-            <strong>Assistente Ingrave</strong>
-            <span className={`ia-status ${connected ? "is-on" : ""}`}>{agentState.mode === "human" ? `com ${agentState.agent?.name ?? "a equipe"}` : agentState.mode === "waiting" ? "aguardando a equipe" : "IA · responde na hora"}</span>
+            <strong>{agentState.mode === "human" ? agentState.agent?.name ?? "Equipe Ingrave" : ASSISTANT.name}</strong>
+            <span className="ia-status">{agentState.mode === "human" ? "Equipe Ingrave" : agentState.mode === "waiting" ? "chamando a equipe…" : typingLabel ?? `${ASSISTANT.role} · online`}</span>
           </div>
         </div>
         <div className="ia-header-actions">
@@ -507,7 +502,8 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
       <main className="ia-messages" aria-live="polite">
         {!messages.length && (
           <div className="ia-welcome">
-            <span className="ia-welcome-mark"><Logo size={28} /></span>
+            <img className="ia-welcome-photo" src={ASSISTANT.avatar} alt="" />
+            <span className="ia-welcome-hi">Oi, eu sou a {ASSISTANT.name}, assistente virtual da Ingrave.</span>
             <h1>{hints.title}</h1>
             <p>{hints.text}</p>
             <div className="ia-suggestions">
@@ -553,8 +549,11 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
 
         {(waitingForModel || typing) && (
           <div className="ia-row">
-            <span className="ia-avatar">{typing ? <UserCircleIcon size={18} weight="fill" /> : <Logo size={16} />}</span>
-            <div className="ia-typing" aria-label={typing ? `${typing} está digitando` : "Pensando"}><i /><i /><i /></div>
+            {typing ? <span className="ia-avatar ia-avatar-human"><UserCircleIcon size={18} weight="fill" /></span> : <img className="ia-avatar ia-avatar-iris" src={ASSISTANT.avatar} alt="" />}
+            <div className="ia-typing-wrap">
+              <div className="ia-typing" role="status" aria-label={typingLabel ?? ""}><i /><i /><i /></div>
+              <span className="ia-typing-label">{typingLabel}</span>
+            </div>
           </div>
         )}
         <div ref={endRef} />
