@@ -4,6 +4,7 @@ import { getAgentByName, routeAgentRequest } from "agents";
 import { conversationIdOf, ChatwootClient, chatwootEnabled, safeEqual, sessionOf, type WebhookEvent } from "./chatwoot";
 import { IngraveAgent } from "./agent";
 import { dgxModel } from "./model";
+import { MAX_AUDIO_BYTES, transcribe } from "./transcribe";
 import { MAX_SPEECH_CHARS, speechText, synthesize, voiceEnabled } from "./voice";
 
 export { IngraveAgent };
@@ -47,6 +48,27 @@ async function handleVoice(request: Request, env: Env, ctx: ExecutionContext) {
   }
 }
 
+/** POST /transcribe (audio body, X-Session header): turns the visitor's recording into text. */
+async function handleTranscribe(request: Request, env: Env) {
+  if (!originAllowed(request, env)) return json(403, { ok: false });
+  const session = request.headers.get("X-Session") ?? "";
+  if (!UUID.test(session)) return json(400, { ok: false });
+  if (!(request.headers.get("Content-Type") ?? "").startsWith("audio/")) return json(415, { ok: false });
+  const declared = Number(request.headers.get("Content-Length") ?? 0);
+  if (declared > MAX_AUDIO_BYTES) return json(413, { ok: false, error: "audio_too_long" });
+  const { success } = await env.RATE_LIMITER.limit({ key: `stt:${request.headers.get("CF-Connecting-IP") ?? session}` });
+  if (!success) return json(429, { ok: false, error: "too_many_requests" });
+  const audio = await request.arrayBuffer();
+  if (!audio.byteLength) return json(422, { ok: false });
+  if (audio.byteLength > MAX_AUDIO_BYTES) return json(413, { ok: false, error: "audio_too_long" });
+  try {
+    return json(200, { ok: true, text: await transcribe(env, audio) });
+  } catch (error) {
+    console.error("transcription failed", error);
+    return json(502, { ok: false, error: "transcription_unavailable" });
+  }
+}
+
 async function handleWebhook(request: Request, env: Env) {
   const secret = new URL(request.url).searchParams.get("secret") ?? "";
   if (!env.CHATWOOT_WEBHOOK_SECRET || !safeEqual(secret, env.CHATWOOT_WEBHOOK_SECRET)) return json(401, { ok: false });
@@ -79,6 +101,7 @@ export default {
     }
 
     if (url.pathname === "/voice" && request.method === "POST") return handleVoice(request, env, ctx);
+    if (url.pathname === "/transcribe" && request.method === "POST") return handleTranscribe(request, env);
 
     if (url.pathname === "/chatwoot/webhook" && request.method === "POST") return handleWebhook(request, env);
 

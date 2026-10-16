@@ -84,6 +84,14 @@ Com o secret `ELEVENLABS_API_KEY`, cada resposta ganha o botão **Ouvir**. O bot
 
 A chamada vai direto para a ElevenLabs, sem o gateway, porque o plano gratuito deles recusa proxies. A rota exige id de conversa válido e origem permitida, tem limite por IP e aceita no máximo 1.500 caracteres. Sem a chave, o botão não aparece.
 
+### Falar com o assistente (microfone)
+
+O botão de **microfone** no campo de mensagem grava até 60 s. O áudio vai para `POST /transcribe`, que o transcreve com o **Workers AI Whisper** (`@cf/openai/whisper-large-v3-turbo`, em português, com o vocabulário da Ingrave como dica), passando pelo mesmo AI Gateway.
+
+O texto transcrito é enviado como mensagem do visitante. Quando a pergunta veio por voz, a resposta é **lida em voz alta automaticamente** pela ElevenLabs, então a conversa fica toda falada.
+
+A rota exige id de conversa e origem válidos, só aceita `audio/*`, tem limite por IP e aceita no máximo 2 MB. O iframe do `widget.js` já pede a permissão de microfone. Se o navegador não suportar gravação, o botão não aparece.
+
 ### Proteções
 - O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.
 - O WebSocket só aceita a origem do próprio assistente e do site (`SITE_ORIGINS`).
@@ -201,6 +209,7 @@ src/
   chatwoot.ts      API de aplicação do Chatwoot e regras do webhook
   hours.ts         horário de atendimento
   voice.ts         ElevenLabs (texto para voz) com cache
+  transcribe.ts    Workers AI Whisper (voz para texto)
   knowledge/       base de conhecimento (site.json) e busca
   app.tsx          interface do chat (iframe)
 public/
