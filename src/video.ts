@@ -35,7 +35,7 @@ export async function startVideo(env: VideoEnv): Promise<VideoSession> {
   const maxSeconds = Math.min(Math.max(Number(env.VIDEO_MAX_SECONDS) || 300, 60), 1200);
   const token = await call<{ session_id: string; session_token: string }>("/sessions/token", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "X-API-KEY": env.LIVEAVATAR_API_KEY ?? "" },
+    headers: { "Content-Type": "application/json", "X-API-KEY": (env.LIVEAVATAR_API_KEY ?? "").trim() },
     body: JSON.stringify({
       mode: "LITE",
       avatar_id: sandbox ? SANDBOX_AVATAR : env.LIVEAVATAR_AVATAR_ID,
@@ -61,7 +61,7 @@ export async function startVideo(env: VideoEnv): Promise<VideoSession> {
 export async function stopVideo(env: VideoEnv, sessionId: string) {
   const response = await fetch(`${API}/sessions/stop`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "X-API-KEY": env.LIVEAVATAR_API_KEY ?? "" },
+    headers: { "Content-Type": "application/json", "X-API-KEY": (env.LIVEAVATAR_API_KEY ?? "").trim() },
     body: JSON.stringify({ session_id: sessionId, reason: "USER_CLOSED" }),
   });
   // A session that already ended (time limit, tab closed) answers with an error: nothing left to stop.
