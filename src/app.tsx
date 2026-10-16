@@ -20,6 +20,8 @@ import {
   SpinnerGapIcon,
   StopCircleIcon,
   XIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
 } from "@phosphor-icons/react";
 import type { IngraveAgent } from "./agent";
 import { type AgentState, type ChatContext, initialAgentState, type MessageMeta, type WidgetMessage } from "./shared";
@@ -138,6 +140,45 @@ function SpeakButton({ text, session, autoPlay = false }: { text: string; sessio
       {state === "playing" ? <StopCircleIcon size={15} weight="fill" /> : state === "loading" ? <SpinnerGapIcon size={15} className="ia-spin" /> : <SpeakerHighIcon size={15} />}
       <span>{label}</span>
     </button>
+  );
+}
+
+/* ---------- feedback (AI Gateway) ---------- */
+
+const FEEDBACK_KEY = "ingrave-agent-feedback";
+
+function readFeedback(): Record<string, 1 | -1> {
+  try {
+    return JSON.parse(sessionStorage.getItem(FEEDBACK_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+/** 👍/👎 under an assistant reply: recorded on the AI Gateway logs; 👎 also flags the Chatwoot conversation. */
+function FeedbackButtons({ messageId, session }: { messageId: string; session: string }) {
+  const [value, setValue] = useState<1 | -1 | undefined>(() => readFeedback()[messageId]);
+  const send = async (next: 1 | -1) => {
+    if (next === value) return;
+    setValue(next);
+    try {
+      sessionStorage.setItem(FEEDBACK_KEY, JSON.stringify({ ...readFeedback(), [messageId]: next }));
+    } catch {
+      /* storage blocked */
+    }
+    track(next === 1 ? "agent_feedback_up" : "agent_feedback_down");
+    await fetch("/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session, message: messageId, value: next }) }).catch(() => undefined);
+  };
+  return (
+    <span className="ia-feedback" role="group" aria-label="Avaliar resposta">
+      <button type="button" className={value === 1 ? "is-on" : ""} aria-pressed={value === 1} onClick={() => send(1)} title="Resposta útil" aria-label="Resposta útil">
+        <ThumbsUpIcon size={15} weight={value === 1 ? "fill" : "regular"} />
+      </button>
+      <button type="button" className={value === -1 ? "is-on" : ""} aria-pressed={value === -1} onClick={() => send(-1)} title="Resposta não ajudou" aria-label="Resposta não ajudou">
+        <ThumbsDownIcon size={15} weight={value === -1 ? "fill" : "regular"} />
+      </button>
+      {value && <span className="ia-feedback-thanks">{value === 1 ? "Obrigado!" : "Obrigado, vamos melhorar."}</span>}
+    </span>
   );
 }
 
@@ -497,9 +538,15 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
                   if (isToolUIPart(part)) return <ToolCard key={part.toolCallId} part={part as ToolPart} approve={addToolApprovalResponse} onTrack={track} />;
                   return null;
                 })}
-                {voiceOn && !(busy && message === lastMessage) && (() => {
+                {!(busy && message === lastMessage) && (() => {
                   const spoken = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("\n").trim();
-                  return spoken ? <SpeakButton text={spoken} session={session} autoPlay={message.id === autoSpeakId} /> : null;
+                  if (!spoken) return null;
+                  return (
+                    <div className="ia-reply-actions">
+                      {voiceOn && <SpeakButton text={spoken} session={session} autoPlay={message.id === autoSpeakId} />}
+                      {!meta?.from && <FeedbackButtons messageId={message.id} session={session} />}
+                    </div>
+                  );
                 })()}
               </div>
             </div>

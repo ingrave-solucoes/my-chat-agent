@@ -49,7 +49,7 @@ flowchart LR
 
 | Ferramenta | Quando | Confirmação do visitante |
 |---|---|---|
-| `buscar_conhecimento` | Dúvidas sobre recursos, canais, integrações, planos e comparativos. Busca BM25 nas páginas do site e mostra as fontes. | não |
+| `buscar_conhecimento` | Dúvidas sobre recursos, canais, integrações, planos e comparativos. AI Search (híbrida + reranking), com a busca local BM25 de reserva; mostra as fontes. | não |
 | `calcular_custo_whatsapp` | Estimativa do custo da Meta por template, com a assinatura da Ingrave se a pessoa informar. | não |
 | `agendar_demonstracao` | Mostra o botão da agenda (Microsoft Bookings). | não |
 | `registrar_contato` | A pessoa quer ser contatada: nome, e-mail, telefone, empresa e interesse vão para o contato no Chatwoot, com etiqueta `lead-agente` e alerta no Teams. | **sim** |
@@ -91,6 +91,21 @@ O botão de **microfone** no campo de mensagem grava até 60 s. O áudio vai par
 O texto transcrito é enviado como mensagem do visitante. Quando a pergunta veio por voz, a resposta é **lida em voz alta automaticamente** pela ElevenLabs, então a conversa fica toda falada.
 
 A rota exige id de conversa e origem válidos, só aceita `audio/*`, tem limite por IP e aceita no máximo 2 MB. O iframe do `widget.js` já pede a permissão de microfone. Se o navegador não suportar gravação, o botão não aparece.
+
+### Busca no site (AI Search)
+
+A ferramenta `buscar_conhecimento` consulta primeiro a instância do **Cloudflare AI Search**
+definida em `AI_SEARCH_INSTANCE` (padrão `ingrave-site`, namespace `default`): busca híbrida
+(vetorial + palavras-chave) com reranking sobre o site rastreado, sempre atualizado. Se a
+instância não existir, falhar, demorar mais de 5 s ou não achar nada relevante, a busca local
+(BM25 sobre `src/knowledge/site.json`) responde. O `/health` mostra qual busca está ativa.
+
+### Avaliação das respostas (👍/👎)
+
+Cada resposta do assistente tem 👍/👎. A avaliação vai para os logs do **AI Gateway**
+(campo *feedback*, visível em Logs e em User Insights) e, quando negativa, o Chatwoot recebe
+uma nota privada com o trecho da resposta e a etiqueta `ia-resposta-ruim`. Toda chamada ao
+DGX leva metadados no gateway (`session`, `page`, `origin`) para filtrar os logs por conversa.
 
 ### Proteções
 - O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.

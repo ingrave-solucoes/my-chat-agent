@@ -69,6 +69,24 @@ async function handleTranscribe(request: Request, env: Env) {
   }
 }
 
+/** POST /feedback {session, message, value: 1 | -1}: 👍/👎 on an assistant reply. */
+async function handleFeedback(request: Request, env: Env) {
+  if (!originAllowed(request, env)) return json(403, { ok: false });
+  let body: { session?: unknown; message?: unknown; value?: unknown };
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return json(400, { ok: false });
+  }
+  if (typeof body.session !== "string" || !UUID.test(body.session)) return json(400, { ok: false });
+  if (typeof body.message !== "string" || !/^[\w-]{1,80}$/.test(body.message) || (body.value !== 1 && body.value !== -1)) return json(400, { ok: false });
+  const { success } = await env.RATE_LIMITER.limit({ key: `feedback:${request.headers.get("CF-Connecting-IP") ?? body.session}` });
+  if (!success) return json(429, { ok: false, error: "too_many_requests" });
+  const agent = await getAgentByName(env.IngraveAgent, body.session);
+  const result = await agent.feedback(body.message, body.value);
+  return json(result.ok ? 200 : 404, result);
+}
+
 async function handleWebhook(request: Request, env: Env) {
   const secret = new URL(request.url).searchParams.get("secret") ?? "";
   if (!env.CHATWOOT_WEBHOOK_SECRET || !safeEqual(secret, env.CHATWOOT_WEBHOOK_SECRET)) return json(401, { ok: false });
@@ -97,11 +115,14 @@ export default {
 
     if (url.pathname === "/health") {
       const model = dgxModel(env) ? `dgx-spark/${env.DGX_MODEL} (reserva: ${env.FALLBACK_MODEL})` : `workers-ai/${env.FALLBACK_MODEL}`;
-      return json(200, { ok: true, model, chatwoot: chatwootEnabled(env), voice: voiceEnabled(env) });
+      const search = env.AI_SEARCH && env.AI_SEARCH_INSTANCE ? `ai-search/${env.AI_SEARCH_INSTANCE} (reserva: local)` : "local";
+      return json(200, { ok: true, model, search, chatwoot: chatwootEnabled(env), voice: voiceEnabled(env) });
     }
 
     if (url.pathname === "/voice" && request.method === "POST") return handleVoice(request, env, ctx);
     if (url.pathname === "/transcribe" && request.method === "POST") return handleTranscribe(request, env);
+
+    if (url.pathname === "/feedback" && request.method === "POST") return handleFeedback(request, env);
 
     if (url.pathname === "/chatwoot/webhook" && request.method === "POST") return handleWebhook(request, env);
 

@@ -129,6 +129,14 @@ a { color: var(--ia-action); }
 .ia-speak:hover { background: var(--ia-surface); color: var(--ia-ink-2); }
 .ia-speak.is-on { background: var(--ia-blue-50); color: var(--ia-action); }
 .ia-speak:focus-visible { outline: 2px solid var(--ia-action); outline-offset: 2px; }
+.ia-reply-actions { display: flex; align-items: center; gap: 2px; margin-top: -2px; }
+.ia-reply-actions .ia-speak { margin-top: 0; }
+.ia-feedback { display: inline-flex; align-items: center; gap: 2px; }
+.ia-feedback button { display: inline-grid; place-items: center; width: 26px; height: 24px; border: 0; border-radius: 999px; background: transparent; color: var(--ia-ink-3); cursor: pointer; }
+.ia-feedback button:hover { background: var(--ia-surface); color: var(--ia-ink-2); }
+.ia-feedback button.is-on { color: var(--ia-action); }
+.ia-feedback button:focus-visible { outline: 2px solid var(--ia-action); outline-offset: 2px; }
+.ia-feedback-thanks { margin-left: 4px; color: var(--ia-ink-3); font-size: 12px; }
 .ia-spin { animation: ia-rotate 1s linear infinite; }
 @keyframes ia-rotate { to { transform: rotate(360deg); } }
 
