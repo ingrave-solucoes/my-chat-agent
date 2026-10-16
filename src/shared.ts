@@ -3,7 +3,7 @@
 export const AGENT_NAME = "IngraveAgent";
 
 /** The assistant's persona: a named virtual assistant (always presented as AI, never as a person). */
-export const ASSISTANT = { name: "Íris", role: "Assistente virtual da Ingrave", avatar: "/iris.svg" };
+export const ASSISTANT = { name: "Íris", role: "Assistente virtual da Ingrave", avatar: "/iris.webp" };
 
 /** Who is answering the visitor right now. */
 export type ChatMode =

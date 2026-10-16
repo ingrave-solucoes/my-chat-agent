@@ -35,7 +35,7 @@
   var host = document.createElement("div");
   host.id = "ingrave-agent";
   var root = host.attachShadow ? host.attachShadow({ mode: "open" }) : host;
-  var avatar = origin + "/iris.svg";
+  var avatar = origin + "/iris.webp";
   var mark = '<img class="av" src="' + avatar + '" alt="" width="30" height="30">';
   var close = '<svg viewBox="0 0 256 256" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M205.7 194.3a8 8 0 0 1-11.4 11.4L128 139.3l-66.3 66.4a8 8 0 0 1-11.4-11.4l66.4-66.3-66.4-66.3a8 8 0 0 1 11.4-11.4l66.3 66.4 66.3-66.4a8 8 0 0 1 11.4 11.4L139.3 128Z"/></svg>';
 
