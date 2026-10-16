@@ -8,7 +8,10 @@
 (function () {
   if (window.IngraveAgent) return;
   var script = document.currentScript;
+  if (!script || !script.src) return;
   var origin = new URL(script.src).origin;
+  // Never inside the assistant itself (a tag manager running on every subdomain would nest a second launcher in the chat).
+  if (location.origin === origin) return;
   var data = script.dataset || {};
   var label = data.label || "Fale com a Ingrave";
   var greeting = data.greeting === undefined ? "Oi! Posso ajudar a escolher o plano ou tirar dúvidas sobre o WhatsApp?" : data.greeting;
