@@ -5,6 +5,6 @@
     // @cloudflare/workers-types package.
     "types": ["node", "vite/client"]
   },
-  // Independent Workers kept in this repository (payment workflow and container) have their own configs.
-  "exclude": ["node_modules", "dist", "workflows", "container"]
+  // The container Worker kept in this repository has its own config.
+  "exclude": ["node_modules", "dist", "container"]
 }

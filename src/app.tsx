@@ -15,6 +15,9 @@ import {
   StopIcon,
   UserCircleIcon,
   WhatsappLogoIcon,
+  SpeakerHighIcon,
+  SpinnerGapIcon,
+  StopCircleIcon,
   XIcon,
 } from "@phosphor-icons/react";
 import type { IngraveAgent } from "./agent";
@@ -73,6 +76,60 @@ function Avatar({ meta }: { meta?: MessageMeta }) {
     return meta.avatarUrl ? <img className="ia-avatar" src={meta.avatarUrl} alt="" /> : <span className="ia-avatar ia-avatar-human"><UserCircleIcon size={18} weight="fill" /></span>;
   }
   return <span className="ia-avatar"><Logo size={16} /></span>;
+}
+
+/* ---------- voice (ElevenLabs) ---------- */
+
+let player: { audio: HTMLAudioElement; stop: () => void } | null = null;
+
+/** "Ouvir" under a reply: the Worker turns the text into speech; one reply plays at a time. */
+function SpeakButton({ text, session }: { text: string; session: string }) {
+  const [state, setState] = useState<"idle" | "loading" | "playing" | "error">("idle");
+  const stopRef = useRef<() => void>(() => undefined);
+
+  useEffect(() => () => stopRef.current(), []);
+
+  const play = async () => {
+    if (state === "playing" || state === "loading") return stopRef.current();
+    player?.stop();
+    setState("loading");
+    const controller = new AbortController();
+    let url = "";
+    const stop = () => {
+      controller.abort();
+      if (player?.stop === stop) {
+        player.audio.pause();
+        player = null;
+      }
+      if (url) URL.revokeObjectURL(url);
+      setState("idle");
+    };
+    stopRef.current = stop;
+    try {
+      const response = await fetch("/voice", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, session }), signal: controller.signal });
+      if (!response.ok) throw new Error(String(response.status));
+      url = URL.createObjectURL(await response.blob());
+      const audio = new Audio(url);
+      player = { audio, stop };
+      audio.addEventListener("ended", stop);
+      await audio.play();
+      setState("playing");
+      track("agent_voice_play");
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      console.warn("voice unavailable", error);
+      setState("error");
+      setTimeout(() => setState("idle"), 2500);
+    }
+  };
+
+  const label = state === "playing" ? "Parar" : state === "loading" ? "Gerando áudio…" : state === "error" ? "Áudio indisponível" : "Ouvir";
+  return (
+    <button type="button" className={`ia-speak ${state === "playing" ? "is-on" : ""}`} onClick={play} aria-label={label} title={label}>
+      {state === "playing" ? <StopCircleIcon size={15} weight="fill" /> : state === "loading" ? <SpinnerGapIcon size={15} className="ia-spin" /> : <SpeakerHighIcon size={15} />}
+      <span>{label}</span>
+    </button>
+  );
 }
 
 /* ---------- tool cards ---------- */
@@ -184,6 +241,15 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const startedTracked = useRef(false);
+  const [voiceOn, setVoiceOn] = useState(false);
+
+  // The "Ouvir" button only shows when the Worker has an ElevenLabs key.
+  useEffect(() => {
+    fetch("/health")
+      .then((response) => response.json() as Promise<{ voice?: boolean }>)
+      .then((health) => setVoiceOn(Boolean(health.voice)))
+      .catch(() => setVoiceOn(false));
+  }, []);
 
   const agent = useAgent<IngraveAgent, AgentState>({
     agent: "IngraveAgent",
@@ -319,6 +385,10 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
                   if (isToolUIPart(part)) return <ToolCard key={part.toolCallId} part={part as ToolPart} approve={addToolApprovalResponse} onTrack={track} />;
                   return null;
                 })}
+                {voiceOn && !(busy && message === lastMessage) && (() => {
+                  const spoken = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("\n").trim();
+                  return spoken ? <SpeakButton text={spoken} session={session} /> : null;
+                })()}
               </div>
             </div>
           );

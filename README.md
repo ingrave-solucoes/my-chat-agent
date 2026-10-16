@@ -4,6 +4,7 @@ Este é o agente de IA que atende os visitantes de **ingrave.com.br**, com uma e
 - abre num botão flutuante;
 - responde na hora com base no conteúdo oficial do site;
 - calcula o custo do WhatsApp e mostra a agenda de demonstração;
+- lê as respostas em voz alta com a **ElevenLabs** (botão "Ouvir");
 - passa a conversa para a equipe no **Chatwoot (app.ingrave.com.br)** quando a pessoa pede.
 
 Ele foi construído sobre o [Cloudflare Agents Starter](https://github.com/cloudflare/agents-starter), com estas peças:
@@ -30,6 +31,7 @@ flowchart LR
   DGX["DGX Spark<br/>Ollama /v1"]
   CW["Chatwoot<br/>app.ingrave.com.br<br/>caixa API"]
   TM["Teams (opcional)"]
+  EL["ElevenLabs<br/>texto para voz"]
 
   W -- "contexto da página, origem da campanha" --> UI
   UI -- "WebSocket" --> WK --> DO
@@ -39,6 +41,7 @@ flowchart LR
   DO -- "espelha conversa, transfere, lead" --> CW
   CW -- "webhook: resposta da equipe, status" --> WK
   DO --> TM
+  UI -- "Ouvir: POST /voice" --> WK -- "cache na borda" --> EL
   UI -- "eventos (chat_open, generate_lead…)" --> W -- "zaraz.track / dataLayer" --> GA["GA4 / Meta via Zaraz"]
 ```
 
@@ -71,6 +74,15 @@ O `widget.js` envia ao chat:
 Esses dados aparecem no prompt e nos atributos do contato no Chatwoot (`origem_campanha`, `pagina_entrada`).
 
 Os eventos `chat_open`, `agent_chat_start`, `generate_lead` (`form=agente`), `agent_handoff`, `booking_click` e `sign_up_click` são enviados para `zaraz.track` na página do site. Assim eles respeitam o consentimento de cookies do Zaraz, e o Lead do Pixel e o `generate_lead` do GA4 já funcionam sem configuração nova.
+
+### Voz (ElevenLabs)
+
+Com o secret `ELEVENLABS_API_KEY`, cada resposta ganha o botão **Ouvir**. O botão chama `POST /voice`, que:
+- limpa o markdown e os links;
+- gera o MP3 na ElevenLabs, com o modelo `eleven_multilingual_v2` e a voz `ELEVENLABS_VOICE_ID`, os mesmos da integração antiga;
+- guarda o áudio no cache da borda por 7 dias, então a mesma resposta não é cobrada duas vezes.
+
+A chamada vai direto para a ElevenLabs, sem o gateway, porque o plano gratuito deles recusa proxies. A rota exige id de conversa válido e origem permitida, tem limite por IP e aceita no máximo 1.500 caracteres. Sem a chave, o botão não aparece.
 
 ### Proteções
 - O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.
@@ -124,6 +136,7 @@ npx wrangler secret put CHATWOOT_API_TOKEN
 npx wrangler secret put CHATWOOT_WEBHOOK_SECRET   # o mesmo do ?secret= do webhook
 npx wrangler secret put TEAMS_WEBHOOK_URL         # opcional, o mesmo do formulário do site
 npx wrangler secret put DGX_API_KEY               # opcional
+npx wrangler secret put ELEVENLABS_API_KEY        # opcional, liga o botão "Ouvir"
 ```
 
 ### 4. Deploy
@@ -138,7 +151,7 @@ O repositório já tem o **Workers Builds** ligado ao worker antigo `my-chat-age
 2. Dê ao worker o nome `ingrave-site-agent`, com build `npm run build` e deploy `npx wrangler deploy`.
 3. No worker antigo `my-chat-agent`, desconecte o repositório em **Settings → Builds**. Se ele não estiver mais em uso, pode apagá-lo.
 
-O worker se chama `ingrave-site-agent` e responde em `agente.ingrave.com.br`, porque o domínio próprio é criado no deploy. `GET /health` mostra o modelo ativo e se o Chatwoot está configurado.
+O worker se chama `ingrave-site-agent` e responde em `agente.ingrave.com.br`, porque o domínio próprio é criado no deploy. `GET /health` mostra o modelo ativo e se o Chatwoot e a voz estão configurados.
 
 ### 5. Colocar no site
 
@@ -185,6 +198,7 @@ src/
   tools.ts         ferramentas do agente
   chatwoot.ts      API de aplicação do Chatwoot e regras do webhook
   hours.ts         horário de atendimento
+  voice.ts         ElevenLabs (texto para voz) com cache
   knowledge/       base de conhecimento (site.json) e busca
   app.tsx          interface do chat (iframe)
 public/
@@ -193,5 +207,5 @@ public/
 scripts/
   sync-knowledge.mjs, local-config.mjs
 tests/core.test.ts
-workflows/holy-mouse-3f4c, container/fragrant-art-eff1   Workers independentes (pagamento e container), inalterados
+container/fragrant-art-eff1   Worker independente (container), inalterado
 ```

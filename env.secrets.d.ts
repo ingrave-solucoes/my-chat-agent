@@ -5,6 +5,7 @@ interface __BaseEnv_Env {
   CHATWOOT_API_TOKEN?: string;
   CHATWOOT_WEBHOOK_SECRET?: string;
   TEAMS_WEBHOOK_URL?: string;
+  ELEVENLABS_API_KEY?: string;
   /** Local development only: direct OpenAI-compatible base URL instead of AI Gateway. */
   DGX_BASE_URL?: string;
 }

@@ -107,3 +107,12 @@ describe("model routing", () => {
     expect(await call(withFallback(fake("dgx", "hang"), fake("workers-ai", "ok"), { timeoutMs: 50 }))).toBe("workers-ai");
   });
 });
+
+describe("voice", () => {
+  it("reads markdown replies as plain speech", async () => {
+    const { speechText } = await import("../src/voice");
+    expect(speechText("O plano **Business** custa R$149. Veja em [Preços](https://ingrave.com.br/precos) ou https://app.ingrave.com.br/app/auth/signup?utm_source=x\n\n- Times\n- SLA")).toBe(
+      "O plano Business custa R$ 149. Veja em Preços ou app.ingrave.com.br\nTimes\nSLA"
+    );
+  });
+});

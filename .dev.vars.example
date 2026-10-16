@@ -4,5 +4,6 @@ DGX_API_KEY=
 CHATWOOT_API_TOKEN=
 CHATWOOT_WEBHOOK_SECRET=
 TEAMS_WEBHOOK_URL=
+ELEVENLABS_API_KEY=
 # Desenvolvimento local: chama um servidor compatível com OpenAI direto, sem AI Gateway (ex.: Ollama).
 # DGX_BASE_URL=http://localhost:11434/v1

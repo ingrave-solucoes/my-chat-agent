@@ -115,6 +115,14 @@ a { color: var(--ia-action); }
 .ia-btn-primary:hover { background: var(--ia-action-hover); }
 .ia-fineprint { margin: 0; color: var(--ia-ink-3); font-size: 11.5px; }
 
+/* Voice */
+.ia-speak { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; margin-top: -2px; padding: 3px 8px 3px 6px; border: 0; border-radius: 999px; background: transparent; color: var(--ia-ink-3); font-size: 12px; cursor: pointer; }
+.ia-speak:hover { background: var(--ia-surface); color: var(--ia-ink-2); }
+.ia-speak.is-on { background: var(--ia-blue-50); color: var(--ia-action); }
+.ia-speak:focus-visible { outline: 2px solid var(--ia-action); outline-offset: 2px; }
+.ia-spin { animation: ia-rotate 1s linear infinite; }
+@keyframes ia-rotate { to { transform: rotate(360deg); } }
+
 .ia-typing { display: inline-flex; gap: 4px; padding: 11px 12px; border-radius: 14px; background: var(--ia-surface); }
 .ia-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ia-ink-3); animation: ia-dot 1.2s infinite ease-in-out; }
 .ia-typing i:nth-child(2) { animation-delay: .15s; }
@@ -134,5 +142,5 @@ a { color: var(--ia-action); }
 
 @media (prefers-reduced-motion: reduce) {
   .ia-messages { scroll-behavior: auto; }
-  .ia-typing i, .ia-chip-busy { animation: none; }
+  .ia-typing i, .ia-chip-busy, .ia-spin { animation: none; }
 }
