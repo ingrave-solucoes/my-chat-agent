@@ -1,0 +1,163 @@
+/* Ingrave assistant launcher for ingrave.com.br.
+   <script src="https://agente.ingrave.com.br/widget.js" defer></script>
+   Optional: data-label, data-greeting (empty to disable), data-position="left".
+   Opens the chat in an iframe on demand, sends it the page context (path, title, campaign origin
+   saved by the site) and forwards analytics events to Zaraz or the GTM dataLayer, so they follow
+   the site's own cookie consent. API: window.IngraveAgent.open() / close() / toggle(); any element
+   with data-ingrave-agent or href="#assistente" opens the chat. */
+(function () {
+  if (window.IngraveAgent) return;
+  var script = document.currentScript;
+  var origin = new URL(script.src).origin;
+  var data = script.dataset || {};
+  var label = data.label || "Fale com a Ingrave";
+  var greeting = data.greeting === undefined ? "Oi! Posso ajudar a escolher o plano ou tirar dúvidas sobre o WhatsApp?" : data.greeting;
+  var side = data.position === "left" ? "left" : "right";
+  var GREETED = "ingrave-agent-greeted";
+
+  var host = document.createElement("div");
+  host.id = "ingrave-agent";
+  var root = host.attachShadow ? host.attachShadow({ mode: "open" }) : host;
+  var mark =
+    '<svg viewBox="0 0 512 512" width="22" height="22" aria-hidden="true"><path fill="#fff" d="M403.3,218.6l-174.2,263.9c-11.8,17.9-38.4,17.3-49.3-1.3l-67.2-114.1-26.3-44.7-19.8-33.7c-4.5-9.1,5.8-18.3,14.4-13l25.9,15.9,50.2,30.8,39.6,24.2,156.7-158.7,50.2,30.7Z"/><path fill="#dbeafe" d="M509.5,57.7l-85.7,129.9-20.4,30.9-50.2-30.8,44.3-44.8,96.3-97.5c8.2-8.4,21.9,2.1,15.7,12.3Z"/><path fill="#dbeafe" d="M86.4,322.4l26.3,44.7-96.3,97.5c-8.4,8.5-22-2-15.9-12.3l85.8-129.9Z"/><path fill="#fff" d="M429.2,234.4l-25.9-15.9-50.2-30.8-39.6-24.2-156.7,158.7-50.2-30.8L280.8,27.5c11.8-17.9,38.4-17.3,49.2,1.3l67.2,114.1,26.3,44.7,19.8,33.7c4.5,9.2-5.6,18.4-14.2,13.1Z"/></svg>';
+  var close = '<svg viewBox="0 0 256 256" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M205.7 194.3a8 8 0 0 1-11.4 11.4L128 139.3l-66.3 66.4a8 8 0 0 1-11.4-11.4l66.4-66.3-66.4-66.3a8 8 0 0 1 11.4-11.4l66.3 66.4 66.3-66.4a8 8 0 0 1 11.4 11.4L139.3 128Z"/></svg>';
+
+  root.innerHTML =
+    "<style>" +
+    ":host{all:initial}" +
+    ".wrap{position:fixed;" + side + ":20px;bottom:20px;z-index:2147483000;font:600 14.5px/1.2 Inter,-apple-system,'Segoe UI',Roboto,sans-serif;color:#0d1b2a}" +
+    ".launch{display:flex;align-items:center;gap:10px;height:52px;padding:0 20px 0 15px;border:0;border-radius:999px;background:#0b6bcb;color:#fff;font:inherit;cursor:pointer;box-shadow:0 10px 30px -6px rgba(11,107,203,.55),0 2px 6px rgba(13,27,42,.15);transition:transform .15s,background .15s}" +
+    ".launch:hover{background:#0a5aab;transform:translateY(-1px)}" +
+    ".launch:focus-visible{outline:3px solid #9cc8ff;outline-offset:3px}" +
+    ".launch .x{display:none}.open .launch .x{display:block}.open .launch .m,.open .launch .t{display:none}.open .launch{width:52px;padding:0;justify-content:center}" +
+    ".badge{position:absolute;top:-4px;" + (side === "left" ? "left" : "right") + ":-4px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#e5484d;color:#fff;font-size:12px;line-height:20px;text-align:center;display:none}" +
+    ".panel{position:absolute;" + side + ":0;bottom:66px;width:400px;height:min(680px,calc(100vh - 110px));border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 24px 64px -12px rgba(13,27,42,.35),0 0 0 1px rgba(13,27,42,.06);opacity:0;transform:translateY(12px) scale(.98);transform-origin:bottom " + side + ";pointer-events:none;transition:opacity .18s,transform .18s;visibility:hidden}" +
+    ".open .panel{opacity:1;transform:none;pointer-events:auto;visibility:visible}" +
+    ".panel iframe{width:100%;height:100%;border:0;display:block;background:transparent}" +
+    ".hello{position:absolute;" + side + ":0;bottom:66px;width:260px;padding:14px 34px 14px 16px;border-radius:16px;background:#fff;color:#0d1b2a;font-weight:500;font-size:14px;line-height:1.45;box-shadow:0 12px 32px -8px rgba(13,27,42,.3),0 0 0 1px rgba(13,27,42,.06);cursor:pointer;display:none}" +
+    ".hello button{position:absolute;top:6px;right:6px;width:24px;height:24px;border:0;border-radius:6px;background:transparent;color:#6b7686;cursor:pointer;font-size:16px;line-height:24px}" +
+    ".open .hello{display:none!important}" +
+    "@media (max-width:520px){.panel{position:fixed;inset:0;width:100%;height:100%;border-radius:0;bottom:0}.open .launch{display:none}}" +
+    "@media (prefers-reduced-motion:reduce){.panel,.launch{transition:none}}" +
+    "</style>" +
+    '<div class="wrap">' +
+    '<div class="hello" role="status"><span></span><button type="button" aria-label="Dispensar">×</button></div>' +
+    '<div class="panel" role="dialog" aria-label="Assistente Ingrave"></div>' +
+    '<button class="launch" type="button" aria-expanded="false" aria-label="' + label + '"><span class="m">' + mark + '</span><span class="t">' + label + '</span><span class="x">' + close + '</span></button>' +
+    '<span class="badge"></span>' +
+    "</div>";
+
+  var wrap = root.querySelector(".wrap");
+  var panel = root.querySelector(".panel");
+  var launch = root.querySelector(".launch");
+  var badge = root.querySelector(".badge");
+  var hello = root.querySelector(".hello");
+  var frame = null;
+  var isOpen = false;
+
+  function theme() {
+    var attr = document.documentElement.dataset.theme;
+    if (attr === "dark" || attr === "light") return attr;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function readTouch(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; }
+  }
+
+  function context() {
+    return { page: location.pathname, title: document.title.slice(0, 200), attribution: { first: readTouch("ig_first_touch"), last: readTouch("ig_last_touch") } };
+  }
+
+  function post(message) {
+    if (frame && frame.contentWindow) frame.contentWindow.postMessage(message, origin);
+  }
+
+  function track(event, props) {
+    var payload = Object.assign({ page: location.pathname }, props || {});
+    try {
+      if (window.zaraz && typeof window.zaraz.track === "function") window.zaraz.track(event, payload);
+      else if (Array.isArray(window.dataLayer)) window.dataLayer.push(Object.assign({ event: event }, payload));
+    } catch (e) { /* analytics unavailable */ }
+  }
+
+  function setBadge(count) {
+    badge.textContent = count > 9 ? "9+" : String(count);
+    badge.style.display = count > 0 && !isOpen ? "block" : "none";
+  }
+
+  function open() {
+    if (!frame) {
+      frame = document.createElement("iframe");
+      frame.title = "Assistente Ingrave";
+      frame.allow = "clipboard-write";
+      frame.src = origin + "/?embed=1&theme=" + theme();
+      panel.appendChild(frame);
+    }
+    isOpen = true;
+    wrap.classList.add("open");
+    launch.setAttribute("aria-expanded", "true");
+    launch.setAttribute("aria-label", "Fechar o assistente");
+    setBadge(0);
+    hideHello(true);
+    post({ type: "ingrave-agent:visibility", open: true });
+    track("chat_open", { widget: "assistente-ia" });
+  }
+
+  function closePanel() {
+    isOpen = false;
+    wrap.classList.remove("open");
+    launch.setAttribute("aria-expanded", "false");
+    launch.setAttribute("aria-label", label);
+    post({ type: "ingrave-agent:visibility", open: false });
+  }
+
+  function hideHello(remember) {
+    hello.style.display = "none";
+    if (remember) try { sessionStorage.setItem(GREETED, "1"); } catch (e) { /* ignore */ }
+  }
+
+  launch.addEventListener("click", function () { isOpen ? closePanel() : open(); });
+  hello.addEventListener("click", function (event) {
+    if (event.target && event.target.tagName === "BUTTON") return hideHello(true);
+    open();
+  });
+  document.addEventListener("keydown", function (event) { if (event.key === "Escape" && isOpen) closePanel(); });
+  document.addEventListener("click", function (event) {
+    var target = event.target && event.target.closest ? event.target.closest('[data-ingrave-agent], a[href="#assistente"]') : null;
+    if (!target) return;
+    event.preventDefault();
+    open();
+  });
+
+  window.addEventListener("message", function (event) {
+    if (event.origin !== origin || !frame || event.source !== frame.contentWindow) return;
+    var message = event.data || {};
+    if (message.type === "ingrave-agent:ready") {
+      post({ type: "ingrave-agent:context", context: context(), theme: theme() });
+      post({ type: "ingrave-agent:visibility", open: isOpen });
+    } else if (message.type === "ingrave-agent:close") closePanel();
+    else if (message.type === "ingrave-agent:unread") setBadge(Number(message.count) || 0);
+    else if (message.type === "ingrave-agent:track" && typeof message.event === "string" && /^[a-z_]{2,40}$/.test(message.event)) track(message.event, message.props);
+  });
+
+  // Keep the chat in sync when the visitor navigates (SPA) or switches the site theme.
+  var lastPath = location.pathname;
+  setInterval(function () {
+    if (location.pathname !== lastPath) {
+      lastPath = location.pathname;
+      post({ type: "ingrave-agent:context", context: context(), theme: theme() });
+    }
+  }, 1000);
+  new MutationObserver(function () { post({ type: "ingrave-agent:context", context: context(), theme: theme() }); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  var greeted = false;
+  try { greeted = sessionStorage.getItem(GREETED) === "1"; } catch (e) { /* ignore */ }
+  if (greeting && !greeted) {
+    hello.querySelector("span").textContent = greeting;
+    setTimeout(function () { if (!isOpen && !frame) hello.style.display = "block"; }, 12000);
+  }
+
+  window.IngraveAgent = { open: open, close: closePanel, toggle: function () { isOpen ? closePanel() : open(); } };
+  (document.body || document.documentElement).appendChild(host);
+})();

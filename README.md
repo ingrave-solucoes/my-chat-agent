@@ -1,238 +1,192 @@
-# 🤖 Chat Agent Starter Kit
+# Assistente de IA do site Ingrave
 
-![npm i agents command](./npm-agents-banner.svg)
+Este é o agente de IA que atende os visitantes de **ingrave.com.br**, com uma experiência parecida com a do assistente do site da Cloudflare:
+- abre num botão flutuante;
+- responde na hora com base no conteúdo oficial do site;
+- calcula o custo do WhatsApp e mostra a agenda de demonstração;
+- passa a conversa para a equipe no **Chatwoot (app.ingrave.com.br)** quando a pessoa pede.
 
-<a href="https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/agents-starter"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/></a>
+Ele foi construído sobre o [Cloudflare Agents Starter](https://github.com/cloudflare/agents-starter), com estas peças:
+- **Cloudflare Agents SDK:** Worker + Durable Object `IngraveAgent`, uma instância por conversa, com o histórico guardado no SQLite do próprio objeto.
+- **Modelo principal:** o **DGX Spark** (Ollama, API compatível com OpenAI), acessado pelo **AI Gateway** como *custom provider*.
+- **Modelo reserva:** o **Workers AI**, chamado pelo mesmo gateway quando o DGX está fora do ar ou demora a responder.
+- **Chatwoot:** uma caixa do tipo **API** dedicada ao assistente. As conversas da IA ficam espelhadas como *pendentes* e a transferência abre a conversa para a equipe. As respostas da equipe voltam para o chat do site em tempo real.
 
-A starter template for building AI-powered chat agents using Cloudflare's Agent platform, powered by [`agents`](https://www.npmjs.com/package/agents). This project provides a foundation for creating interactive chat experiences with AI, complete with a modern UI and tool integration capabilities.
+```mermaid
+flowchart LR
+  subgraph Site["ingrave.com.br"]
+    W["widget.js<br/>botão + iframe"]
+  end
+  subgraph CF["Cloudflare · agente.ingrave.com.br"]
+    UI["Chat (React)"]
+    WK["Worker<br/>rotas, limites, webhook"]
+    DO[("IngraveAgent<br/>Durable Object por conversa")]
+    KB["Base de conhecimento<br/>(conteúdo do site)"]
+  end
+  subgraph AIG["AI Gateway"]
+    C["custom-dgx-spark"]
+    WA["Workers AI (reserva)"]
+  end
+  DGX["DGX Spark<br/>Ollama /v1"]
+  CW["Chatwoot<br/>app.ingrave.com.br<br/>caixa API"]
+  TM["Teams (opcional)"]
 
-## Features
-
-- 💬 Interactive chat interface with AI
-- 🛠️ Built-in tool system with human-in-the-loop confirmation
-- 📅 Advanced task scheduling (one-time, delayed, and recurring via cron)
-- 🌓 Dark/Light theme support
-- ⚡️ Real-time streaming responses
-- 🔄 State management and chat history
-- 🎨 Modern, responsive UI
-
-## Prerequisites
-
-- Cloudflare account
-- OpenAI API key
-
-## Quick Start
-
-1. Create a new project:
-
-```bash
-npx create-cloudflare@latest --template cloudflare/agents-starter
+  W -- "contexto da página, origem da campanha" --> UI
+  UI -- "WebSocket" --> WK --> DO
+  DO --> KB
+  DO -- "chat/completions" --> C --> DGX
+  DO -. "falhou ou demorou" .-> WA
+  DO -- "espelha conversa, transfere, lead" --> CW
+  CW -- "webhook: resposta da equipe, status" --> WK
+  DO --> TM
+  UI -- "eventos (chat_open, generate_lead…)" --> W -- "zaraz.track / dataLayer" --> GA["GA4 / Meta via Zaraz"]
 ```
 
-2. Install dependencies:
+## O que o assistente faz
+
+| Ferramenta | Quando | Confirmação do visitante |
+|---|---|---|
+| `buscar_conhecimento` | Dúvidas sobre recursos, canais, integrações, planos e comparativos. Busca BM25 nas páginas do site e mostra as fontes. | não |
+| `calcular_custo_whatsapp` | Estimativa do custo da Meta por template, com a assinatura da Ingrave se a pessoa informar. | não |
+| `agendar_demonstracao` | Mostra o botão da agenda (Microsoft Bookings). | não |
+| `registrar_contato` | A pessoa quer ser contatada: nome, e-mail, telefone, empresa e interesse vão para o contato no Chatwoot, com etiqueta `lead-agente` e alerta no Teams. | **sim** |
+| `transferir_para_humano` | Pedido de atendimento humano, suporte de conta, negociação ou algo fora do alcance da IA. | **sim** |
+
+### Modos da conversa
+
+| Modo | Como funciona |
+|---|---|
+| **ai** | A IA responde. Ao fim de cada resposta, a pergunta e a resposta vão para uma conversa **pendente** no Chatwoot, com a etiqueta `agente-ia`. Pendentes não entram na fila, mas a equipe pode revisar. |
+| **waiting** | Depois da transferência: a conversa é **aberta** no Chatwoot, com nota de resumo, etiquetas `transferido` e o motivo, time atribuído e alerta no Teams. O visitante vê um aviso de fila, que menciona quando está fora do horário. |
+| **human** | Quando alguém da equipe responde no Chatwoot, a resposta aparece no chat do site com nome e foto, e a IA fica em silêncio. Isso vale mesmo sem transferência, então a equipe pode entrar a qualquer momento. "Digitando…" também aparece. |
+| volta para **ai** | Quando a conversa é **resolvida**, ou volta para **pendente**, no Chatwoot. |
+
+### Contexto e métricas
+
+O `widget.js` envia ao chat:
+- a página atual;
+- o título da página;
+- a primeira e a última origem da visita que o site já guarda (`ig_first_touch` e `ig_last_touch`: UTMs, gclid, fbclid, referrer).
+
+Esses dados aparecem no prompt e nos atributos do contato no Chatwoot (`origem_campanha`, `pagina_entrada`).
+
+Os eventos `chat_open`, `agent_chat_start`, `generate_lead` (`form=agente`), `agent_handoff`, `booking_click` e `sign_up_click` são enviados para `zaraz.track` na página do site. Assim eles respeitam o consentimento de cookies do Zaraz, e o Lead do Pixel e o `generate_lead` do GA4 já funcionam sem configuração nova.
+
+### Proteções
+- O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.
+- O WebSocket só aceita a origem do próprio assistente e do site (`SITE_ORIGINS`).
+- O chat só pode ser exibido em iframe pelo site, por causa do `frame-ancestors` em `public/_headers`.
+- Há um limite por IP (`RATE_LIMITER`), outro de 60 mensagens por conversa e outro de 4.000 caracteres por mensagem.
+- O estado da conversa (modo, lead) só muda pelo servidor.
+- O webhook do Chatwoot exige `?secret=` com comparação em tempo constante. Notas privadas e o eco das mensagens da própria IA são ignorados.
+- O contexto vindo do navegador é filtrado: só os campos conhecidos passam, com tamanho limitado.
+
+## Configuração
+
+### 1. AI Gateway + DGX Spark
+
+1. Em **AI → AI Gateway**, crie o gateway `ingrave`, ou use outro e ajuste `AI_GATEWAY_ID`.
+2. Ligue **Authenticated Gateway** e gere um token. Ele vira o secret `AI_GATEWAY_TOKEN`.
+3. Em **Custom Providers**, crie o provedor:
+   - **slug:** `dgx-spark`;
+   - **base_url:** a URL HTTPS do DGX, **sem** `/v1`. Por exemplo, o worker `ingrave-ollama-proxy` ou o túnel que expõe o Ollama.
+
+   As chamadas saem para `https://gateway.ai.cloudflare.com/v1/{conta}/ingrave/custom-dgx-spark/v1/chat/completions`.
+4. Se o DGX exigir chave, guarde-a no gateway (BYOK) ou no secret `DGX_API_KEY`.
+5. Em `wrangler.jsonc`, preencha `AI_GATEWAY_ACCOUNT_ID` e ajuste `DGX_MODEL` para o modelo carregado no Ollama. Por exemplo, `gpt-oss:120b` ou `qwen3:32b`; o modelo precisa suportar *tool calling*.
+
+Se `AI_GATEWAY_ACCOUNT_ID` estiver vazio, o assistente usa só o Workers AI (`FALLBACK_MODEL`). Isso serve para o primeiro deploy.
+
+> **Segurança do DGX:** hoje o `ingrave-ollama-proxy` aceita chamadas sem autenticação. Proteja o endpoint antes de colocá-lo no gateway: Cloudflare Access com *service token* ou uma chave verificada no proxy.
+
+### 2. Chatwoot (app.ingrave.com.br)
+
+1. Em **Configurações → Caixas de entrada → Adicionar**, escolha **API** e dê o nome "Assistente do site".
+2. Em **Webhook URL**, use `https://agente.ingrave.com.br/chatwoot/webhook?secret=<um segredo longo>`.
+3. Adicione à caixa os agentes que vão atender e um usuário de serviço. O token desse usuário é o `CHATWOOT_API_TOKEN`.
+4. Anote o **id da caixa** (na URL de configurações) e o **id da conta**. Opcionalmente, anote também o id do time de vendas (`CHATWOOT_HANDOFF_TEAM_ID`).
+5. Crie as etiquetas `agente-ia`, `transferido`, `lead-agente`, `vendas`, `suporte`, `financeiro` e `outro`. Se elas não existirem, o Chatwoot ignora.
+
+### 3. Variáveis e secrets
+
+Em `wrangler.jsonc` → `vars`, preencha:
+- `AI_GATEWAY_ACCOUNT_ID`;
+- `CHATWOOT_ACCOUNT_ID` e `CHATWOOT_INBOX_ID`;
+- opcionalmente `CHATWOOT_HANDOFF_TEAM_ID`;
+- `BUSINESS_HOURS`, no formato `1-5 09:00-18:00`, em que os dias vão de 0 (domingo) a 6;
+- `BOOKINGS_URL` e `SITE_ORIGINS`.
+
+Depois grave os secrets:
+
+```bash
+npx wrangler secret put AI_GATEWAY_TOKEN
+npx wrangler secret put CHATWOOT_API_TOKEN
+npx wrangler secret put CHATWOOT_WEBHOOK_SECRET   # o mesmo do ?secret= do webhook
+npx wrangler secret put TEAMS_WEBHOOK_URL         # opcional, o mesmo do formulário do site
+npx wrangler secret put DGX_API_KEY               # opcional
+```
+
+### 4. Deploy
 
 ```bash
 npm install
-```
-
-3. Set up your environment:
-
-Create a `.dev.vars` file:
-
-```env
-OPENAI_API_KEY=your_openai_api_key
-```
-
-4. Run locally:
-
-```bash
-npm start
-```
-
-5. Deploy:
-
-```bash
 npm run deploy
 ```
 
-## Project Structure
+O worker se chama `ingrave-site-agent` e responde em `agente.ingrave.com.br`, porque o domínio próprio é criado no deploy. `GET /health` mostra o modelo ativo e se o Chatwoot está configurado.
 
-```
-├── src/
-│   ├── app.tsx        # Chat UI implementation
-│   ├── server.ts      # Chat agent logic
-│   ├── tools.ts       # Tool definitions
-│   ├── utils.ts       # Helper functions
-│   └── styles.css     # UI styling
-```
+### 5. Colocar no site
 
-## Customization Guide
+Em **Zaraz → Tools → Add new tool → Custom HTML**, crie a ferramenta sem finalidade de consentimento, porque o chat é funcional, e use:
 
-### Adding New Tools
-
-Add new tools in `tools.ts` using the tool builder:
-
-```ts
-// Example of a tool that requires confirmation
-const searchDatabase = tool({
-  description: "Search the database for user records",
-  parameters: z.object({
-    query: z.string(),
-    limit: z.number().optional()
-  })
-  // No execute function = requires confirmation
-});
-
-// Example of an auto-executing tool
-const getCurrentTime = tool({
-  description: "Get current server time",
-  parameters: z.object({}),
-  execute: async () => new Date().toISOString()
-});
-
-// Scheduling tool implementation
-const scheduleTask = tool({
-  description:
-    "schedule a task to be executed at a later time. 'when' can be a date, a delay in seconds, or a cron pattern.",
-  parameters: z.object({
-    type: z.enum(["scheduled", "delayed", "cron"]),
-    when: z.union([z.number(), z.string()]),
-    payload: z.string()
-  }),
-  execute: async ({ type, when, payload }) => {
-    // ... see the implementation in tools.ts
-  }
-});
+```html
+<script src="https://agente.ingrave.com.br/widget.js" defer></script>
 ```
 
-To handle tool confirmations, add execution functions to the `executions` object:
+Depois remova o botão de chat antigo do Chatwoot do Zaraz, para não ficarem dois botões. Para abrir o chat a partir de qualquer link do site, use `href="#assistente"`, `data-ingrave-agent` ou `window.IngraveAgent.open()`.
 
-```typescript
-export const executions = {
-  searchDatabase: async ({
-    query,
-    limit
-  }: {
-    query: string;
-    limit?: number;
-  }) => {
-    // Implementation for when the tool is confirmed
-    const results = await db.search(query, limit);
-    return results;
-  }
-  // Add more execution handlers for other tools that require confirmation
-};
+Opções do script:
+- `data-label`: texto do botão;
+- `data-greeting`: balão de boas-vindas depois de 12 s; vazio desliga;
+- `data-position="left"`.
+
+## Manutenção
+
+- **Base de conhecimento:** quando planos, recursos ou guias mudarem no site, rode o comando abaixo e faça o deploy.
+
+  ```bash
+  npm run sync-knowledge -- ../ingrave-site
+  ```
+
+  Ele recria `src/knowledge/site.json` a partir de `client/src/content` do repositório do site.
+- **Prompt:** `src/prompt.ts`. Os preços entram da base de conhecimento, nunca escritos à mão.
+- **Testes:** `npm test`.
+- **Desenvolvimento local sem login na Cloudflare:**
+
+  ```bash
+  node scripts/local-config.mjs
+  cp .dev.vars.example .dev.vars   # DGX_BASE_URL=http://localhost:11434/v1 aponta direto para um Ollama
+  WRANGLER_CONFIG=wrangler.local.jsonc npx vite dev
+  ```
+
+## Estrutura
+
 ```
-
-Tools can be configured in two ways:
-
-1. With an `execute` function for automatic execution
-2. Without an `execute` function, requiring confirmation and using the `executions` object to handle the confirmed action. NOTE: The keys in `executions` should match `toolsRequiringConfirmation` in `app.tsx`.
-
-### Use a different AI model provider
-
-The starting [`server.ts`](https://github.com/cloudflare/agents-starter/blob/main/src/server.ts) implementation uses the [`ai-sdk`](https://sdk.vercel.ai/docs/introduction) and the [OpenAI provider](https://sdk.vercel.ai/providers/ai-sdk-providers/openai), but you can use any AI model provider by:
-
-1. Installing an alternative AI provider for the `ai-sdk`, such as the [`workers-ai-provider`](https://sdk.vercel.ai/providers/community-providers/cloudflare-workers-ai) or [`anthropic`](https://sdk.vercel.ai/providers/ai-sdk-providers/anthropic) provider:
-2. Replacing the AI SDK with the [OpenAI SDK](https://github.com/openai/openai-node)
-3. Using the Cloudflare [Workers AI + AI Gateway](https://developers.cloudflare.com/ai-gateway/providers/workersai/#workers-binding) binding API directly
-
-For example, to use the [`workers-ai-provider`](https://sdk.vercel.ai/providers/community-providers/cloudflare-workers-ai), install the package:
-
-```sh
-npm install workers-ai-provider
+src/
+  server.ts        Worker: /agents/*, /chatwoot/webhook, /health, limites e origem
+  agent.ts         IngraveAgent (Durable Object): turnos, espelhamento, transferência, webhook
+  model.ts         DGX Spark via AI Gateway + reserva Workers AI
+  prompt.ts        prompt do sistema
+  tools.ts         ferramentas do agente
+  chatwoot.ts      API de aplicação do Chatwoot e regras do webhook
+  hours.ts         horário de atendimento
+  knowledge/       base de conhecimento (site.json) e busca
+  app.tsx          interface do chat (iframe)
+public/
+  widget.js        botão e painel para o site
+  _headers         frame-ancestors e cache
+scripts/
+  sync-knowledge.mjs, local-config.mjs
+tests/core.test.ts
+workflows/holy-mouse-3f4c, container/fragrant-art-eff1   Workers independentes (pagamento e container), inalterados
 ```
-
-Add an `ai` binding to `wrangler.jsonc`:
-
-```jsonc
-// rest of file
-  "ai": {
-    "binding": "AI"
-  }
-// rest of file
-```
-
-Replace the `@ai-sdk/openai` import and usage with the `workers-ai-provider`:
-
-```diff
-// server.ts
-// Change the imports
-- import { openai } from "@ai-sdk/openai";
-+ import { createWorkersAI } from 'workers-ai-provider';
-
-// Create a Workers AI instance
-+ const workersai = createWorkersAI({ binding: env.AI });
-
-// Use it when calling the streamText method (or other methods)
-// from the ai-sdk
-- const model = openai("gpt-4o-2024-11-20");
-+ const model = workersai("@cf/deepseek-ai/deepseek-r1-distill-qwen-32b")
-```
-
-Commit your changes and then run the `agents-starter` as per the rest of this README.
-
-### Modifying the UI
-
-The chat interface is built with React and can be customized in `app.tsx`:
-
-- Modify the theme colors in `styles.css`
-- Add new UI components in the chat container
-- Customize message rendering and tool confirmation dialogs
-- Add new controls to the header
-
-### Example Use Cases
-
-1. **Customer Support Agent**
-   - Add tools for:
-     - Ticket creation/lookup
-     - Order status checking
-     - Product recommendations
-     - FAQ database search
-
-2. **Development Assistant**
-   - Integrate tools for:
-     - Code linting
-     - Git operations
-     - Documentation search
-     - Dependency checking
-
-3. **Data Analysis Assistant**
-   - Build tools for:
-     - Database querying
-     - Data visualization
-     - Statistical analysis
-     - Report generation
-
-4. **Personal Productivity Assistant**
-   - Implement tools for:
-     - Task scheduling with flexible timing options
-     - One-time, delayed, and recurring task management
-     - Task tracking with reminders
-     - Email drafting
-     - Note taking
-
-5. **Scheduling Assistant**
-   - Build tools for:
-     - One-time event scheduling using specific dates
-     - Delayed task execution (e.g., "remind me in 30 minutes")
-     - Recurring tasks using cron patterns
-     - Task payload management
-     - Flexible scheduling patterns
-
-Each use case can be implemented by:
-
-1. Adding relevant tools in `tools.ts`
-2. Customizing the UI for specific interactions
-3. Extending the agent's capabilities in `server.ts`
-4. Adding any necessary external API integrations
-
-## Learn More
-
-- [`agents`](https://github.com/cloudflare/agents/blob/main/packages/agents/README.md)
-- [Cloudflare Agents Documentation](https://developers.cloudflare.com/agents/)
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-
-## License
-
-MIT

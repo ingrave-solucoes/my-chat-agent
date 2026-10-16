@@ -1,0 +1,9 @@
+# The chat UI may only be framed by the Ingrave website (and local development).
+/*
+  Content-Security-Policy: frame-ancestors 'self' https://ingrave.com.br https://www.ingrave.com.br https://*.ingrave-site.pages.dev http://localhost:*
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+
+/widget.js
+  Cache-Control: public, max-age=300
+  Access-Control-Allow-Origin: *

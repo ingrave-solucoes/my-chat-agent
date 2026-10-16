@@ -1,76 +1,46 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "my-chat-agent",
+  // Assistente de IA do site ingrave.com.br. Nome novo para não colidir com o worker my-chat-agent antigo.
+  "name": "ingrave-site-agent",
   "main": "src/server.ts",
-  "compatibility_date": "2025-08-03",
+  "compatibility_date": "2026-06-11",
   "compatibility_flags": ["nodejs_compat"],
-  "ai": {
-    "binding": "AI",
-    "remote": true
-  },
+  // Domínio próprio: o DNS é criado no deploy (zona ingrave.com.br na mesma conta).
+  "routes": [{ "pattern": "agente.ingrave.com.br", "custom_domain": true }],
+  // Workers AI: modelo reserva quando o DGX Spark não responde (também passa pelo AI Gateway).
+  "ai": { "binding": "AI", "remote": true },
   "assets": {
-    "directory": "public"
+    "directory": "./public",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/agents/*", "/chatwoot/*", "/health"]
   },
   "durable_objects": {
-    "bindings": [
-      {
-        "name": "Chat",
-        "class_name": "Chat"
-      }
-    ]
+    "bindings": [{ "class_name": "IngraveAgent", "name": "IngraveAgent" }]
   },
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_sqlite_classes": ["Chat"]
-    }
-  ],
-  "services": [
-    {
-      "binding": "PAYMENT_SERVICE",
-      "service": "holy-mouse-3f4c"
-    }
-  ],
-  "workflows": [
-    {
-      "binding": "CUSTOMER_SUPPORT_WORKFLOW",
-      "name": "customer-support-workflow",
-      "class_name": "CustomerSupportWorkflow"
-    }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "R2_BUCKET",
-      "bucket_name": "bucket-my-agent"
-    }
-  ],
-  "queues": {
-    "producers": [
-      {
-        "binding": "MY_QUEUE",
-        "queue": "queue-my-agent"
-      }
-    ],
-    "consumers": [
-      {
-        "queue": "queue-my-agent",
-        "max_batch_size": 10,
-        "max_batch_timeout": 30,
-        "max_retries": 3,
-        "dead_letter_queue": "queue-my-agent-dlq"
-      }
-    ]
+  "migrations": [{ "new_sqlite_classes": ["IngraveAgent"], "tag": "v1" }],
+  // Limite por IP para abrir conversas (o limite por mensagem fica dentro de cada conversa).
+  "ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "4207", "simple": { "limit": 40, "period": 60 } }],
+  "vars": {
+    // AI Gateway + provedor customizado apontando para o DGX Spark (API compatível com OpenAI).
+    "AI_GATEWAY_ACCOUNT_ID": "",
+    "AI_GATEWAY_ID": "ingrave",
+    "DGX_PROVIDER_SLUG": "dgx-spark",
+    "DGX_MODEL": "gpt-oss:120b",
+    "DGX_TIMEOUT_MS": "30000",
+    "FALLBACK_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    // Chatwoot (app.ingrave.com.br): caixa do tipo API dedicada ao assistente.
+    "CHATWOOT_BASE_URL": "https://app.ingrave.com.br",
+    "CHATWOOT_ACCOUNT_ID": "",
+    "CHATWOOT_INBOX_ID": "",
+    "CHATWOOT_HANDOFF_TEAM_ID": "",
+    "MIRROR_CONVERSATIONS": "true",
+    // Atendimento humano e agenda.
+    "BUSINESS_HOURS": "1-5 09:00-18:00",
+    "TIMEZONE": "America/Sao_Paulo",
+    "BOOKINGS_URL": "https://bookings.cloud.microsoft/book/Ingrave1@ingrave.com.br/",
+    "SITE_ORIGINS": "https://ingrave.com.br,https://www.ingrave.com.br"
   },
-  "observability": {
-    "enabled": true,
-    "head_sampling_rate": 1,
-    "logs": {
-      "enabled": true,
-      "invocation_logs": true
-    },
-    "traces": {
-      "enabled": true,
-      "head_sampling_rate": 1
-    }
-  }
+  "observability": { "enabled": true }
+  // Secrets (wrangler secret put): AI_GATEWAY_TOKEN, DGX_API_KEY (opcional), CHATWOOT_API_TOKEN,
+  // CHATWOOT_WEBHOOK_SECRET, TEAMS_WEBHOOK_URL (opcional).
 }
