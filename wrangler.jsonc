@@ -30,8 +30,8 @@
     "FALLBACK_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     // Chatwoot (app.ingrave.com.br): caixa do tipo API dedicada ao assistente.
     "CHATWOOT_BASE_URL": "https://app.ingrave.com.br",
-    "CHATWOOT_ACCOUNT_ID": "",
-    "CHATWOOT_INBOX_ID": "",
+    "CHATWOOT_ACCOUNT_ID": "1",
+    "CHATWOOT_INBOX_ID": "154",
     "CHATWOOT_HANDOFF_TEAM_ID": "",
     "MIRROR_CONVERSATIONS": "true",
     // Atendimento humano e agenda.
