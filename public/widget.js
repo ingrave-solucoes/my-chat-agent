@@ -14,7 +14,21 @@
   if (location.origin === origin) return;
   var data = script.dataset || {};
   var label = data.label || "Fale com a Ingrave";
-  var greeting = data.greeting === undefined ? "Oi! Posso ajudar a escolher o plano ou tirar dúvidas sobre o WhatsApp?" : data.greeting;
+  // Greeting bubble that matches the page (the chat's own welcome follows the same pages in src/pages.ts).
+  var GREETINGS = [
+    [/^\/precos/, "Quer ajuda para escolher o plano? Digo qual cabe na sua equipe e quanto fica."],
+    [/^\/ferramentas\/calculadora-whatsapp/, "Quer que eu calcule o custo das mensagens do WhatsApp para o seu volume?"],
+    [/whatsapp/, "Dúvidas sobre a API oficial do WhatsApp? Posso explicar em poucos minutos."],
+    [/^\/comparar/, "Comparando ferramentas? Mostro as diferenças e como funciona a migração."],
+    [/^\/produto\/captain|ia-automacao|chatbot/, "Quer ver como a IA pode responder seus clientes? Pergunte aqui."],
+    [/^\/contato/, "Prefere resolver agora? Respondo na hora ou chamo a equipe."],
+  ];
+  function pageGreeting() {
+    var path = location.pathname.toLowerCase();
+    for (var i = 0; i < GREETINGS.length; i++) if (GREETINGS[i][0].test(path)) return GREETINGS[i][1];
+    return "Oi! Posso ajudar a escolher o plano ou tirar dúvidas sobre o WhatsApp?";
+  }
+  var greeting = data.greeting === undefined ? pageGreeting() : data.greeting;
   var side = data.position === "left" ? "left" : "right";
   var GREETED = "ingrave-agent-greeted";
 
@@ -157,8 +171,12 @@
   var greeted = false;
   try { greeted = sessionStorage.getItem(GREETED) === "1"; } catch (e) { /* ignore */ }
   if (greeting && !greeted) {
-    hello.querySelector("span").textContent = greeting;
-    setTimeout(function () { if (!isOpen && !frame) hello.style.display = "block"; }, 12000);
+    setTimeout(function () {
+      if (isOpen || frame) return;
+      // Picked when shown, so it matches the page the visitor navigated to in the meantime.
+      hello.querySelector("span").textContent = data.greeting === undefined ? pageGreeting() : greeting;
+      hello.style.display = "block";
+    }, 12000);
   }
 
   window.IngraveAgent = { open: open, close: closePanel, toggle: function () { isOpen ? closePanel() : open(); } };

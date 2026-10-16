@@ -41,6 +41,8 @@
     "MIRROR_CONVERSATIONS": "true",
     // Atendimento humano e agenda.
     "BUSINESS_HOURS": "1-5 09:00-18:00",
+    // Minutos de expediente até alertar a equipe sobre lead ou transferência sem resposta (0 desliga).
+    "FOLLOW_UP_MINUTES": "120",
     "TIMEZONE": "America/Sao_Paulo",
     "BOOKINGS_URL": "https://bookings.cloud.microsoft/book/Ingrave1@ingrave.com.br/",
     "SITE_ORIGINS": "https://ingrave.com.br,https://www.ingrave.com.br",

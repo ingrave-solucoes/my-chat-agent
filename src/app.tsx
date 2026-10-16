@@ -26,16 +26,11 @@ import {
 import type { IngraveAgent } from "./agent";
 import { type AgentState, type ChatContext, initialAgentState, type MessageMeta, type WidgetMessage } from "./shared";
 import { Markdown } from "./ui/Markdown";
+import { hintsFor } from "./pages";
 
 const SESSION_KEY = "ingrave-agent-session";
 const embedded = typeof window !== "undefined" && window.parent !== window;
 
-const SUGGESTIONS = [
-  "Quanto custa a Ingrave?",
-  "Como funciona o WhatsApp com vários atendentes?",
-  "Quero migrar do Octadesk",
-  "Falar com a equipe",
-];
 
 function readSession() {
   try {
@@ -378,6 +373,7 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   const [typing, setTyping] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const context = useRef<ChatContext>({});
+  const [page, setPage] = useState<string | undefined>();
   const visible = useRef(!embedded);
   const unread = useRef(0);
   const endRef = useRef<HTMLDivElement>(null);
@@ -418,6 +414,7 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
     body: () => ({ context: context.current }),
   });
   const busy = status === "submitted" || status === "streaming";
+  const hints = useMemo(() => hintsFor(page), [page]);
 
   // Context and visibility from widget.js.
   useEffect(() => {
@@ -426,6 +423,7 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
       const data = event.data as WidgetMessage;
       if (data?.type === "ingrave-agent:context") {
         context.current = data.context ?? {};
+        setPage(context.current.page);
         if (data.theme) document.documentElement.dataset.theme = data.theme;
       }
       if (data?.type === "ingrave-agent:visibility") {
@@ -510,10 +508,10 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
         {!messages.length && (
           <div className="ia-welcome">
             <span className="ia-welcome-mark"><Logo size={28} /></span>
-            <h1>Olá! Como posso ajudar?</h1>
-            <p>Tire dúvidas sobre a Ingrave, planos e WhatsApp, ou peça para falar com a equipe.</p>
+            <h1>{hints.title}</h1>
+            <p>{hints.text}</p>
             <div className="ia-suggestions">
-              {SUGGESTIONS.map((suggestion) => <button type="button" key={suggestion} onClick={() => send(suggestion)}>{suggestion}</button>)}
+              {hints.suggestions.map((suggestion) => <button type="button" key={suggestion} onClick={() => send(suggestion)}>{suggestion}</button>)}
             </div>
           </div>
         )}

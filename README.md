@@ -107,6 +107,17 @@ Cada resposta do assistente tem 👍/👎. A avaliação vai para os logs do **A
 uma nota privada com o trecho da resposta e a etiqueta `ia-resposta-ruim`. Toda chamada ao
 DGX leva metadados no gateway (`session`, `page`, `origin`) para filtrar os logs por conversa.
 
+### Saudação por página e retorno de leads
+
+O balão do widget e a tela inicial do chat mudam conforme a página do site (preços,
+calculadora, WhatsApp, comparativos, IA, integrações, contato), com perguntas sugeridas para
+cada uma (`src/pages.ts`).
+
+Depois de um lead (`registrar_contato`) ou de uma transferência, o assistente agenda uma
+checagem para `FOLLOW_UP_MINUTES` minutos de expediente depois (padrão 120). Se ninguém da
+equipe respondeu e a conversa não foi resolvida, o Chatwoot recebe uma nota, a etiqueta
+`sem-resposta`, a conversa volta para "aberta" e o Teams é avisado (se configurado).
+
 ### Proteções
 - O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.
 - O WebSocket só aceita a origem do próprio assistente e do site (`SITE_ORIGINS`).

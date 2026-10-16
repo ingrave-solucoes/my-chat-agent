@@ -23,7 +23,7 @@ import {
   type UIMessage,
 } from "ai";
 import { ChatwootClient, chatwootEnabled, isTeamReply, type WebhookEvent } from "./chatwoot";
-import { describeHours, isOpen } from "./hours";
+import { afterBusinessMinutes, describeHours, isOpen } from "./hours";
 import { chatModel } from "./model";
 import { searchSite } from "./search";
 import { systemPrompt } from "./prompt";
@@ -36,6 +36,7 @@ const MAX_VISITOR_MESSAGES = 60;
 const MAX_MESSAGE_CHARS = 4000;
 
 type ChatwootLink = { contactId: number; conversationId: number };
+type FollowUp = { kind: "lead" | "handoff"; since: string };
 
 const textOf = (message: UIMessage) =>
   message.parts
@@ -313,6 +314,7 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
       url: client.conversationUrl(link.conversationId),
     }).catch((error) => console.warn("teams alert failed", error));
     this.setState({ ...this.state, leadShared: true });
+    await this.scheduleFollowUp("lead");
     return { ok: true, message: "Dados enviados para a equipe comercial." };
   }
 
@@ -337,6 +339,7 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
       url: client.conversationUrl(link.conversationId),
     }).catch((error) => console.warn("teams alert failed", error));
     this.setState({ ...this.state, mode: "waiting", outsideHours });
+    await this.scheduleFollowUp("handoff");
     return {
       ok: true,
       outsideHours,
@@ -344,6 +347,44 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
         ? `Conversa transferida. A equipe está fora do horário (${describeHours(this.env.BUSINESS_HOURS)}) e responde aqui assim que voltar${this.state.leadShared ? " ou pelo e-mail informado" : ""}.`
         : "Conversa transferida. Alguém da equipe vai responder aqui em instantes.",
     };
+  }
+
+  /* ---------- follow-up ---------- */
+
+  /** Checks back after FOLLOW_UP_MINUTES of business time whether the team answered the lead. */
+  private async scheduleFollowUp(kind: FollowUp["kind"]) {
+    const minutes = Number(this.env.FOLLOW_UP_MINUTES);
+    if (!minutes || !this.chatwoot) return;
+    const now = new Date();
+    const due = afterBusinessMinutes(this.env.BUSINESS_HOURS, this.env.TIMEZONE, now, minutes);
+    await this.schedule(due, "followUp", { kind, since: now.toISOString() } satisfies FollowUp).catch((error) => console.warn("follow-up not scheduled", error));
+  }
+
+  /** Scheduled: flags the Chatwoot conversation and alerts Teams if nobody from the team replied. */
+  async followUp(payload: FollowUp) {
+    const client = this.chatwoot;
+    const link = await this.ctx.storage.get<ChatwootLink>("chatwoot");
+    if (!client || !link) return;
+    const replied = await this.ctx.storage.get<string>("teamRepliedAt");
+    if (replied && replied >= payload.since) return;
+    // One alert per unanswered stretch, even if both a lead and a handoff were scheduled.
+    const alerted = await this.ctx.storage.get<string>("followUpAt");
+    if (alerted && (!replied || alerted > replied)) return;
+    const conversation = await client.getConversation(link.conversationId).catch(() => undefined);
+    if (conversation?.status === "resolved") return;
+    const what = payload.kind === "lead" ? "Lead do assistente" : "Pedido de atendimento humano";
+    const waited = Math.round((Date.now() - Date.parse(payload.since)) / 3_600_000);
+    await client.note(link.conversationId, `⏰ ${what} ainda sem resposta da equipe (${waited} h desde o pedido).`).catch(() => undefined);
+    await this.ctx.storage.put("followUpAt", new Date().toISOString());
+    await client.addLabels(link.conversationId, ["sem-resposta"]).catch(() => undefined);
+    await client.setStatus(link.conversationId, "open").catch(() => undefined);
+    const context = await this.context();
+    await notifyTeams(this.env.TEAMS_WEBHOOK_URL, {
+      title: `${what} sem resposta`,
+      facts: [["Origem", describeOrigin(context)], ["Página", context.page ?? ""], ["Esperando", `${waited} h`]],
+      text: "Ninguém da equipe respondeu esta conversa do site ainda.",
+      url: client.conversationUrl(link.conversationId),
+    }).catch((error) => console.warn("teams alert failed", error));
   }
 
   /** Called by the Worker for each inbox webhook that belongs to this conversation. */
@@ -359,6 +400,7 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
       const avatarUrl = event.sender?.thumbnail || event.sender?.avatar_url || undefined;
       const meta: MessageMeta = { from: "human", author, avatarUrl, createdAt: new Date().toISOString() };
       await this.persistMessages([...this.messages, { id, role: "assistant", parts: [{ type: "text", text }], metadata: meta }]);
+      await this.ctx.storage.put("teamRepliedAt", new Date().toISOString());
       this.setState({ ...this.state, mode: "human", agent: { name: author, avatarUrl } });
       this.broadcastEvent({ type: "typing", on: false });
       return;

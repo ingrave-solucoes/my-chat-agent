@@ -41,3 +41,32 @@ describe("AI Search results", () => {
     expect(result).toEqual({ fonte: "ai-search", resultados: [{ titulo: "Planos e preços", url: "https://ingrave.com.br/precos", trecho: "Business R$ 99" }] });
   });
 });
+
+import { DEFAULT_HINTS, hintsFor } from "../src/pages";
+
+describe("page hints", () => {
+  it("matches the page the visitor is on", () => {
+    expect(hintsFor("/precos").title).toMatch(/plano/);
+    expect(hintsFor("/ferramentas/calculadora-whatsapp").title).toMatch(/custo/);
+    expect(hintsFor("/canais/whatsapp").title).toMatch(/WhatsApp/);
+    expect(hintsFor("/comparar/octadesk").suggestions).toContain("Quero migrar do Octadesk");
+    expect(hintsFor("/")).toBe(DEFAULT_HINTS);
+    expect(hintsFor(undefined)).toBe(DEFAULT_HINTS);
+  });
+});
+
+import { afterBusinessMinutes } from "../src/hours";
+
+describe("follow-up timing", () => {
+  const spec = "1-5 09:00-18:00";
+  const tz = "America/Sao_Paulo";
+  it("counts only business time", () => {
+    // Wed 10:00 BRT + 120 min -> Wed 12:00 BRT
+    expect(afterBusinessMinutes(spec, tz, new Date("2026-10-14T13:00:00Z"), 120).toISOString()).toBe("2026-10-14T15:00:00.000Z");
+    // Fri 17:00 BRT + 120 min -> 1 h on Friday, 1 h on Monday -> Mon 10:00 BRT
+    expect(afterBusinessMinutes(spec, tz, new Date("2026-10-16T20:00:00Z"), 120).toISOString()).toBe("2026-10-19T13:00:00.000Z");
+  });
+  it("adds plain minutes without business hours", () => {
+    expect(afterBusinessMinutes("", tz, new Date("2026-10-16T20:00:00Z"), 30).toISOString()).toBe("2026-10-16T20:30:00.000Z");
+  });
+});
