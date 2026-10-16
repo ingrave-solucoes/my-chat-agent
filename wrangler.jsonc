@@ -15,14 +15,18 @@
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/agents/*", "/chatwoot/*", "/health", "/voice", "/transcribe", "/feedback"]
+    "run_worker_first": ["/agents/*", "/chatwoot/*", "/health", "/voice", "/transcribe", "/feedback", "/video/*"]
   },
   "durable_objects": {
     "bindings": [{ "class_name": "IngraveAgent", "name": "IngraveAgent" }]
   },
   "migrations": [{ "new_sqlite_classes": ["IngraveAgent"], "tag": "v1" }],
   // Limite por IP para abrir conversas (o limite por mensagem fica dentro de cada conversa).
-  "ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "4207", "simple": { "limit": 40, "period": 60 } }],
+  "ratelimits": [
+    { "name": "RATE_LIMITER", "namespace_id": "4207", "simple": { "limit": 40, "period": 60 } },
+    // Sessões de vídeo (cobradas por minuto): no máximo 2 por minuto por IP.
+    { "name": "VIDEO_LIMITER", "namespace_id": "4208", "simple": { "limit": 2, "period": 60 } }
+  ],
   "vars": {
     // AI Gateway + provedor customizado apontando para o DGX Spark (API compatível com OpenAI).
     "AI_GATEWAY_ACCOUNT_ID": "88903b729ba835b7dcc08993884c62c5",
@@ -47,8 +51,13 @@
     "BOOKINGS_URL": "https://bookings.cloud.microsoft/book/Ingrave1@ingrave.com.br/",
     "SITE_ORIGINS": "https://ingrave.com.br,https://www.ingrave.com.br",
     // Voz (botão "Ouvir" nas respostas): ElevenLabs, ativo quando o secret ELEVENLABS_API_KEY existe.
-    "ELEVENLABS_VOICE_ID": "JBFqnCBsd6RMkjVDRZzb",
-    "ELEVENLABS_MODEL_ID": "eleven_multilingual_v2"
+    "ELEVENLABS_VOICE_ID": "EXAVITQu4vr4xnSDxMaL",
+    "ELEVENLABS_MODEL_ID": "eleven_multilingual_v2",
+    // Íris em vídeo (HeyGen LiveAvatar, modo LITE): ativo com o secret LIVEAVATAR_API_KEY e um avatar.
+    // LIVEAVATAR_SANDBOX="true" testa sem gastar créditos (avatar de teste, sessões de ~1 minuto).
+    "LIVEAVATAR_AVATAR_ID": "",
+    "LIVEAVATAR_SANDBOX": "",
+    "VIDEO_MAX_SECONDS": "300"
   },
   "observability": { "enabled": true }
   // Secrets (wrangler secret put): AI_GATEWAY_TOKEN, DGX_API_KEY (opcional), CHATWOOT_API_TOKEN,

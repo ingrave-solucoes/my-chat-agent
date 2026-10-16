@@ -21,23 +21,30 @@ export function speechText(markdown: string) {
     .slice(0, MAX_SPEECH_CHARS);
 }
 
-async function cacheKey(text: string, voice: string, model: string) {
+/** mp3 for the "Ouvir" button; pcm (16-bit 24 kHz mono) for the video avatar's lip-sync. */
+export type SpeechFormat = "mp3" | "pcm";
+const FORMATS: Record<SpeechFormat, { query: string; type: string }> = {
+  mp3: { query: "mp3_44100_128", type: "audio/mpeg" },
+  pcm: { query: "pcm_24000", type: "audio/pcm" },
+};
+
+async function cacheKey(text: string, voice: string, model: string, format: SpeechFormat) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${voice}|${model}|${text}`));
   const hex = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
-  return new Request(`https://tts.ingrave.cache/${hex}.mp3`);
+  return new Request(`https://tts.ingrave.cache/${hex}.${format}`);
 }
 
-/** MP3 for the text, from the edge cache when the same reply was already spoken. */
-export async function synthesize(env: VoiceEnv, text: string, ctx?: ExecutionContext): Promise<Response> {
+/** Audio for the text, from the edge cache when the same reply was already spoken. */
+export async function synthesize(env: VoiceEnv, text: string, ctx?: ExecutionContext, format: SpeechFormat = "mp3"): Promise<Response> {
   const voice = env.ELEVENLABS_VOICE_ID;
   const model = env.ELEVENLABS_MODEL_ID;
-  const key = await cacheKey(text, voice, model);
+  const key = await cacheKey(text, voice, model, format);
   // Workers runtime cache (the DOM typings loaded for the UI do not know `caches.default`).
   const cache = (caches as unknown as { default: Cache }).default;
   const hit = await cache.match(key);
   if (hit) return hit;
 
-  const upstream = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=mp3_44100_128`, {
+  const upstream = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=${FORMATS[format].query}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "xi-api-key": env.ELEVENLABS_API_KEY ?? "" },
     body: JSON.stringify({ text, model_id: model }),
@@ -45,7 +52,7 @@ export async function synthesize(env: VoiceEnv, text: string, ctx?: ExecutionCon
   if (!upstream.ok) throw new Error(`elevenlabs → ${upstream.status} ${(await upstream.text()).slice(0, 200)}`);
 
   const response = new Response(await upstream.arrayBuffer(), {
-    headers: { "Content-Type": upstream.headers.get("Content-Type") ?? "audio/mpeg", "Cache-Control": "public, max-age=604800" },
+    headers: { "Content-Type": FORMATS[format].type, "Cache-Control": "public, max-age=604800" },
   });
   const put = cache.put(key, response.clone());
   if (ctx) ctx.waitUntil(put);

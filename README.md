@@ -118,6 +118,17 @@ checagem para `FOLLOW_UP_MINUTES` minutos de expediente depois (padrão 120). Se
 equipe respondeu e a conversa não foi resolvida, o Chatwoot recebe uma nota, a etiqueta
 `sem-resposta`, a conversa volta para "aberta" e o Teams é avisado (se configurado).
 
+### Íris em vídeo (HeyGen LiveAvatar)
+
+Com `LIVEAVATAR_API_KEY` (secret) e `LIVEAVATAR_AVATAR_ID` configurados, o chat mostra o botão
+**Vídeo**. A sessão usa o modo **LITE** (1 crédito por minuto): o LiveAvatar só renderiza o rosto e
+transmite o vídeo por LiveKit; o cérebro continua sendo o nosso agente, e a voz é a ElevenLabs
+(`/voice` com `format: "pcm"`, PCM 16-bit 24 kHz), enviada em blocos de ~1 s ao WebSocket do
+avatar, que faz a sincronia labial. Limites: `VIDEO_MAX_SECONDS` por sessão (padrão 300),
+3 sessões por conversa, 2 inícios por minuto por IP. `LIVEAVATAR_SANDBOX="true"` testa com o
+avatar de testes, sem gastar créditos (sessões de ~1 minuto). O vídeo mostra o selo
+"Assistente virtual (IA)".
+
 ### Proteções
 - O id da conversa é um UUID aleatório criado no navegador. Sem ele não há acesso ao histórico.
 - O WebSocket só aceita a origem do próprio assistente e do site (`SITE_ORIGINS`).

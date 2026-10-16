@@ -6,6 +6,7 @@ import { IngraveAgent } from "./agent";
 import { dgxModel } from "./model";
 import { MAX_AUDIO_BYTES, transcribe } from "./transcribe";
 import { MAX_SPEECH_CHARS, speechText, synthesize, voiceEnabled } from "./voice";
+import { startVideo, stopVideo, videoEnabled } from "./video";
 
 export { IngraveAgent };
 
@@ -29,7 +30,7 @@ function originAllowed(request: Request, env: Env) {
 async function handleVoice(request: Request, env: Env, ctx: ExecutionContext) {
   if (!voiceEnabled(env)) return json(404, { ok: false, error: "voice_disabled" });
   if (!originAllowed(request, env)) return json(403, { ok: false });
-  let body: { text?: unknown; session?: unknown };
+  let body: { text?: unknown; session?: unknown; format?: unknown };
   try {
     body = (await request.json()) as typeof body;
   } catch {
@@ -41,7 +42,7 @@ async function handleVoice(request: Request, env: Env, ctx: ExecutionContext) {
   const { success } = await env.RATE_LIMITER.limit({ key: `voice:${request.headers.get("CF-Connecting-IP") ?? body.session}` });
   if (!success) return json(429, { ok: false, error: "too_many_requests" });
   try {
-    return await synthesize(env, text, ctx);
+    return await synthesize(env, text, ctx, body.format === "pcm" ? "pcm" : "mp3");
   } catch (error) {
     console.error("voice failed", error);
     return json(502, { ok: false, error: "voice_unavailable" });
@@ -66,6 +67,36 @@ async function handleTranscribe(request: Request, env: Env) {
   } catch (error) {
     console.error("transcription failed", error);
     return json(502, { ok: false, error: "transcription_unavailable" });
+  }
+}
+
+/** POST /video/start {session} and /video/stop {session}: Íris on video (HeyGen LiveAvatar). */
+async function handleVideo(request: Request, env: Env, action: "start" | "stop") {
+  if (!videoEnabled(env)) return json(404, { ok: false, error: "video_disabled" });
+  if (!originAllowed(request, env)) return json(403, { ok: false });
+  let body: { session?: unknown };
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return json(400, { ok: false });
+  }
+  if (typeof body.session !== "string" || !UUID.test(body.session)) return json(400, { ok: false });
+  const agent = await getAgentByName(env.IngraveAgent, body.session);
+  if (action === "stop") {
+    const id = await agent.videoEnded();
+    if (id) await stopVideo(env, id);
+    return json(200, { ok: true });
+  }
+  const { success } = await env.VIDEO_LIMITER.limit({ key: request.headers.get("CF-Connecting-IP") ?? body.session });
+  if (!success) return json(429, { ok: false, error: "too_many_requests" });
+  if (!(await agent.videoAllowed())) return json(429, { ok: false, error: "video_limit" });
+  try {
+    const video = await startVideo(env);
+    await agent.videoStarted(video.sessionId);
+    return json(200, { ok: true, ...video });
+  } catch (error) {
+    console.error("video start failed", error);
+    return json(502, { ok: false, error: "video_unavailable" });
   }
 }
 
@@ -116,12 +147,14 @@ export default {
     if (url.pathname === "/health") {
       const model = dgxModel(env) ? `dgx-spark/${env.DGX_MODEL} (reserva: ${env.FALLBACK_MODEL})` : `workers-ai/${env.FALLBACK_MODEL}`;
       const search = env.AI_SEARCH && env.AI_SEARCH_INSTANCE ? `ai-search/${env.AI_SEARCH_INSTANCE} (reserva: local)` : "local";
-      return json(200, { ok: true, model, search, chatwoot: chatwootEnabled(env), voice: voiceEnabled(env) });
+      return json(200, { ok: true, model, search, chatwoot: chatwootEnabled(env), voice: voiceEnabled(env), video: videoEnabled(env) && voiceEnabled(env) });
     }
 
     if (url.pathname === "/voice" && request.method === "POST") return handleVoice(request, env, ctx);
     if (url.pathname === "/transcribe" && request.method === "POST") return handleTranscribe(request, env);
 
+    if (url.pathname === "/video/start" && request.method === "POST") return handleVideo(request, env, "start");
+    if (url.pathname === "/video/stop" && request.method === "POST") return handleVideo(request, env, "stop");
     if (url.pathname === "/feedback" && request.method === "POST") return handleFeedback(request, env);
 
     if (url.pathname === "/chatwoot/webhook" && request.method === "POST") return handleWebhook(request, env);
