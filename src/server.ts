@@ -96,7 +96,9 @@ async function handleVideo(request: Request, env: Env, action: "start" | "stop")
     return json(200, { ok: true, ...video });
   } catch (error) {
     console.error("video start failed", error);
-    return json(502, { ok: false, error: "video_unavailable" });
+    // The upstream status and message (never the key) help to fix the setup: wrong avatar id, no credits...
+    const detail = error instanceof Error ? error.message.slice(0, 200) : undefined;
+    return json(502, { ok: false, error: "video_unavailable", detail });
   }
 }
 
