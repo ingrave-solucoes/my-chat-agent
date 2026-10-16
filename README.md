@@ -95,7 +95,7 @@ A rota exige id de conversa e origem válidos, só aceita `audio/*`, tem limite 
 ### Busca no site (AI Search)
 
 A ferramenta `buscar_conhecimento` consulta primeiro a instância do **Cloudflare AI Search**
-definida em `AI_SEARCH_INSTANCE` (padrão `ingrave-site`, namespace `default`): busca híbrida
+definida em `AI_SEARCH_INSTANCE` (`assistente-ingrave`, namespace `default`): busca híbrida
 (vetorial + palavras-chave) com reranking sobre o site rastreado, sempre atualizado. Se a
 instância não existir, falhar, demorar mais de 5 s ou não achar nada relevante, a busca local
 (BM25 sobre `src/knowledge/site.json`) responde. O `/health` mostra qual busca está ativa.

@@ -32,7 +32,7 @@
     "DGX_TIMEOUT_MS": "30000",
     "FALLBACK_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
     // Instância do AI Search com o site rastreado (vazio desliga e usa só a busca local).
-    "AI_SEARCH_INSTANCE": "ingrave-site",
+    "AI_SEARCH_INSTANCE": "assistente-ingrave",
     // Chatwoot (app.ingrave.com.br): caixa do tipo API dedicada ao assistente.
     "CHATWOOT_BASE_URL": "https://app.ingrave.com.br",
     "CHATWOOT_ACCOUNT_ID": "1",
