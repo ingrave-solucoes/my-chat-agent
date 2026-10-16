@@ -32,18 +32,30 @@ async function call<T>(path: string, init: RequestInit): Promise<T> {
 /** Creates and starts a LITE session; returns what the browser needs to watch and drive it. */
 export async function startVideo(env: VideoEnv): Promise<VideoSession> {
   const sandbox = env.LIVEAVATAR_SANDBOX === "true";
-  const maxSeconds = Math.min(Math.max(Number(env.VIDEO_MAX_SECONDS) || 300, 60), 1200);
-  const token = await call<{ session_id: string; session_token: string }>("/sessions/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-API-KEY": (env.LIVEAVATAR_API_KEY ?? "").trim() },
-    body: JSON.stringify({
-      mode: "LITE",
-      avatar_id: sandbox ? SANDBOX_AVATAR : env.LIVEAVATAR_AVATAR_ID,
-      is_sandbox: sandbox,
-      max_session_duration: maxSeconds,
-      video_settings: { quality: "high", encoding: "H264" },
-    }),
-  });
+  const wanted = Math.min(Math.max(Number(env.VIDEO_MAX_SECONDS) || 120, 60), 1200);
+  const requestToken = (maxSeconds: number) =>
+    call<{ session_id: string; session_token: string }>("/sessions/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-API-KEY": (env.LIVEAVATAR_API_KEY ?? "").trim() },
+      body: JSON.stringify({
+        mode: "LITE",
+        avatar_id: sandbox ? SANDBOX_AVATAR : env.LIVEAVATAR_AVATAR_ID,
+        is_sandbox: sandbox,
+        max_session_duration: maxSeconds,
+        video_settings: { quality: "high", encoding: "H264" },
+      }),
+    });
+  let maxSeconds = wanted;
+  let token: { session_id: string; session_token: string };
+  try {
+    token = await requestToken(maxSeconds);
+  } catch (error) {
+    // The plan caps the session length ("exceeds the maximum allowed (120s)"): use the cap.
+    const cap = /maximum allowed \((\d+)s\)/.exec(error instanceof Error ? error.message : "");
+    if (!cap) throw error;
+    maxSeconds = Number(cap[1]);
+    token = await requestToken(maxSeconds);
+  }
   const started = await call<{ session_id: string; livekit_url: string; livekit_client_token: string; ws_url?: string; max_session_duration?: number }>(
     "/sessions/start",
     { method: "POST", headers: { Authorization: `Bearer ${token.session_token}` } }
