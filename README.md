@@ -105,7 +105,9 @@ A chamada vai direto para a ElevenLabs, sem o gateway, porque o plano gratuito d
 
    As chamadas saem para `https://gateway.ai.cloudflare.com/v1/{conta}/default/custom-dgx-spark/v1/chat/completions`.
 4. Se o DGX exigir chave, guarde-a no gateway (BYOK) ou no secret `DGX_API_KEY`.
-5. Em `wrangler.jsonc`, confira `AI_GATEWAY_ACCOUNT_ID` (já preenchido com a conta da Ingrave) e ajuste `DGX_MODEL` para o modelo carregado no Ollama. Por exemplo, `gpt-oss:120b` ou `qwen3:32b`; o modelo precisa suportar *tool calling*.
+5. Em `wrangler.jsonc`, confira `AI_GATEWAY_ACCOUNT_ID` (já preenchido com a conta da Ingrave) e `DGX_MODEL`, que hoje é **`gemma4:12b`**: testado com tool calling no DGX. O modelo precisa suportar *tool calling*. Alternativas no DGX: `qwen3:32b`, `gpt-oss:120b`.
+
+Configuração atual: gateway `default`, custom provider `dgx-spark` com base_url `https://llm.ingrave.com.br`.
 
 Enquanto o custom provider não existir, a chamada ao DGX falha na hora e o assistente responde com o Workers AI (`FALLBACK_MODEL`). Por isso o primeiro deploy já funciona. Com `AI_GATEWAY_ACCOUNT_ID` vazio, ele usa só o Workers AI.
 
