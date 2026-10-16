@@ -1,21 +1,9 @@
-OPENAI_API_KEY=sk-proj-1234567890
-
-# Optional - Cloudflare AI Gateway https://developers.cloudflare.com/ai-gateway/
-# GATEWAY_BASE_URL=https://gateway.ai.cloudflare.com/v1/..
-
-# Chatwoot Configuration (optional - for webhook integration)
-# CHATWOOT_BASE_URL=https://your-chatwoot-instance.com
-# CHATWOOT_API_KEY=your_chatwoot_api_access_token
-# CHATWOOT_ACCOUNT_ID=your_account_id
-# CHATWOOT_WEBHOOK_SECRET=your_webhook_secret_if_configured
-
-# ElevenLabs Text-to-Speech Configuration (optional - for voice messages)
-# Get your API key from: https://elevenlabs.io/app/settings/api-keys
-# ELEVENLABS_API_KEY=your_elevenlabs_api_key
-# CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
-# AI_GATEWAY_ID=your_ai_gateway_id
-
-# R2 Storage Configuration
-# The R2 bucket is configured in wrangler.jsonc
-# Bucket name: bucket_my-agent
-# No environment variables needed - R2 is accessed via binding
+# Copie para .dev.vars no desenvolvimento local. Em produção use: npx wrangler secret put NOME
+AI_GATEWAY_TOKEN=
+DGX_API_KEY=
+CHATWOOT_API_TOKEN=
+CHATWOOT_WEBHOOK_SECRET=
+TEAMS_WEBHOOK_URL=
+ELEVENLABS_API_KEY=
+# Desenvolvimento local: chama um servidor compatível com OpenAI direto, sem AI Gateway (ex.: Ollama).
+# DGX_BASE_URL=http://localhost:11434/v1

@@ -1,0 +1,739 @@
+{
+ "syncedAt": "2026-10-16",
+ "plans": [
+  {
+   "id": "hacker",
+   "name": "Hacker",
+   "description": "Para começar a atender pelo site, sem custo.",
+   "monthly": 0,
+   "annual": 0,
+   "highlights": [
+    "Até 2 agentes",
+    "500 conversas por mês",
+    "Chat no site",
+    "Histórico de 30 dias",
+    "Caixa de entrada compartilhada",
+    "Respostas prontas e etiquetas"
+   ]
+  },
+  {
+   "id": "startups",
+   "name": "Startups",
+   "description": "Para pequenas equipes que atendem em todos os canais.",
+   "monthly": 79,
+   "annual": 66,
+   "highlights": [
+    "Tudo do Hacker, sem limite de conversas*",
+    "WhatsApp, Instagram, Messenger, e-mail e mais",
+    "Central de ajuda",
+    "Captain com 300 créditos por mês",
+    "Relatórios e CSAT",
+    "Histórico de 1 ano"
+   ]
+  },
+  {
+   "id": "business",
+   "name": "Business",
+   "description": "Para operações que precisam de escala e automação.",
+   "monthly": 149,
+   "annual": 124,
+   "highlights": [
+    "Tudo do Startups",
+    "Voz: ligações na caixa de entrada",
+    "Times, automações e macros",
+    "SLA e horário de atendimento",
+    "Captain com 500 créditos por mês",
+    "Histórico de 2 anos"
+   ]
+  },
+  {
+   "id": "enterprise",
+   "name": "Enterprise",
+   "description": "Para empresas com requisitos de segurança e governança.",
+   "monthly": 349,
+   "annual": 290,
+   "highlights": [
+    "Tudo do Business",
+    "SSO / SAML",
+    "Logs de auditoria e papéis personalizados",
+    "Captain com 800 créditos por mês",
+    "Onboarding dedicado",
+    "Histórico de 3 anos"
+   ]
+  }
+ ],
+ "captainAddon": {
+  "price": 99,
+  "credits": 1000
+ },
+ "whatsappRates": {
+  "checkedAt": "outubro de 2026",
+  "brl": {
+   "marketing": 0.3217,
+   "utility": 0.035,
+   "authentication": 0.035
+  },
+  "usd": {
+   "marketing": 0.0625,
+   "utility": 0.0068,
+   "authentication": 0.0068
+  },
+  "source": "https://developers.facebook.com/docs/whatsapp/pricing"
+ },
+ "docs": [
+  {
+   "id": "precos",
+   "title": "Planos e preços",
+   "url": "https://ingrave.com.br/precos",
+   "text": "Hacker: grátis. Para começar a atender pelo site, sem custo. Inclui: Até 2 agentes; 500 conversas por mês; Chat no site; Histórico de 30 dias; Caixa de entrada compartilhada; Respostas prontas e etiquetas.\nStartups: R$ 79/agente/mês no mensal ou R$ 66/agente/mês no anual. Para pequenas equipes que atendem em todos os canais. Inclui: Tudo do Hacker, sem limite de conversas*; WhatsApp, Instagram, Messenger, e-mail e mais; Central de ajuda; Captain com 300 créditos por mês; Relatórios e CSAT; Histórico de 1 ano.\nBusiness: R$ 149/agente/mês no mensal ou R$ 124/agente/mês no anual. Para operações que precisam de escala e automação. Inclui: Tudo do Startups; Voz: ligações na caixa de entrada; Times, automações e macros; SLA e horário de atendimento; Captain com 500 créditos por mês; Histórico de 2 anos.\nEnterprise: R$ 349/agente/mês no mensal ou R$ 290/agente/mês no anual. Para empresas com requisitos de segurança e governança. Inclui: Tudo do Business; SSO / SAML; Logs de auditoria e papéis personalizados; Captain com 800 créditos por mês; Onboarding dedicado; Histórico de 3 anos.\nPacote extra do Captain: R$ 99 por 1000 créditos.\nUso e limites: Agentes (Hacker Até 2, Startups Sem limite, Business Sem limite, Enterprise Sem limite); Conversas por mês (Hacker 500, Startups Ilimitadas*, Business Ilimitadas*, Enterprise Ilimitadas*); Histórico de dados (Hacker 30 dias, Startups 1 ano, Business 2 anos, Enterprise 3 anos)\nCanais: Chat no site (Hacker sim, Startups sim, Business sim, Enterprise sim); E-mail (Hacker não, Startups sim, Business sim, Enterprise sim); WhatsApp (API oficial) (Hacker não, Startups sim, Business sim, Enterprise sim); Instagram, Messenger e TikTok (Hacker não, Startups sim, Business sim, Enterprise sim); Telegram, LINE e SMS (Hacker não, Startups sim, Business sim, Enterprise sim); Canal via API (Hacker não, Startups sim, Business sim, Enterprise sim); Voz (Hacker não, Startups não, Business sim, Enterprise sim)\nCaptain IA: Créditos inclusos por mês (Hacker não, Startups 300, Business 500, Enterprise 800); Copiloto e sugestões de resposta (Hacker não, Startups sim, Business sim, Enterprise sim); Resumo de conversas (Hacker não, Startups sim, Business sim, Enterprise sim); Triagem e monitores (Hacker não, Startups não, Business sim, Enterprise sim)\nGestão de conversas: Caixa de entrada compartilhada (Hacker sim, Startups sim, Business sim, Enterprise sim); Etiquetas e notas privadas (Hacker sim, Startups sim, Business sim, Enterprise sim); Respostas prontas (Hacker sim, Startups sim, Business sim, Enterprise sim); Times (Hacker não, Startups não, Business sim, Enterprise sim); Regras de automação e macros (Hacker não, Startups não, Business sim, Enterprise sim); SLA e horário de atendimento (Hacker não, Startups não, Business sim, Enterprise sim); Atribuição automática e capacidade (Hacker não, Startups não, Business sim, Enterprise sim)\nClientes, autoatendimento e relatórios: Perfis, atributos e segmentos (Hacker sim, Startups sim, Business sim, Enterprise sim); Central de ajuda (Hacker não, Startups sim, Business sim, Enterprise sim); Domínio personalizado na central (Hacker não, Startups não, Business sim, Enterprise sim); Campanhas (site e WhatsApp) (Hacker não, Startups sim, Business sim, Enterprise sim); Relatórios e CSAT (Hacker Básicos, Startups sim, Business sim, Enterprise sim)\nIntegrações e segurança: API e webhooks (Hacker sim, Startups sim, Business sim, Enterprise sim); Slack, Linear, Dialogflow e apps no painel (Hacker não, Startups sim, Business sim, Enterprise sim); Papéis personalizados (Hacker não, Startups não, Business não, Enterprise sim); Logs de auditoria (Hacker não, Startups não, Business não, Enterprise sim); SSO / SAML (Hacker não, Startups não, Business não, Enterprise sim); Onboarding dedicado (Hacker não, Startups não, Business não, Enterprise sim)\nP: Como funciona a cobrança?\nR: Os planos pagos são cobrados por agente por mês. No plano anual, você paga o equivalente a 10 meses e usa 12. Todos os valores são em reais.\nP: As mensagens do WhatsApp estão incluídas?\nR: O valor por agente cobre o uso da plataforma. As conversas iniciadas por templates no WhatsApp seguem a tabela oficial da Meta e são cobradas à parte, conforme o volume de cada empresa.\nP: Como funcionam os créditos do Captain?\nR: Os planos pagos incluem créditos mensais do Captain: 300 no Startups, 500 no Business e 800 no Enterprise. Se precisar de mais, é possível comprar pacotes adicionais de 1.000 créditos.\nP: Posso mudar de plano depois?\nR: Sim. Você pode subir ou descer de plano quando quiser, e o valor é ajustado de forma proporcional.\nP: O que significa conversas ilimitadas?\nR: Nos planos pagos não há limite de conversas, sujeito à política de uso justo para evitar abusos.\nP: Vocês oferecem desconto para ONGs e projetos open source?\nR: Sim. Fale com a equipe para conhecer as condições."
+  },
+  {
+   "id": "recurso-web-chat",
+   "title": "Chat no site",
+   "url": "https://ingrave.com.br/canais/web-chat",
+   "text": "Um widget de chat ajustável para o seu site ou produto.\nConverse com quem está no seu site, no momento certo.\nInstale o widget com uma linha de código e atenda visitantes sem tirá-los da página. As conversas chegam na mesma caixa de entrada dos outros canais.\nInstalação em minutos: Copie o script, cole no site e o chat já aparece com as cores da sua marca.\nContexto do visitante: Veja a página atual, o navegador e o histórico de conversas anteriores.\nAtendimento contínuo: Se o visitante sair, a conversa continua por e-mail quando ele deixa o contato.\nComo funciona: Crie a caixa de entrada de chat e escolha cores e textos → Cole o script no site ou no app → Responda pela Ingrave junto com os outros canais"
+  },
+  {
+   "id": "recurso-email",
+   "title": "E-mail",
+   "url": "https://ingrave.com.br/canais/email",
+   "text": "Conecte o e-mail de suporte por IMAP/SMTP ou encaminhamento.\nO e-mail de suporte dentro do mesmo fluxo da equipe.\nConecte o endereço de suporte e transforme cada e-mail em uma conversa com dono, prioridade e histórico, sem caixas de correio compartilhadas e confusas.\nThreads organizadas: Respostas e encaminhamentos ficam agrupados na mesma conversa.\nAssinatura e identidade: Responda com o nome da empresa e uma assinatura padrão.\nMesmo histórico: O e-mail aparece no perfil do cliente junto com chat e WhatsApp.\nComo funciona: Conecte a conta por IMAP/SMTP ou crie um encaminhamento → Defina quem recebe as novas mensagens → Responda, etiquete e resolva como qualquer conversa"
+  },
+  {
+   "id": "recurso-whatsapp",
+   "title": "WhatsApp",
+   "url": "https://ingrave.com.br/canais/whatsapp",
+   "text": "Atendimento pela API oficial do WhatsApp Business.\nO canal favorito do cliente, no fluxo da equipe.\nConecte números pela API oficial do WhatsApp Business e atenda em equipe, com templates aprovados, mídias e histórico conectado ao cliente.\nVários atendentes, um número: Toda a equipe responde pelo mesmo número, cada um com suas conversas.\nTemplates aprovados: Envie mensagens fora da janela de 24 horas com modelos aprovados pela Meta.\nMídias e documentos: Receba e envie fotos, áudios, PDFs e localização.\nComo funciona: Conecte o número pela API oficial → Distribua as conversas por time ou atendente → Use templates e campanhas para retomar contatos"
+  },
+  {
+   "id": "recurso-messenger",
+   "title": "Facebook Messenger",
+   "url": "https://ingrave.com.br/canais/messenger",
+   "text": "Mensagens da sua página do Facebook na caixa de entrada.\nAs mensagens da sua página do Facebook, sem abrir o Facebook.\nConecte a página e responda às mensagens do Messenger junto com os outros canais, com histórico e responsáveis.\nConexão em poucos cliques: Autorize a página e as mensagens começam a chegar.\nEquipe organizada: Distribua, etiquete e acompanhe como qualquer conversa.\nPerfil unificado: O contato do Messenger se junta ao perfil do cliente.\nComo funciona: Conecte a página do Facebook → Escolha a equipe responsável → Responda pela Ingrave"
+  },
+  {
+   "id": "recurso-instagram",
+   "title": "Instagram",
+   "url": "https://ingrave.com.br/canais/instagram",
+   "text": "Directs do Instagram organizados para a equipe.\nDo direct à conversa que avança.\nReceba as mensagens diretas do Instagram na Ingrave e responda em equipe, com contexto, sem dividir a senha da conta.\nSem compartilhar senha: Cada atendente responde com o próprio acesso.\nRespostas a stories: Menções e respostas a stories chegam como conversas.\nOrganização por assunto: Use etiquetas para separar vendas, suporte e parcerias.\nComo funciona: Conecte a conta profissional do Instagram → Defina times e regras de distribuição → Acompanhe tudo pela caixa de entrada"
+  },
+  {
+   "id": "recurso-tiktok",
+   "title": "TikTok",
+   "url": "https://ingrave.com.br/canais/tiktok",
+   "text": "Mensagens diretas do TikTok junto com os outros canais.\nAtenda quem chega pelo TikTok sem perder o ritmo.\nConecte a conta e receba as mensagens diretas do TikTok na mesma caixa de entrada, com o mesmo cuidado dos outros canais.\nUm lugar só: Nada de alternar entre apps para responder.\nContexto do cliente: O histórico acompanha o contato em qualquer canal.\nEquipe compartilhada: Distribua as mensagens entre atendentes.\nComo funciona: Conecte a conta do TikTok → Escolha a equipe responsável → Responda pela Ingrave"
+  },
+  {
+   "id": "recurso-x",
+   "title": "X (Twitter)",
+   "url": "https://ingrave.com.br/canais/x",
+   "text": "(Em breve)\nMensagens diretas e menções do X.\nMensagens e menções do X na caixa de entrada.\nEm breve, mensagens diretas e menções do X chegarão à Ingrave como conversas, prontas para a equipe responder.\nMenções viram conversas: Nenhuma menção importante fica sem resposta.\nDMs organizadas: Mensagens diretas com responsável e prioridade.\nHistórico conectado: Tudo vinculado ao perfil do cliente.\nComo funciona: Conecte a conta do X → Defina quem acompanha menções e mensagens → Responda pela Ingrave"
+  },
+  {
+   "id": "recurso-telegram",
+   "title": "Telegram",
+   "url": "https://ingrave.com.br/canais/telegram",
+   "text": "Conversas de um bot do Telegram na Ingrave.\nAtendimento pelo Telegram, com a equipe toda junta.\nConecte um bot do Telegram e receba as conversas na Ingrave para responder em equipe, com histórico e organização.\nConfiguração simples: Basta o token do bot para começar.\nMídias suportadas: Receba imagens, arquivos e áudios.\nMesma organização: Etiquetas, times e automações valem para o Telegram.\nComo funciona: Crie um bot e copie o token → Conecte o bot na Ingrave → Responda pela caixa de entrada"
+  },
+  {
+   "id": "recurso-line",
+   "title": "LINE",
+   "url": "https://ingrave.com.br/canais/line",
+   "text": "Suporte pelo LINE para clientes que usam o app.\nAtenda clientes que preferem o LINE.\nConecte um canal oficial do LINE e responda às mensagens na Ingrave, junto com todos os outros canais.\nCanal oficial: Conexão com a conta oficial do LINE.\nFluxo único: As mensagens entram na mesma fila da equipe.\nHistórico completo: Cada conversa fica registrada no perfil do contato.\nComo funciona: Conecte o canal do LINE → Escolha os responsáveis → Responda pela Ingrave"
+  },
+  {
+   "id": "recurso-sms",
+   "title": "SMS",
+   "url": "https://ingrave.com.br/canais/sms",
+   "text": "Envie e receba SMS pela Twilio e outros provedores.\nSMS de ida e volta, com o contexto de sempre.\nConecte um número de SMS pela Twilio ou outro provedor compatível e converse por mensagem de texto direto da Ingrave.\nProvedores compatíveis: Use a Twilio ou outro provedor de SMS suportado.\nRespostas rápidas: Use respostas prontas e macros também no SMS.\nTudo registrado: As mensagens ficam no histórico do cliente.\nComo funciona: Conecte o provedor de SMS → Associe o número a uma caixa de entrada → Converse pela Ingrave"
+  },
+  {
+   "id": "recurso-voz",
+   "title": "Voz",
+   "url": "https://ingrave.com.br/canais/voz",
+   "text": "Atenda chamadas telefônicas dentro da caixa de entrada.\nChamadas telefônicas no mesmo lugar das mensagens.\nReceba e faça ligações pela Ingrave. Cada chamada vira uma conversa, com registro, notas e o histórico completo do cliente ao lado.\nLigação com contexto: Veja quem está ligando e o que já foi conversado antes de atender.\nRegistro automático: Cada chamada fica no histórico, com duração e notas.\nContinuidade: Comece por telefone e continue pelo WhatsApp ou e-mail.\nComo funciona: Conecte um número de telefone → Defina quem recebe as chamadas → Atenda pelo navegador, com o perfil do cliente aberto"
+  },
+  {
+   "id": "recurso-caixa-de-entrada-compartilhada",
+   "title": "Caixa de entrada compartilhada",
+   "url": "https://ingrave.com.br/recursos/caixa-de-entrada-compartilhada",
+   "text": "Filas compartilhadas para a equipe trabalhar junta.\nUma caixa de entrada para toda a equipe.\nTodas as conversas de todos os canais em uma fila compartilhada, com abas para as suas, as não atribuídas e as de cada time.\nNada se perde: Cada conversa tem dono, status e prioridade.\nVisões que fazem sentido: Minhas, não atribuídas, todas, por time e por canal.\nTrabalho em tempo real: Novas mensagens aparecem na hora para quem precisa ver.\nComo funciona: Conecte os canais → Crie times e regras de distribuição → Acompanhe tudo em uma visão só"
+  },
+  {
+   "id": "recurso-etiquetas",
+   "title": "Etiquetas",
+   "url": "https://ingrave.com.br/recursos/etiquetas",
+   "text": "Marque conversas para organizar e analisar.\nEtiquetas para dar nome a cada assunto.\nClassifique conversas com etiquetas coloridas como cobrança, entrega ou lead. Filtre, automatize e acompanhe relatórios por etiqueta.\nOrganização visual: Cores ajudam a bater o olho e entender a fila.\nBase para automações: Regras podem adicionar etiquetas e agir a partir delas.\nRelatórios por assunto: Saiba quais temas mais geram contato.\nComo funciona: Crie as etiquetas do seu negócio → Aplique manualmente ou por automação → Filtre e acompanhe nos relatórios"
+  },
+  {
+   "id": "recurso-notas-privadas",
+   "title": "Notas privadas",
+   "url": "https://ingrave.com.br/recursos/notas-privadas",
+   "text": "Converse com a equipe dentro do atendimento, sem o cliente ver.\nBastidores dentro da própria conversa.\nEscreva notas internas e mencione colegas no meio do atendimento. O cliente não vê nada, e a decisão fica registrada para quem vier depois.\nMenções com @: Chame quem sabe a resposta e ele recebe uma notificação.\nContexto preservado: As notas ficam no histórico da conversa.\nSem grupos paralelos: Chega de decidir atendimento em outro aplicativo.\nComo funciona: Troque a caixa de resposta para nota privada → Mencione um colega com @ → Responda ao cliente já com a decisão"
+  },
+  {
+   "id": "recurso-times",
+   "title": "Times",
+   "url": "https://ingrave.com.br/recursos/times",
+   "text": "Crie grupos internos de atendentes.\nTimes para cada tipo de demanda.\nAgrupe atendentes em times como Suporte, Financeiro ou Vendas e direcione as conversas para quem entende do assunto.\nEncaminhamento claro: Conversas vão para o time certo, não para todo mundo.\nFilas por time: Cada time vê e cuida da sua fila.\nRelatórios por time: Compare volume e tempo de resposta entre equipes.\nComo funciona: Crie os times → Adicione os atendentes → Encaminhe conversas manualmente ou por regra"
+  },
+  {
+   "id": "recurso-atribuicoes",
+   "title": "Atribuições",
+   "url": "https://ingrave.com.br/recursos/atribuicoes",
+   "text": "Defina quem cuida de cada conversa.\nCada conversa com um responsável.\nAtribua conversas a atendentes e times manualmente ou de forma automática, para que nenhum cliente fique sem resposta por falta de dono.\nResponsabilidade clara: Todo mundo sabe o que é seu.\nTransferência simples: Passe a conversa com um clique e uma nota de contexto.\nEquilíbrio da fila: Combine com atribuição automática e capacidade.\nComo funciona: Abra a conversa → Escolha o atendente ou o time → Acompanhe na aba Minhas"
+  },
+  {
+   "id": "recurso-prioridade",
+   "title": "Prioridade",
+   "url": "https://ingrave.com.br/recursos/prioridade",
+   "text": "Indique a urgência de cada conversa.\nO que é urgente aparece primeiro.\nMarque conversas como urgente, alta, média ou baixa e ordene a fila pela prioridade. Regras e o Captain podem definir a prioridade sozinhos.\nFila ordenada: Os casos críticos sobem para o topo.\nSinal visual: Ícones de prioridade em toda a lista.\nAutomático quando possível: Defina a prioridade por regra ou pelo Captain.\nComo funciona: Defina a prioridade na conversa → Ordene a lista por prioridade → Automatize com regras ou com o Captain"
+  },
+  {
+   "id": "recurso-confirmacao-de-leitura",
+   "title": "Confirmação de leitura",
+   "url": "https://ingrave.com.br/recursos/confirmacao-de-leitura",
+   "text": "Saiba se a mensagem foi entregue e lida.\nSaiba se sua mensagem chegou.\nAcompanhe o status de envio, entrega e leitura das mensagens nos canais que oferecem essa informação.\nMenos dúvida: Veja na hora se o cliente recebeu.\nFalhas visíveis: Mensagens que não foram entregues ficam sinalizadas.\nFollow-up no momento certo: Retome quando a mensagem foi lida e ficou sem resposta.\nComo funciona: Envie a mensagem → Acompanhe os indicadores de status → Retome a conversa quando fizer sentido"
+  },
+  {
+   "id": "recurso-deteccao-de-colisao",
+   "title": "Detecção de colisão",
+   "url": "https://ingrave.com.br/recursos/deteccao-de-colisao",
+   "text": "Evite que duas pessoas respondam a mesma conversa.\nDuas pessoas, uma conversa, nenhuma resposta duplicada.\nA Ingrave mostra quem está vendo ou digitando em cada conversa, para que dois atendentes não respondam o mesmo cliente ao mesmo tempo.\nPresença em tempo real: Veja quem mais está na conversa.\nSem respostas repetidas: O cliente recebe uma resposta, não duas.\nColaboração tranquila: Combine com notas privadas para decidir junto.\nComo funciona: Abra uma conversa → Veja o aviso de quem já está nela → Combine pela nota privada quem responde"
+  },
+  {
+   "id": "recurso-filtros-de-conversa",
+   "title": "Filtros de conversa",
+   "url": "https://ingrave.com.br/recursos/filtros-de-conversa",
+   "text": "Filtros avançados para encontrar qualquer conversa.\nEncontre exatamente as conversas que você procura.\nCombine status, canal, etiqueta, time, prioridade, atributos e datas em filtros avançados e salve as visões que você usa todo dia.\nCombinações livres: Use E/OU entre várias condições.\nVisões salvas: Guarde filtros como pastas na barra lateral.\nBusca rápida: Procure por mensagem, contato ou número da conversa.\nComo funciona: Abra o filtro avançado → Combine as condições → Salve como pasta para usar depois"
+  },
+  {
+   "id": "recurso-captain",
+   "title": "Captain",
+   "url": "https://ingrave.com.br/recursos/captain",
+   "text": "Um copiloto de IA que ajuda a equipe a responder.\nCaptain, a IA que trabalha ao lado da sua equipe.\nO Captain resume conversas, sugere respostas com base no seu conteúdo e ajusta o tom, sem tirar o humano da conversa.\nRascunhos em segundos: A equipe revisa, ajusta e envia. Ninguém começa do zero.\nBaseado no seu conteúdo: Respostas apoiadas na central de ajuda e em documentos da empresa.\nResumo de histórico: Quem assume a conversa entende o caso na hora.\nComo funciona: Conecte a central de ajuda e documentos → Ative o Captain nas caixas de entrada → Use as sugestões no dia a dia e ajuste o tom"
+  },
+  {
+   "id": "recurso-captain-monitores",
+   "title": "Captain Monitores",
+   "url": "https://ingrave.com.br/recursos/captain-monitores",
+   "text": "Acompanhe temas descritos em linguagem natural.\nDiga o que acompanhar. O Captain fica de olho.\nDescreva em palavras simples os assuntos que importam, como reclamações de entrega ou pedidos de cancelamento, e o Captain sinaliza as conversas que se encaixam.\nSem palavras-chave frágeis: Descreva o tema como explicaria para um colega.\nAlertas no momento certo: Veja quando um assunto começa a crescer.\nAção rápida: Leve as conversas sinalizadas para o time certo.\nComo funciona: Descreva o tema em linguagem natural → O Captain analisa as novas conversas → Acompanhe as ocorrências e aja"
+  },
+  {
+   "id": "recurso-captain-triagem",
+   "title": "Captain Triagem",
+   "url": "https://ingrave.com.br/recursos/captain-triagem",
+   "text": "Prioridade, etiquetas e time definidos automaticamente.\nTriagem automática desde a primeira mensagem.\nO Captain lê a primeira mensagem, entende a intenção e define prioridade, etiquetas e o time responsável antes de alguém abrir a conversa.\nFila já organizada: As conversas chegam classificadas.\nMenos encaminhamento manual: Cada pedido vai direto para quem resolve.\nCritérios transparentes: Veja por que cada decisão foi tomada.\nComo funciona: Ative a triagem nas caixas de entrada → Defina etiquetas e times disponíveis → Acompanhe e ajuste as decisões"
+  },
+  {
+   "id": "recurso-regras-de-automacao",
+   "title": "Regras de automação",
+   "url": "https://ingrave.com.br/recursos/regras-de-automacao",
+   "text": "Execute ações quando condições forem atendidas.\nQuando acontecer isso, faça aquilo.\nCrie regras sem código que reagem a eventos, como uma nova conversa ou uma mensagem recebida, e executam ações como atribuir, etiquetar, priorizar ou enviar mensagem.\nSem código: Monte regras com eventos, condições e ações.\nConsistência: O mesmo critério vale para todas as conversas.\nTempo livre: A equipe para de fazer o que a regra faz.\nComo funciona: Escolha o evento → Defina as condições → Escolha as ações e ative"
+  },
+  {
+   "id": "recurso-macros",
+   "title": "Macros",
+   "url": "https://ingrave.com.br/recursos/macros",
+   "text": "Uma sequência de ações com um clique.\nVárias ações, um clique.\nAgrupe ações frequentes, como enviar uma mensagem, adicionar etiqueta, atribuir ao financeiro e resolver, em uma macro que qualquer atendente executa na hora.\nProcessos padronizados: Todo mundo resolve do mesmo jeito.\nMenos cliques: O que levava seis passos vira um.\nPessoais ou da equipe: Crie macros só suas ou compartilhadas.\nComo funciona: Crie a macro e adicione as ações → Compartilhe com a equipe → Execute de dentro da conversa"
+  },
+  {
+   "id": "recurso-chatbots",
+   "title": "Chatbots",
+   "url": "https://ingrave.com.br/recursos/chatbots",
+   "text": "Integração com bots como Dialogflow e Rasa.\nBots que atendem primeiro e passam a vez quando precisa.\nConecte bots do Dialogflow, Rasa ou o seu próprio via API. O bot resolve o simples e transfere para uma pessoa com todo o contexto.\nAtendimento 24 horas: Respostas imediatas mesmo fora do expediente.\nTransferência suave: A pessoa assume com o histórico do bot.\nUse o bot que quiser: Dialogflow, Rasa ou um bot próprio via API.\nComo funciona: Conecte o bot à caixa de entrada → Defina quando ele transfere → Acompanhe as conversas do bot"
+  },
+  {
+   "id": "recurso-sla",
+   "title": "Gestão de SLA",
+   "url": "https://ingrave.com.br/recursos/sla",
+   "text": "Acompanhe prazos de primeira resposta e resolução.\nPrazos claros, cumpridos de verdade.\nDefina políticas de SLA para primeira resposta, próxima resposta e resolução. A Ingrave mostra o tempo restante e alerta antes do prazo estourar.\nTempo restante visível: Cada conversa mostra quanto falta.\nAlertas antecipados: Avisos antes do prazo, não depois.\nRelatórios de cumprimento: Saiba quais prazos foram cumpridos ou perdidos.\nComo funciona: Crie as políticas de SLA → Aplique por regra ou manualmente → Acompanhe os prazos na fila"
+  },
+  {
+   "id": "recurso-horario-de-atendimento",
+   "title": "Horário de atendimento",
+   "url": "https://ingrave.com.br/recursos/horario-de-atendimento",
+   "text": "Defina os horários em que a equipe atende.\nO cliente sabe quando vai ser atendido.\nConfigure o horário de funcionamento de cada caixa de entrada e envie uma mensagem automática fora do expediente com a expectativa certa.\nHorários por canal: Cada caixa de entrada com sua agenda.\nMensagem fora do horário: O cliente recebe um aviso claro.\nStatus no widget: O chat mostra se a equipe está online.\nComo funciona: Defina dias e horários → Escreva a mensagem fora do horário → Ative na caixa de entrada"
+  },
+  {
+   "id": "recurso-atribuicao-automatica",
+   "title": "Atribuição automática",
+   "url": "https://ingrave.com.br/recursos/atribuicao-automatica",
+   "text": "Distribua as conversas entre os atendentes disponíveis.\nConversas distribuídas sem ninguém precisar distribuir.\nNovas conversas são atribuídas em rodízio para os atendentes disponíveis da caixa de entrada, respeitando presença e capacidade.\nDistribuição justa: Rodízio entre quem está online.\nResposta mais rápida: Ninguém espera alguém pegar a conversa.\nRespeita a capacidade: Combine com limites por atendente.\nComo funciona: Ative a atribuição automática na caixa de entrada → Defina os atendentes participantes → Ajuste a capacidade se precisar"
+  },
+  {
+   "id": "recurso-capacidade-dos-agentes",
+   "title": "Capacidade dos agentes",
+   "url": "https://ingrave.com.br/recursos/capacidade-dos-agentes",
+   "text": "Evite sobrecarregar os atendentes.\nCada atendente com a quantidade certa de conversas.\nDefina quantas conversas cada pessoa pode atender ao mesmo tempo. A distribuição automática respeita esse limite.\nQualidade preservada: Ninguém atende mais do que consegue.\nLimites por canal: Capacidades diferentes para chat e e-mail.\nVisão da carga: Veja quem tem espaço para mais conversas.\nComo funciona: Crie uma política de capacidade → Associe aos atendentes → Deixe a distribuição automática respeitar os limites"
+  },
+  {
+   "id": "recurso-perfis-de-contato",
+   "title": "Perfis de contato",
+   "url": "https://ingrave.com.br/recursos/perfis-de-contato",
+   "text": "Uma visão unificada de cada cliente.\nTudo sobre o cliente em um só perfil.\nDados de contato, canais, empresa, conversas anteriores, notas e atributos reunidos no mesmo perfil, sempre ao lado da conversa.\nPerfil ao lado da conversa: Nada de abrir outra ferramenta para saber quem é.\nContatos mesclados: Una perfis duplicados de canais diferentes.\nDados sempre atualizados: Edite na hora ou sincronize via API.\nComo funciona: Os contatos são criados a cada nova conversa → Complete dados e mescle duplicados → Use o perfil em cada atendimento"
+  },
+  {
+   "id": "recurso-notas-de-contato",
+   "title": "Notas de contato",
+   "url": "https://ingrave.com.br/recursos/notas-de-contato",
+   "text": "Anotações fixas no perfil do cliente.\nO que a equipe precisa lembrar sobre cada cliente.\nRegistre preferências, combinados e contexto importante no perfil do contato. Quem atender depois já sabe.\nMemória da equipe: O combinado não depende de quem atendeu.\nVisível em toda conversa: As notas aparecem no painel do contato.\nAutor e data: Saiba quem escreveu e quando.\nComo funciona: Abra o perfil do contato → Adicione a nota → Consulte em qualquer conversa futura"
+  },
+  {
+   "id": "recurso-atributos-personalizados",
+   "title": "Atributos personalizados",
+   "url": "https://ingrave.com.br/recursos/atributos-personalizados",
+   "text": "Campos sob medida para o seu negócio.\nOs campos que o seu negócio precisa.\nCrie atributos para contatos e conversas, como plano, número do pedido ou data de renovação, e use em filtros, automações e relatórios.\nVários tipos: Texto, número, data, lista, link e caixa de seleção.\nBase para automações: Regras e segmentos usam os atributos.\nPreenchidos via API: Sincronize dados do seu sistema.\nComo funciona: Crie o atributo e escolha o tipo → Preencha manualmente, no pré-chat ou via API → Use em filtros e automações"
+  },
+  {
+   "id": "recurso-segmentos-de-contatos",
+   "title": "Segmentos de contatos",
+   "url": "https://ingrave.com.br/recursos/segmentos-de-contatos",
+   "text": "Filtre e agrupe contatos.\nGrupos de clientes prontos para agir.\nFiltre contatos por atributos, etiquetas, cidade ou data e salve como segmentos para campanhas, análises e ações em massa.\nFiltros combinados: Use várias condições ao mesmo tempo.\nSegmentos salvos: Volte ao mesmo grupo quando quiser.\nProntos para campanha: Use segmentos como público de campanhas.\nComo funciona: Abra a lista de contatos → Combine os filtros → Salve como segmento"
+  },
+  {
+   "id": "recurso-historico-de-conversas",
+   "title": "Histórico de conversas",
+   "url": "https://ingrave.com.br/recursos/historico-de-conversas",
+   "text": "Uma linha do tempo completa de interações.\nToda a história do cliente, em ordem.\nVeja todas as conversas anteriores do contato, de qualquer canal, em uma linha do tempo dentro do atendimento atual.\nTodos os canais: Chat, e-mail, WhatsApp e voz na mesma linha do tempo.\nAcesso rápido: Abra conversas antigas sem sair da atual.\nContexto para decidir: Entenda o que já foi tentado.\nComo funciona: Abra uma conversa → Veja as conversas anteriores no painel → Abra a que precisar"
+  },
+  {
+   "id": "recurso-formularios-pre-chat",
+   "title": "Formulários pré-chat",
+   "url": "https://ingrave.com.br/recursos/formularios-pre-chat",
+   "text": "Colete dados antes do chat começar.\nSaiba quem é e o que precisa antes do primeiro olá.\nPeça nome, e-mail, telefone ou qualquer atributo personalizado antes de iniciar o chat no site, e já direcione a conversa.\nCampos sob medida: Use os atributos que você criou.\nObrigatórios ou opcionais: Você decide o que pedir.\nContato criado na hora: Os dados vão direto para o perfil.\nComo funciona: Ative o pré-chat no widget → Escolha os campos → Receba conversas já identificadas"
+  },
+  {
+   "id": "recurso-importacao-csv",
+   "title": "Importação por CSV",
+   "url": "https://ingrave.com.br/recursos/importacao-csv",
+   "text": "Importe contatos em massa.\nTraga sua base de contatos em minutos.\nImporte contatos de uma planilha CSV com nome, e-mail, telefone e atributos, e comece a atender com contexto desde o primeiro dia.\nMigração simples: Traga contatos de outra ferramenta.\nAtributos incluídos: Mapeie colunas para campos personalizados.\nExportação também: Baixe a base quando precisar.\nComo funciona: Prepare a planilha CSV → Envie pela tela de contatos → Confira os contatos importados"
+  },
+  {
+   "id": "recurso-api-de-contatos",
+   "title": "API de contatos",
+   "url": "https://ingrave.com.br/recursos/api-de-contatos",
+   "text": "Sincronize contatos com sistemas externos.\nContatos sempre sincronizados com o seu sistema.\nCrie, atualize e consulte contatos pela API para manter a Ingrave alinhada com seu CRM, ERP ou plataforma de e-commerce.\nDados em tempo real: Atualize atributos quando algo mudar no seu sistema.\nIdentificação segura: Identifique usuários logados no widget.\nAutomação completa: Combine com webhooks para fluxos de ida e volta.\nComo funciona: Gere um token de acesso → Use os endpoints de contatos → Combine com webhooks"
+  },
+  {
+   "id": "recurso-visao-ao-vivo",
+   "title": "Visão ao vivo",
+   "url": "https://ingrave.com.br/recursos/visao-ao-vivo",
+   "text": "Um painel de atendimento em tempo real.\nO que está acontecendo agora, em uma tela.\nVeja conversas abertas, não atribuídas e pendentes, além de quem está online e quantas conversas cada pessoa tem neste momento.\nTempo real: Números atualizados sem recarregar.\nEquipe visível: Quem está online, ocupado ou ausente.\nAção imediata: Identifique filas crescendo e redistribua.\nComo funciona: Abra a visão ao vivo → Acompanhe filas e equipe → Redistribua quando precisar"
+  },
+  {
+   "id": "recurso-relatorios-de-conversas",
+   "title": "Relatórios de conversas",
+   "url": "https://ingrave.com.br/recursos/relatorios-de-conversas",
+   "text": "Volume, tempo de resposta e resolução.\nVolume, velocidade e resolução, dia a dia.\nAcompanhe conversas recebidas, tempo de primeira resposta, tempo de resolução e mensagens trocadas, por período.\nTendências claras: Veja como os números mudam ao longo do tempo.\nHorários de pico: Saiba quando reforçar a equipe.\nComparação de períodos: Compare semanas e meses.\nComo funciona: Escolha o período → Analise os indicadores → Exporte se precisar"
+  },
+  {
+   "id": "recurso-relatorios-de-agentes",
+   "title": "Relatórios de agentes",
+   "url": "https://ingrave.com.br/recursos/relatorios-de-agentes",
+   "text": "Desempenho individual de cada atendente.\nComo cada pessoa da equipe está indo.\nVeja volume, tempo de resposta, tempo de resolução e satisfação por atendente, para reconhecer e apoiar cada pessoa.\nFeedback com dados: Conversas de desenvolvimento baseadas em números.\nEquilíbrio de carga: Veja quem está sobrecarregado.\nReconhecimento: Identifique quem está indo bem.\nComo funciona: Abra o relatório de agentes → Selecione a pessoa e o período → Compare com a média da equipe"
+  },
+  {
+   "id": "recurso-relatorios-de-times",
+   "title": "Relatórios de times",
+   "url": "https://ingrave.com.br/recursos/relatorios-de-times",
+   "text": "Análises de desempenho por time.\nCompare o ritmo de cada time.\nAcompanhe os indicadores de cada time, como Suporte, Financeiro ou Vendas, e entenda onde a operação precisa de reforço.\nVisão por área: Cada time com seus números.\nPlanejamento: Dados para dimensionar equipes.\nPrioridades claras: Saiba qual time precisa de ajuda.\nComo funciona: Abra o relatório de times → Escolha o time e o período → Compare os resultados"
+  },
+  {
+   "id": "recurso-relatorios-por-caixa",
+   "title": "Relatórios por caixa de entrada",
+   "url": "https://ingrave.com.br/recursos/relatorios-por-caixa",
+   "text": "Indicadores de cada canal.\nComo cada canal está performando.\nCompare volume e tempos entre WhatsApp, chat no site, e-mail e outros canais para decidir onde investir.\nComparação entre canais: Veja qual canal traz mais conversas.\nTempo por canal: Entenda onde a resposta demora mais.\nDecisões de presença: Invista nos canais que seus clientes usam.\nComo funciona: Abra o relatório por caixa de entrada → Selecione o canal → Compare períodos"
+  },
+  {
+   "id": "recurso-relatorios-por-etiqueta",
+   "title": "Relatórios por etiqueta",
+   "url": "https://ingrave.com.br/recursos/relatorios-por-etiqueta",
+   "text": "Análises por assunto.\nOs assuntos que mais geram contato.\nUse as etiquetas para entender quais temas crescem, quanto tempo levam para resolver e onde há oportunidade de autoatendimento.\nMotivos de contato: Saiba por que os clientes chamam.\nOportunidades de conteúdo: Temas frequentes viram artigos.\nMelhoria contínua: Acompanhe o efeito das mudanças.\nComo funciona: Etiquete as conversas → Abra o relatório por etiqueta → Transforme os temas em ações"
+  },
+  {
+   "id": "recurso-relatorios-csat",
+   "title": "Relatórios de CSAT",
+   "url": "https://ingrave.com.br/recursos/relatorios-csat",
+   "text": "Notas de satisfação dos clientes.\nOuça o que o cliente achou do atendimento.\nEnvie uma pesquisa de satisfação ao resolver a conversa e acompanhe notas e comentários por atendente, time e período.\nPesquisa automática: Enviada ao final de cada conversa.\nComentários reais: Leia o que o cliente escreveu.\nPor pessoa e time: Veja onde a experiência é melhor.\nComo funciona: Ative a pesquisa de satisfação → Resolva as conversas normalmente → Acompanhe notas e comentários"
+  },
+  {
+   "id": "recurso-exportacao-de-relatorios",
+   "title": "Exportação de relatórios",
+   "url": "https://ingrave.com.br/recursos/exportacao-de-relatorios",
+   "text": "Baixe os dados para analisar onde quiser.\nLeve os números para onde precisar.\nExporte relatórios em CSV para cruzar com outras fontes na sua planilha ou ferramenta de BI.\nFormato aberto: CSV pronto para planilhas.\nAnálises próprias: Cruze com vendas e outros dados.\nHistórico guardado: Mantenha registros por período.\nComo funciona: Abra o relatório → Escolha o período → Baixe em CSV"
+  },
+  {
+   "id": "recurso-atalhos-de-teclado",
+   "title": "Atalhos de teclado",
+   "url": "https://ingrave.com.br/recursos/atalhos-de-teclado",
+   "text": "Navegue pela Ingrave sem tirar a mão do teclado.\nAtenda na velocidade do teclado.\nAtalhos para trocar de conversa, resolver, atribuir, mudar de aba e abrir a barra de comandos, sem depender do mouse.\nMais rapidez: Ações frequentes em uma tecla.\nMenos cansaço: Menos idas e vindas com o mouse.\nFácil de aprender: Lista de atalhos sempre à mão.\nComo funciona: Abra a lista de atalhos → Pratique os mais usados → Ganhe velocidade no dia a dia"
+  },
+  {
+   "id": "recurso-barra-de-comandos",
+   "title": "Barra de comandos",
+   "url": "https://ingrave.com.br/recursos/barra-de-comandos",
+   "text": "Acesso rápido a qualquer ação.\nQualquer ação a um atalho de distância.\nAbra a barra de comandos e digite o que quer fazer: atribuir, etiquetar, mudar prioridade, ir para uma tela ou trocar de tema.\nBusca por ação: Digite e encontre o comando.\nContexto da conversa: Comandos aplicados à conversa aberta.\nNavegação rápida: Vá para qualquer tela sem procurar no menu.\nComo funciona: Pressione Ctrl + K → Digite a ação → Pressione Enter"
+  },
+  {
+   "id": "recurso-respostas-prontas",
+   "title": "Respostas prontas",
+   "url": "https://ingrave.com.br/recursos/respostas-prontas",
+   "text": "Modelos de mensagem reutilizáveis.\nAs melhores respostas, prontas para usar.\nSalve respostas para as perguntas frequentes e insira digitando / seguido do atalho. Todo mundo responde bem, do mesmo jeito.\nConsistência: A mesma informação para todos os clientes.\nVelocidade: Digite / e escolha a resposta.\nFáceis de manter: Atualize em um lugar e vale para todos.\nComo funciona: Crie a resposta e um atalho → Digite / na caixa de resposta → Ajuste se precisar e envie"
+  },
+  {
+   "id": "recurso-acoes-em-massa",
+   "title": "Ações em massa",
+   "url": "https://ingrave.com.br/recursos/acoes-em-massa",
+   "text": "Atualize várias conversas de uma vez.\nOrganize dezenas de conversas de uma vez.\nSelecione várias conversas e atribua, etiquete, mude o status ou resolva todas juntas.\nLimpeza rápida: Resolva conversas antigas em segundos.\nRedistribuição: Passe um lote para outro time.\nMenos repetição: Uma ação, várias conversas.\nComo funciona: Selecione as conversas → Escolha a ação → Confirme"
+  },
+  {
+   "id": "recurso-personalizacao-do-widget",
+   "title": "Personalização do widget",
+   "url": "https://ingrave.com.br/recursos/personalizacao-do-widget",
+   "text": "Cores, textos e posição com a sua marca.\nUm chat com a cara da sua marca.\nEscolha cor, posição, mensagem de boas-vindas, avatar e horário de atendimento do widget, sem escrever código.\nIdentidade visual: Cores e textos da sua marca.\nMensagens de boas-vindas: Recepção certa para cada página.\nComportamento ajustável: Posição, balão e tipo de exibição.\nComo funciona: Abra as configurações do widget → Ajuste cores e textos → Veja a prévia e publique"
+  },
+  {
+   "id": "recurso-central-de-ajuda",
+   "title": "Central de ajuda",
+   "url": "https://ingrave.com.br/recursos/central-de-ajuda",
+   "text": "Um portal de autoatendimento com artigos.\nRespostas que continuam trabalhando.\nPublique artigos organizados por categoria em um portal com a sua marca. Clientes encontram respostas sozinhos e o Captain usa o mesmo conteúdo.\nEditor simples: Escreva e publique sem depender de TI.\nVários idiomas: Traduções do mesmo artigo para cada público.\nIntegrado ao chat: Sugira artigos dentro do widget.\nComo funciona: Crie o portal e as categorias → Escreva e publique os artigos → Divulgue o link e conecte ao chat"
+  },
+  {
+   "id": "recurso-idiomas",
+   "title": "Mais de 50 idiomas",
+   "url": "https://ingrave.com.br/recursos/idiomas",
+   "text": "Converse com clientes no idioma deles.\nAtenda clientes em mais de 50 idiomas.\nA interface, o widget e a central de ajuda funcionam em mais de 50 idiomas, e as mensagens podem ser traduzidas para quem atende.\nInterface traduzida: A equipe usa a Ingrave no idioma que preferir.\nWidget localizado: O cliente vê o chat no idioma dele.\nTradução de mensagens: Entenda e responda em outros idiomas.\nComo funciona: Defina o idioma da conta e do widget → Ative a tradução de mensagens → Atenda clientes do mundo todo"
+  },
+  {
+   "id": "recurso-campanhas",
+   "title": "Campanhas",
+   "url": "https://ingrave.com.br/recursos/campanhas",
+   "text": "Mensagens proativas para visitantes e contatos.\nComece a conversa antes do cliente.\nCrie campanhas que enviam mensagens para visitantes do site em páginas específicas ou para segmentos de contatos, no momento certo.\nGatilhos por página: Mensagem certa em cada URL.\nPúblico segmentado: Use segmentos de contatos.\nRespostas no mesmo fluxo: Quem responde entra na caixa de entrada.\nComo funciona: Escolha o tipo de campanha → Defina público e mensagem → Agende ou ative"
+  },
+  {
+   "id": "recurso-campanhas-whatsapp",
+   "title": "Campanhas no WhatsApp",
+   "url": "https://ingrave.com.br/recursos/campanhas-whatsapp",
+   "text": "Envie templates agendados e acompanhe resultados.\nCampanhas de WhatsApp com resultados à vista.\nEnvie templates aprovados para segmentos de contatos, agende o disparo e acompanhe entregas, leituras e respostas.\nTemplates aprovados: Use modelos oficiais da Meta.\nAgendamento: Programe o envio para a melhor hora.\nMétricas de entrega: Veja enviados, entregues, lidos e respondidos.\nComo funciona: Escolha o template → Selecione o segmento → Agende e acompanhe"
+  },
+  {
+   "id": "recurso-dominio-personalizado",
+   "title": "Domínio personalizado",
+   "url": "https://ingrave.com.br/recursos/dominio-personalizado",
+   "text": "A central de ajuda no seu próprio domínio.\nSua central de ajuda no seu endereço.\nPublique a central de ajuda em um subdomínio seu, como ajuda.suaempresa.com.br, com certificado e identidade da marca.\nEndereço da marca: Mais confiança para o cliente.\nMelhor para buscas: O conteúdo fortalece o seu domínio.\nConfiguração guiada: Basta apontar o DNS.\nComo funciona: Escolha o subdomínio → Configure o DNS → Publique o portal"
+  },
+  {
+   "id": "recurso-templates-de-email",
+   "title": "Templates de e-mail",
+   "url": "https://ingrave.com.br/recursos/templates-de-email",
+   "text": "Respostas por e-mail com a identidade da marca.\nE-mails com a identidade da sua marca.\nPersonalize o layout das respostas e notificações por e-mail com logo, cores e assinatura da empresa.\nLayout consistente: Todos os e-mails com a mesma cara.\nAssinaturas: Assinatura padrão por caixa de entrada.\nNotificações claras: Mensagens automáticas bem apresentadas.\nComo funciona: Abra as configurações de e-mail → Ajuste logo, cores e assinatura → Envie um teste e salve"
+  },
+  {
+   "id": "recurso-suporte-rtl",
+   "title": "Suporte a idiomas RTL",
+   "url": "https://ingrave.com.br/recursos/suporte-rtl",
+   "text": "Idiomas escritos da direita para a esquerda.\nPronto para idiomas da direita para a esquerda.\nA interface e o widget se ajustam a idiomas como árabe e hebraico, com o texto e o layout na direção correta.\nLayout espelhado: Menus e mensagens na direção certa.\nWidget adaptado: O cliente lê com naturalidade.\nSem configuração extra: Basta escolher o idioma.\nComo funciona: Escolha o idioma → A interface se ajusta → Atenda normalmente"
+  },
+  {
+   "id": "recurso-slack",
+   "title": "Slack",
+   "url": "https://ingrave.com.br/recursos/slack",
+   "text": "Responda conversas de dentro do Slack.\nAtenda clientes sem sair do Slack.\nReceba novas conversas em um canal do Slack e responda em threads. As respostas vão para o cliente pelo canal original.\nThreads por conversa: Cada atendimento em uma thread.\nResposta direta: Responda no Slack e o cliente recebe.\nEquipe toda por perto: Envolva quem não usa a Ingrave.\nComo funciona: Conecte o workspace do Slack → Escolha o canal → Responda pelas threads"
+  },
+  {
+   "id": "recurso-webhooks",
+   "title": "Webhooks",
+   "url": "https://ingrave.com.br/recursos/webhooks",
+   "text": "Eventos em tempo real para seus sistemas.\nSeus sistemas sabem na hora o que aconteceu.\nReceba eventos como conversa criada, mensagem recebida e status alterado em uma URL sua, para disparar fluxos em outros sistemas.\nTempo real: Eventos enviados assim que acontecem.\nEventos à escolha: Assine só o que precisa.\nBase para automações: Conecte com n8n, Zapier ou sistemas próprios.\nComo funciona: Cadastre a URL → Escolha os eventos → Processe as chamadas no seu sistema"
+  },
+  {
+   "id": "recurso-api",
+   "title": "API REST",
+   "url": "https://ingrave.com.br/recursos/api",
+   "text": "Acesso completo pela API.\nTudo o que a Ingrave faz, pela API.\nContas, caixas de entrada, conversas, mensagens, contatos e relatórios disponíveis por uma API REST documentada, para integrar do seu jeito.\nCobertura completa: Os mesmos recursos da interface.\nCanal via API: Crie canais próprios e integre qualquer origem.\nTokens por usuário: Acesso controlado e auditável.\nComo funciona: Gere o token de acesso → Consulte a documentação → Integre seus sistemas"
+  },
+  {
+   "id": "recurso-dialogflow",
+   "title": "Dialogflow",
+   "url": "https://ingrave.com.br/recursos/dialogflow",
+   "text": "Chatbots com o processamento de linguagem do Google.\nBots do Dialogflow conectados ao seu atendimento.\nConecte um agente do Dialogflow a uma caixa de entrada para responder automaticamente e transferir para uma pessoa quando necessário.\nLinguagem natural: Intenções reconhecidas pelo Google.\nTransferência: Passe para a equipe com o contexto.\nConfiguração simples: Basta o projeto e a chave.\nComo funciona: Crie o agente no Dialogflow → Conecte à caixa de entrada → Defina a regra de transferência"
+  },
+  {
+   "id": "recurso-google-tradutor",
+   "title": "Google Tradutor",
+   "url": "https://ingrave.com.br/recursos/google-tradutor",
+   "text": "Traduza mensagens automaticamente.\nEntenda qualquer cliente, em qualquer idioma.\nTraduza mensagens recebidas para o idioma da equipe com um clique, usando o Google Tradutor.\nTradução instantânea: Leia a mensagem no seu idioma.\nEquipe única: Sem precisar de atendentes para cada língua.\nOriginal preservado: O texto original continua visível.\nComo funciona: Conecte o Google Tradutor → Abra a mensagem → Clique em traduzir"
+  },
+  {
+   "id": "recurso-linear",
+   "title": "Linear",
+   "url": "https://ingrave.com.br/recursos/linear",
+   "text": "Crie issues a partir das conversas.\nDo relato do cliente para a issue, sem copiar e colar.\nCrie issues no Linear a partir de uma conversa ou vincule a issues existentes, para o time de produto receber o contexto completo.\nContexto completo: A issue já leva o link da conversa.\nAcompanhamento: Veja as issues vinculadas na conversa.\nSuporte e produto juntos: Menos ruído entre times.\nComo funciona: Conecte o Linear → Crie ou vincule a issue na conversa → Acompanhe o andamento"
+  },
+  {
+   "id": "recurso-apps-no-painel",
+   "title": "Apps no painel",
+   "url": "https://ingrave.com.br/recursos/apps-no-painel",
+   "text": "Incorpore apps próprios ao painel.\nSeus sistemas dentro da tela de atendimento.\nIncorpore páginas do seu sistema, como pedidos ou assinaturas, como uma aba ao lado da conversa, recebendo os dados do contato.\nSem trocar de tela: Pedidos e dados do cliente ao lado da conversa.\nContexto automático: O app recebe os dados do contato e da conversa.\nQualquer sistema: Basta uma URL.\nComo funciona: Cadastre a URL do app → Receba o contexto da conversa → Use como aba no atendimento"
+  },
+  {
+   "id": "recurso-chamadas-de-video",
+   "title": "Chamadas de áudio e vídeo",
+   "url": "https://ingrave.com.br/recursos/chamadas-de-video",
+   "text": "Chamadas de áudio e vídeo dentro do chat.\nQuando escrever não basta, chame por vídeo.\nInicie uma chamada de áudio ou vídeo a partir do chat no site, sem que o cliente precise instalar nada.\nSem instalação: Funciona no navegador do cliente.\nMais clareza: Mostre a tela e resolva junto.\nRegistro na conversa: A chamada fica no histórico.\nComo funciona: Ative a integração → Inicie a chamada pela conversa → O cliente entra pelo link no chat"
+  },
+  {
+   "id": "recurso-criptografia",
+   "title": "Criptografia de dados",
+   "url": "https://ingrave.com.br/recursos/criptografia",
+   "text": "Dados criptografados em trânsito e em repouso.\nInformações protegidas no caminho e no armazenamento.\nAs comunicações usam conexões criptografadas e os dados armazenados são protegidos, para que conversas e contatos fiquem seguros.\nEm trânsito: Conexões HTTPS/TLS em todo o acesso.\nEm repouso: Dados armazenados com proteção.\nAcesso controlado: Combine com papéis e auditoria.\nComo funciona: Acesse sempre por conexão segura → Defina papéis para a equipe → Acompanhe pelos logs de auditoria"
+  },
+  {
+   "id": "recurso-logs-de-auditoria",
+   "title": "Logs de auditoria",
+   "url": "https://ingrave.com.br/recursos/logs-de-auditoria",
+   "text": "Registro de todas as atividades da conta.\nQuem fez o quê, e quando.\nAcompanhe alterações em configurações, caixas de entrada, usuários e automações, com autor, data e detalhes.\nRastreabilidade: Cada mudança registrada.\nInvestigação rápida: Encontre a origem de um problema.\nGovernança: Base para processos internos de controle.\nComo funciona: Abra os logs de auditoria → Filtre por pessoa ou ação → Veja os detalhes da mudança"
+  },
+  {
+   "id": "recurso-papeis-e-permissoes",
+   "title": "Papéis e permissões",
+   "url": "https://ingrave.com.br/recursos/papeis-e-permissoes",
+   "text": "Controle de acesso sob medida.\nCada pessoa vê o que precisa.\nUse os papéis padrão ou crie papéis personalizados com permissões específicas para conversas, contatos, relatórios e configurações.\nPapéis personalizados: Monte o acesso de cada função.\nAcesso por caixa de entrada: Restrinja canais por pessoa.\nMenos risco: Configurações só com quem deve mexer.\nComo funciona: Crie o papel → Escolha as permissões → Atribua às pessoas"
+  },
+  {
+   "id": "recurso-sso-saml",
+   "title": "SSO / SAML",
+   "url": "https://ingrave.com.br/recursos/sso-saml",
+   "text": "Login único com o provedor da empresa.\nEntre com a conta da empresa.\nConecte a Ingrave ao seu provedor de identidade via SAML para que a equipe entre com login único e o acesso siga as políticas da empresa.\nUm login só: Menos senhas para gerenciar.\nControle central: Desligou no provedor, perdeu o acesso.\nPolíticas da empresa: MFA e regras do seu provedor.\nComo funciona: Configure o aplicativo SAML no provedor → Informe os dados na Ingrave → Ative o login único"
+  },
+  {
+   "id": "recurso-privacidade-lgpd",
+   "title": "Privacidade e LGPD",
+   "url": "https://ingrave.com.br/recursos/privacidade-lgpd",
+   "text": "Controles para pedidos de privacidade.\nFerramentas para cuidar dos dados dos seus clientes.\nExporte e exclua dados de contatos, controle quem acessa as informações e responda a pedidos de titulares com mais facilidade.\nExclusão de contatos: Remova dados quando o titular pedir.\nExportação: Entregue os dados em formato aberto.\nAcesso restrito: Permissões limitam quem vê o quê.\nComo funciona: Localize o contato → Exporte ou exclua os dados → Registre o atendimento ao pedido"
+  },
+  {
+   "id": "produto-captain",
+   "title": "Captain",
+   "url": "https://ingrave.com.br/produto/captain",
+   "text": "IA para cada conversa\nA IA que trabalha ao lado da sua equipe.\nO Captain entende cada pedido, resume históricos, sugere respostas a partir do seu conteúdo e organiza a fila sozinho. Sua equipe continua no controle de cada mensagem enviada.\nRascunhos de resposta baseados no seu conteúdo: O Captain lê a conversa, busca a resposta na central de ajuda e nos documentos da empresa e entrega um rascunho pronto para revisar. Mostra a fonte de cada resposta; Ajusta o tom: mais formal, mais próximo, mais curto; Funciona em todos os canais\nTriagem automática desde a primeira mensagem: Prioridade, etiquetas e time responsável definidos assim que a conversa chega, para a fila já começar organizada. Entende a intenção do cliente; Encaminha para quem resolve; Decisões transparentes e ajustáveis\nMonitores para os temas que importam: Descreva em linguagem natural o que quer acompanhar e o Captain sinaliza as conversas sobre aquele assunto. Reclamações, cancelamentos, elogios; Sem listas de palavras-chave; Alertas quando um tema cresce\nP: O Captain responde sozinho para o cliente?\nR: Você decide. O Captain pode sugerir rascunhos para a equipe aprovar e também atender em canais definidos, transferindo para uma pessoa quando necessário.\nP: De onde vêm as respostas?\nR: Dos artigos da sua central de ajuda e dos documentos que você adicionar. Cada sugestão mostra a fonte usada.\nP: Preciso treinar um modelo?\nR: Não. Basta conectar o conteúdo que você já tem e ajustar as instruções.\nP: Em quais planos o Captain está disponível?\nR: Veja os detalhes na página de preços ou fale com a equipe."
+  },
+  {
+   "id": "produto-shared-inbox",
+   "title": "Caixa de entrada",
+   "url": "https://ingrave.com.br/produto/shared-inbox",
+   "text": "Todos os canais, uma só fila\nUma caixa de entrada para todos os canais e toda a equipe.\nWhatsApp, Instagram, chat no site, e-mail, voz e mais chegam ao mesmo lugar. Cada conversa tem dono, prioridade e histórico, e a equipe trabalha junta sem pisar no pé de ninguém.\nTodos os canais no mesmo fluxo: Nada de abrir um app para cada canal. As conversas chegam com o ícone do canal e seguem as mesmas regras. WhatsApp, Instagram, Messenger, TikTok, Telegram, LINE e SMS; Chat no site, e-mail e voz; Canal via API para qualquer origem\nColaboração sem grupos paralelos: Notas privadas, menções e detecção de colisão deixam a equipe decidir junto dentro da própria conversa. Notas que o cliente não vê; Menções com @ e notificações; Aviso de quem está respondendo\nFilas organizadas por times e prioridade: Times, atribuição automática, capacidade e filtros salvos mantêm a fila clara mesmo nos dias mais cheios. Abas Minhas, Não atribuídas e Todas; Prioridades e SLAs visíveis; Filtros salvos como pastas\nP: Quantos canais posso conectar?\nR: Você pode conectar vários canais e várias contas do mesmo canal. Os limites de cada plano estão na página de preços.\nP: Cada atendente precisa de um número de WhatsApp?\nR: Não. A equipe toda atende pelo mesmo número, cada pessoa com suas conversas.\nP: Consigo separar as conversas por área?\nR: Sim. Use times, caixas de entrada e regras para que cada área veja apenas o que é dela.\nP: As conversas antigas ficam guardadas?\nR: Sim, o histórico fica no perfil do cliente, de acordo com o período do seu plano."
+  },
+  {
+   "id": "produto-help-center",
+   "title": "Help Center",
+   "url": "https://ingrave.com.br/produto/help-center",
+   "text": "Autoatendimento com a sua marca\nUma central de ajuda que resolve antes da espera começar.\nPublique artigos organizados em um portal com a identidade da sua marca, no seu domínio e em vários idiomas. Clientes encontram respostas sozinhos e o Captain usa o mesmo conteúdo para ajudar a equipe.\nEditor simples, publicação imediata: Escreva artigos com títulos, imagens, vídeos e links, organize em categorias e publique sem depender de ninguém. Rascunhos e revisão; Categorias e artigos relacionados; Busca integrada\nNo seu domínio e com a sua marca: Logo, cores e endereço próprio, como ajuda.suaempresa.com.br, para o cliente se sentir em casa. Domínio personalizado; Cores e logo da marca; Vários portais por conta\nUm conteúdo, vários idiomas: Traduza artigos para atender clientes em outros países, mantendo tudo organizado no mesmo portal. Versões por idioma; Seletor de idioma no portal; Mais de 50 idiomas suportados\nP: Posso usar meu próprio domínio?\nR: Sim. Aponte um subdomínio para a Ingrave e o portal passa a responder nele.\nP: Os artigos aparecem no chat?\nR: Sim. O widget pode sugerir artigos e o Captain usa o conteúdo para sugerir respostas.\nP: Consigo ter mais de um portal?\nR: Sim, por exemplo, um para clientes e outro para parceiros.\nP: Preciso saber programar?\nR: Não. O editor é visual e a publicação é imediata."
+  },
+  {
+   "id": "produto-crm-workspace",
+   "title": "Contatos e CRM",
+   "url": "https://ingrave.com.br/produto/crm-workspace",
+   "text": "Contexto completo de cada cliente\nConheça cada cliente antes de responder.\nPerfis unificados com dados, canais, histórico, notas e atributos personalizados, ao lado de cada conversa. Segmente, importe e sincronize contatos com os sistemas que você já usa.\nPerfil completo ao lado da conversa: Quem é, de onde vem, o que já pediu e o que a equipe combinou, tudo sem trocar de tela. Dados de contato e empresa; Conversas anteriores em todos os canais; Notas fixas da equipe\nCampos do seu jeito: Crie atributos como plano, número do pedido ou data de renovação e use em filtros, automações e relatórios. Texto, número, data, lista e mais; Preenchidos no pré-chat ou via API; Base para segmentos\nSegmentos prontos para agir: Agrupe contatos por qualquer critério e use em campanhas, análises e ações em massa. Filtros combinados; Segmentos salvos; Importação e exportação em CSV\nP: Contatos duplicados podem ser unidos?\nR: Sim. Mescle perfis de canais diferentes em um só.\nP: Consigo importar minha base?\nR: Sim, por planilha CSV com atributos personalizados.\nP: Integra com meu CRM?\nR: Use a API de contatos e os webhooks para sincronizar com o seu sistema.\nP: Os dados ficam visíveis para todos?\nR: Você controla o acesso com papéis e permissões."
+  },
+  {
+   "id": "produto-voice",
+   "title": "Voz",
+   "url": "https://ingrave.com.br/produto/voice",
+   "text": "Telefone no mesmo contexto\nAtenda ligações no mesmo lugar das mensagens.\nReceba e faça chamadas direto da Ingrave. Cada ligação vira uma conversa com o perfil do cliente ao lado, registro automático e continuidade em qualquer canal.\nChamadas no navegador: Atenda pelo computador, sem aparelho extra, com o histórico do cliente aberto antes de dizer alô. Quem está ligando, antes de atender; Conversas anteriores ao lado; Notas durante a chamada\nRegistro automático: Duração, responsável e anotações ficam no histórico, junto com as mensagens do cliente. Linha do tempo unificada; Relatórios de chamadas; Etiquetas e prioridade\nContinuidade entre canais: Comece por telefone e envie o resumo pelo WhatsApp ou e-mail, sem perder o fio da conversa. Mesmo perfil em todos os canais; Follow-up no canal preferido; Equipe toda alinhada\nP: Preciso de um telefone físico?\nR: Não. As chamadas são feitas e atendidas pelo navegador.\nP: Posso usar meu número atual?\nR: Fale com a equipe para avaliar a portabilidade ou a conexão do seu número.\nP: As chamadas ficam registradas?\nR: Sim, como conversas no histórico do cliente.\nP: Funciona com os outros canais?\nR: Sim. A ligação aparece na mesma caixa de entrada."
+  },
+  {
+   "id": "produto-website-live-chat",
+   "title": "Chat no site",
+   "url": "https://ingrave.com.br/produto/website-live-chat",
+   "text": "Converse com quem está no seu site\nUm chat com a cara da sua marca, em qualquer página.\nInstale o widget com uma linha de código, personalize cores e mensagens e atenda visitantes no momento em que eles precisam, com campanhas, pré-chat e central de ajuda integrados.\nPersonalização sem código: Cor, posição, avatar, mensagens de boas-vindas e horário de atendimento ajustados em poucos cliques. Identidade da marca; Mensagens por página; Status online e offline\nSaiba quem é antes do primeiro olá: Formulários pré-chat e identificação de usuários logados trazem o contexto para a conversa. Campos personalizados; Identificação segura; Página atual e navegador\nComece a conversa você: Campanhas proativas convidam o visitante a conversar na página e no momento certos. Gatilhos por URL e tempo; Mensagens segmentadas; Respostas entram na fila\nP: Funciona em qualquer site?\nR: Sim. Basta colar o script em qualquer site ou aplicativo web. Também há SDKs para apps.\nP: O chat deixa o site lento?\nR: O widget é carregado de forma assíncrona para não atrapalhar o carregamento da página.\nP: E fora do horário?\nR: O widget mostra que a equipe está offline e coleta o contato para responder depois.\nP: Posso ter um chat por site?\nR: Sim, crie uma caixa de entrada para cada site ou marca."
+  },
+  {
+   "id": "solucao-suporte",
+   "title": "Solução: Suporte ao cliente",
+   "url": "https://ingrave.com.br/solucoes/suporte",
+   "text": "Resolva mais. Sem deixar ninguém esperando.\nDê ao time uma visão completa de cada cliente, com contexto para responder rápido e tranquilidade para resolver bem.\nDesafio: Pedidos espalhados em vários canais: Uma caixa de entrada compartilhada com todos os canais e responsáveis claros.\nDesafio: Perguntas repetidas tomando o dia: Central de ajuda, respostas prontas e o Captain cuidando do repetitivo.\nDesafio: Prazos perdidos sem ninguém perceber: SLAs com tempo restante visível e alertas antes de estourar.\nOrganize cada pedido: Triagem automática define prioridade, etiqueta e time.\nResponda com contexto: Perfil, histórico e sugestões do Captain ao lado.\nSaiba onde melhorar: Relatórios, CSAT e motivos de contato por etiqueta."
+  },
+  {
+   "id": "solucao-vendas",
+   "title": "Solução: Vendas e conversão",
+   "url": "https://ingrave.com.br/solucoes/vendas",
+   "text": "Transforme conversas em oportunidades.\nConecte marketing, pré-vendas e vendas em uma operação que acompanha a intenção do cliente desde o primeiro sinal.\nDesafio: Leads esfriando na fila: Atribuição automática e prioridade para quem está pronto para comprar.\nDesafio: Falta de contexto na negociação: Perfil completo, atributos e notas da equipe em cada conversa.\nDesafio: Retomadas que não acontecem: Templates e campanhas de WhatsApp para voltar a falar no momento certo.\nPerceba sinais de compra: Captain e regras identificam intenção e etiquetam.\nPriorize boas oportunidades: Encaminhe para o vendedor certo, na hora.\nConverta com mais contexto: Histórico, atributos e respostas prontas para fechar."
+  },
+  {
+   "id": "solucao-marketing",
+   "title": "Solução: Marketing conversacional",
+   "url": "https://ingrave.com.br/solucoes/marketing",
+   "text": "Campanhas que começam com uma conversa.\nCrie jornadas personalizadas e conecte campanhas aos atendimentos que realmente movem o relacionamento.\nDesafio: Campanhas sem resposta organizada: Quem responde a campanha entra direto na fila certa.\nDesafio: Mensagens genéricas: Segmentos de contatos e atributos para personalizar.\nDesafio: Resultados difíceis de medir: Entregas, leituras e respostas de cada envio.\nFale com o público certo: Segmentos salvos a partir de atributos e etiquetas.\nApareça no melhor momento: Campanhas no site e no WhatsApp com agendamento.\nAprenda com cada interação: Relatórios por etiqueta e por canal."
+  },
+  {
+   "id": "solucao-operacoes",
+   "title": "Solução: Operações e equipes",
+   "url": "https://ingrave.com.br/solucoes/operacoes",
+   "text": "Mais clareza para o ritmo da operação.\nPadronize processos, conecte times e tenha uma visão operacional que transforma volume em decisão.\nDesafio: Cada pessoa trabalha de um jeito: Macros, regras e respostas prontas padronizam o processo.\nDesafio: Sobrecarga em alguns atendentes: Capacidade por agente e atribuição automática equilibram a fila.\nDesafio: Gestão sem números: Visão ao vivo e relatórios por agente, time e canal.\nDistribua sem ruído: Times, regras e capacidade definidos uma vez.\nColabore com precisão: Notas privadas, menções e detecção de colisão.\nMelhore continuamente: Relatórios, SLAs e auditoria."
+  },
+  {
+   "id": "solucao-ecommerce",
+   "title": "Solução: E-commerce e varejo",
+   "url": "https://ingrave.com.br/solucoes/ecommerce",
+   "text": "Atendimento que acompanha cada pedido.\nResponda dúvidas de produto, status de entrega e trocas em todos os canais, com o pedido do cliente ao lado da conversa.\nDesafio: Picos em datas comerciais: Captain, respostas prontas e automações absorvem o volume.\nDesafio: Onde está meu pedido?: Apps no painel mostram o pedido ao lado da conversa.\nDesafio: Vendas pelo WhatsApp e Instagram: Atendimento em equipe pelos canais oficiais.\nResponda o repetitivo: Central de ajuda e Captain para entrega, troca e pagamento.\nVeja o pedido: Dados da loja dentro do atendimento.\nRecupere vendas: Campanhas de WhatsApp para carrinhos e retomadas."
+  },
+  {
+   "id": "solucao-educacao",
+   "title": "Solução: Educação",
+   "url": "https://ingrave.com.br/solucoes/educacao",
+   "text": "Responda alunos e famílias sem filas.\nMatrículas, financeiro e secretaria em uma operação organizada, com respostas rápidas nos canais que alunos e responsáveis usam.\nDesafio: Época de matrícula sobrecarregada: Triagem e times separando captação, secretaria e financeiro.\nDesafio: As mesmas dúvidas todo semestre: Central de ajuda com calendário, documentos e prazos.\nDesafio: Comunicados que ninguém lê: Campanhas de WhatsApp com confirmação de leitura.\nSepare as demandas: Times por área e regras por assunto.\nDê autonomia: Portal de ajuda com as dúvidas frequentes.\nComunique com clareza: Campanhas segmentadas por curso ou turma."
+  },
+  {
+   "id": "solucao-saas",
+   "title": "Solução: Software e SaaS",
+   "url": "https://ingrave.com.br/solucoes/saas",
+   "text": "Suporte dentro do produto, com contexto técnico.\nAtenda usuários dentro da sua aplicação, com identificação do usuário logado, integração com o time de produto e uma base de conhecimento sempre atual.\nDesafio: Usuário sem contexto técnico: Widget identifica o usuário e mostra plano e atributos.\nDesafio: Bugs que se perdem: Integração com o Linear leva o relato ao time de produto.\nDesafio: Documentação desatualizada: Central de ajuda simples de manter e usada pelo Captain.\nAtenda dentro do produto: Chat com usuário identificado.\nEscale para o produto: Issues no Linear com o link da conversa.\nEscalone o conhecimento: Artigos que respondem antes da conversa."
+  },
+  {
+   "id": "comparativos",
+   "title": "Ingrave em comparação",
+   "url": "https://ingrave.com.br/comparar",
+   "text": "model: Por agente, em reais\nentry: Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês\nfree: Sim, até 2 agentes\nai: Captain incluso nos planos pagos, com créditos mensais\nchannels: WhatsApp, Instagram, Messenger, TikTok, Telegram, LINE, SMS, e-mail, chat no site e voz\ncurrency: Real (R$)"
+  },
+  {
+   "id": "comparar-octadesk",
+   "title": "Ingrave x Octadesk",
+   "url": "https://ingrave.com.br/comparar/octadesk",
+   "text": "Octadesk (Omnichannel): Preço por agente em vez de franquia de conversas ativas.\nA Octadesk cobra uma mensalidade de plataforma por volume de conversas ativas, mais um valor por usuário de Helpdesk. A Ingrave cobra por agente, com conversas ilimitadas nos planos pagos.\nModelo de cobrança: Octadesk = Por agente, em reais; Ingrave = Plataforma por conversas ativas (DAU) + valor por usuário de Helpdesk\nPreço de entrada: Octadesk = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Plano One: R$ 2.499/mês com 3.000 DAUs, + R$ 130 por usuário de Helpdesk\nPlano gratuito: Octadesk = Sim, até 2 agentes; Ingrave = Não informado na página de preços\nImplantação: Octadesk = Contratação direta pelo site; Ingrave = Consultoria de onboarding obrigatória, valor sob consulta\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Octadesk para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Octadesk vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-huggy",
+   "title": "Ingrave x Huggy",
+   "url": "https://ingrave.com.br/comparar/huggy",
+   "text": "Huggy (Omnichannel): Mais agentes por menos, com todos os canais no mesmo plano.\nO Huggy tem um plano gratuito para 1 usuário e planos pagos com usuários adicionais cobrados à parte. A Ingrave tem plano gratuito para 2 agentes e preço único por agente nos planos pagos.\nModelo de cobrança: Huggy = Por agente, em reais; Ingrave = Plano mensal com usuários adicionais cobrados à parte\nPreço de entrada: Huggy = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Plano gratuito para 1 usuário; plano pago publicado a R$ 989/mês com 1 usuário incluso\nPlano gratuito: Huggy = Sim, até 2 agentes; Ingrave = Sim, 1 usuário\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Huggy para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Huggy vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-blip",
+   "title": "Ingrave x Blip",
+   "url": "https://ingrave.com.br/comparar/blip",
+   "text": "Blip (Chatbot e IA): Contratação simples, sem projeto consultivo para começar.\nO Blip trabalha com propostas comerciais sob medida. Na Ingrave você escolhe um plano, cria a conta e começa no mesmo dia, com preço publicado.\nModelo de cobrança: Blip = Por agente, em reais; Ingrave = Proposta comercial; sem tabela pública de preço por usuário\nPreço de entrada: Blip = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Referência de mercado de R$ 2.449/mês no pacote inicial (fonte de terceiros)\nContratação: Blip = Cadastro direto pelo site; Ingrave = Via time comercial\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Blip para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Blip vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-kommo",
+   "title": "Ingrave x Kommo",
+   "url": "https://ingrave.com.br/comparar/kommo",
+   "text": "Kommo (CRM e vendas): Atendimento completo com cobrança mensal em reais.\nO Kommo é um CRM de vendas por mensagens, com preço por usuário em dólar e contrato mínimo de 6 meses no Brasil. A Ingrave é focada em atendimento omnichannel, com preço em reais e cobrança mensal ou anual.\nModelo de cobrança: Kommo = Por agente, em reais; Ingrave = Por usuário, em dólar\nPreço de entrada: Kommo = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = US$ 25/usuário/mês no plano Base (a partir de 1º/9/2026)\nContrato: Kommo = Mensal ou anual; Ingrave = Mínimo de 6 meses com pagamento adiantado no Brasil\nMoeda: Kommo = Real (R$); Ingrave = Dólar (US$)\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Kommo para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Kommo vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-digisac",
+   "title": "Ingrave x Digisac",
+   "url": "https://ingrave.com.br/comparar/digisac",
+   "text": "Digisac (Omnichannel): Preço publicado por agente, sem precisar pedir proposta.\nA Digisac não publica tabela fixa e define o valor por proposta. A Ingrave publica os preços por agente e permite começar grátis.\nModelo de cobrança: Digisac = Por agente, em reais; Ingrave = Proposta comercial conforme atendentes, canais e módulos\nPreço de entrada: Digisac = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = A partir de R$ 197/mês, segundo análises independentes\nTeste: Digisac = Plano Hacker gratuito; Ingrave = Teste gratuito de 10 dias\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Digisac para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Digisac vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-rd-station-conversas",
+   "title": "Ingrave x RD Station Conversas",
+   "url": "https://ingrave.com.br/comparar/rd-station-conversas",
+   "text": "RD Station Conversas (Omnichannel): Conversas ilimitadas em vez de franquia por cliente atendido.\nO RD Station Conversas cobra por faixa de clientes atendidos, com excedente na fatura seguinte e taxas de ativação. A Ingrave cobra por agente, sem franquia de conversas nos planos pagos.\nModelo de cobrança: RD Station Conversas = Por agente, em reais; Ingrave = Franquia de clientes atendidos por mês, com excedente cobrado\nPreço de entrada: RD Station Conversas = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Basic: R$ 989/mês no plano anual\nNúmeros adicionais: RD Station Conversas = Conecte vários números na mesma conta; Ingrave = R$ 599 por número adicional\nAtivação do WhatsApp: RD Station Conversas = Conexão pela API oficial da Meta; Ingrave = R$ 1.999 de ativação do número\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do RD Station Conversas para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o RD Station Conversas vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-jivochat",
+   "title": "Ingrave x JivoChat",
+   "url": "https://ingrave.com.br/comparar/jivochat",
+   "text": "JivoChat (Chat ao vivo): Do chat no site a uma caixa de entrada omnichannel completa.\nO JivoChat nasceu como chat para sites e cobra por operador, com o agente de IA à parte. A Ingrave reúne chat, WhatsApp, e-mail, voz e central de ajuda, com o Captain incluso nos planos pagos.\nModelo de cobrança: JivoChat = Por agente, em reais; Ingrave = Por operador, em reais\nPreço de entrada: JivoChat = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Profissional: R$ 126/operador/mês no plano anual\nIA: JivoChat = Captain incluso nos planos pagos, com créditos mensais; Ingrave = Agente IA cobrado à parte: R$ 343/mês\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do JivoChat para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o JivoChat vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-zendesk",
+   "title": "Ingrave x Zendesk",
+   "url": "https://ingrave.com.br/comparar/zendesk",
+   "text": "Zendesk (Helpdesk): Helpdesk completo em reais, com IA inclusa.\nO Zendesk cobra por agente em dólar e vende o copiloto de IA como adicional. A Ingrave cobra em reais e inclui o Captain nos planos pagos.\nModelo de cobrança: Zendesk = Por agente, em reais; Ingrave = Por agente, em dólar\nPreço de entrada: Zendesk = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Suite Team: US$ 55/agente/mês (anual) ou US$ 69 (mensal)\nIA: Zendesk = Captain incluso nos planos pagos, com créditos mensais; Ingrave = Copiloto vendido como adicional por agente\nMoeda: Zendesk = Real (R$); Ingrave = Dólar (US$)\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Zendesk para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Zendesk vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "comparar-intercom",
+   "title": "Ingrave x Intercom",
+   "url": "https://ingrave.com.br/comparar/intercom",
+   "text": "Intercom (Helpdesk): IA sem cobrança por resolução e preço em reais.\nO Intercom cobra por assento em dólar e soma uma taxa por resolução do agente de IA Fin. Na Ingrave, o Captain vem com créditos mensais inclusos e o preço é fixo por agente.\nModelo de cobrança: Intercom = Por agente, em reais; Ingrave = Por assento, em dólar, + taxa por resolução de IA\nPreço de entrada: Intercom = Plano grátis (Hacker); pagos a partir de R$ 79/agente/mês; Ingrave = Essential: a partir de US$ 29/assento/mês (anual)\nIA: Intercom = Captain incluso nos planos pagos, com créditos mensais; Ingrave = Fin: US$ 0,99 por resolução\nMoeda: Intercom = Real (R$); Ingrave = Dólar (US$)\nPreço em reais, por agente: Você sabe quanto vai pagar no fim do mês: um valor por agente, sem franquia de conversas nos planos pagos e sem conversão de dólar.\nIA inclusa no plano: O Captain vem com créditos mensais em todos os planos pagos. Rascunhos, resumos e triagem sem cobrança por resolução.\nTodos os canais nos planos pagos: WhatsApp, Instagram, e-mail, chat no site e mais, na mesma caixa de entrada desde o plano Startups.\nComece grátis: O plano Hacker é gratuito para até 2 agentes. Teste a plataforma antes de decidir.\nP: Consigo migrar do Intercom para a Ingrave?\nR: Sim. Importe contatos por planilha CSV e use a API para trazer dados de outros sistemas. Se precisar de ajuda, fale com a equipe.\nP: Posso testar antes de contratar?\nR: Sim. O plano Hacker é gratuito para até 2 agentes, e você pode mudar para um plano pago quando quiser.\nP: As taxas do WhatsApp estão incluídas?\nR: As conversas iniciadas por templates seguem a tabela oficial da Meta e são cobradas à parte, como em qualquer plataforma que usa a API oficial.\nP: Os dados deste comparativo estão atualizados?\nR: As informações sobre o Intercom vêm de fontes públicas consultadas em outubro de 2026 e podem mudar. Confira os links de origem no fim da página.\nDados conferidos em outubro de 2026."
+  },
+  {
+   "id": "guia-multiatendimento-whatsapp",
+   "title": "Multiatendimento no WhatsApp: o que é e como implantar na sua empresa",
+   "url": "https://ingrave.com.br/guias/multiatendimento-whatsapp",
+   "text": "Entenda o que é multiatendimento no WhatsApp, por que o app comum não dá conta de uma equipe e como implantar vários atendentes no mesmo número pela API oficial.\nQuando o WhatsApp vira o principal canal de contato, um único celular deixa de dar conta. Multiatendimento é a forma de colocar a equipe inteira no mesmo número, com fila, responsáveis e histórico, sem perder o jeito próximo de conversar que o cliente espera.\n## O que é multiatendimento no WhatsApp\nMultiatendimento no WhatsApp é o uso de um mesmo número por vários atendentes ao mesmo tempo, cada um em seu computador, com as conversas organizadas em uma caixa de entrada compartilhada. O cliente continua falando com um único contato da empresa; do lado de dentro, as mensagens são distribuídas, acompanhadas e registradas.\nNa prática, isso resolve três problemas do uso improvisado do aplicativo: ninguém sabe quem está respondendo cada cliente, conversas se perdem quando o celular troca de mão e não existe forma de medir tempo de resposta ou volume.\n## Por que o WhatsApp Business comum não basta para uma equipe\nO aplicativo WhatsApp Business foi pensado para pequenos negócios com uma ou poucas pessoas atendendo. Ele permite alguns aparelhos conectados, etiquetas e respostas rápidas, mas não oferece fila, atribuição de responsável, regras de distribuição nem relatórios por atendente.\nOs sinais de que a operação já passou desse limite costumam ser os mesmos:\n- Clientes que mandam mensagem e esperam horas porque cada um achou que outra pessoa ia responder.\n- Duas pessoas respondendo o mesmo cliente com informações diferentes.\n- Histórico preso no celular de quem saiu da empresa.\n- Gestores sem saber quantas conversas chegam por dia ou quanto tempo leva a primeira resposta.\n## API oficial ou soluções não oficiais\nExistem duas formas de colocar um número de WhatsApp em uma plataforma de atendimento. A primeira é a API oficial do WhatsApp Business, oferecida pela Meta diretamente ou por meio de parceiros. A segunda são ferramentas que simulam o WhatsApp Web ou o aplicativo, lendo a tela por QR code.\nSoluções não oficiais parecem mais simples no começo, mas violam os termos de uso do WhatsApp e expõem o número a bloqueios sem aviso. Para uma empresa que depende do canal, o risco não compensa. A API oficial dá estabilidade, permite templates aprovados para iniciar conversas, campanhas e o selo de conta comercial, e é o caminho que a Ingrave usa.\n## Como implantar o multiatendimento em 6 passos\n1. Defina o número: Use um número que será só da empresa. Ele pode ser o mesmo que você usa hoje no aplicativo, desde que seja migrado para a API, ou um número novo.\n2. Conecte pela API oficial: Crie ou use a conta empresarial da Meta e conecte o número à plataforma de atendimento. Na Ingrave, a conexão é feita pelo painel, sem precisar de desenvolvedor.\n3. Organize times e filas: Separe quem atende vendas, suporte e financeiro, por exemplo. Cada time tem a sua fila e os seus responsáveis.\n4. Configure a distribuição: Escolha se as conversas são atribuídas automaticamente, por rodízio e respeitando a capacidade de cada pessoa, ou puxadas manualmente da fila.\n5. Prepare respostas e automações: Cadastre respostas prontas, horário de atendimento e mensagens de ausência. Um chatbot ou agente de IA pode responder perguntas frequentes e coletar dados antes de passar para uma pessoa.\n6. Acompanhe os números: Defina metas de primeira resposta e resolução, ative a pesquisa de satisfação e acompanhe os relatórios por atendente e por time.\n## Recursos que fazem diferença no dia a dia\n- Caixa de entrada compartilhada com filtros por status, time, etiqueta e responsável.\n- Notas privadas para combinar o próximo passo sem o cliente ver.\n- Detecção de colisão, que avisa quando outra pessoa já está respondendo.\n- Templates aprovados para retomar contato depois da janela de 24 horas.\n- Histórico completo do cliente, inclusive de outros canais como Instagram e e-mail.\n- Relatórios de volume, tempo de resposta, resolução e satisfação.\nCom esses recursos, o WhatsApp deixa de ser um canal paralelo e passa a funcionar como parte de uma operação de atendimento organizada.\nP: Quantos atendentes podem usar o mesmo número de WhatsApp?\nR: Com a API oficial em uma plataforma de multiatendimento, não há limite prático de atendentes por número: cada pessoa entra com o próprio login e vê as conversas atribuídas a ela ou ao seu time.\nP: Posso usar o número que já tenho no WhatsApp Business?\nR: Sim. O número pode ser migrado do aplicativo para a API oficial. Durante a migração ele deixa de funcionar no aplicativo e passa a ser usado pela plataforma.\nP: Multiatendimento no WhatsApp tem custo da Meta?\nR: A Meta cobra pelo envio de mensagens de template, como marketing, utilidade e autenticação, conforme a tabela vigente para o Brasil. Responder um cliente que escreveu para você dentro da janela de atendimento de 24 horas não tem cobrança da Meta."
+  },
+  {
+   "id": "guia-api-oficial-whatsapp-business",
+   "title": "API oficial do WhatsApp Business: guia completo para empresas",
+   "url": "https://ingrave.com.br/guias/api-oficial-whatsapp-business",
+   "text": "O que é a API oficial do WhatsApp Business, diferença para o aplicativo, como funcionam templates, a janela de 24 horas e a cobrança por mensagem, e como começar.\nA API oficial do WhatsApp Business é a forma aprovada pela Meta para empresas usarem o WhatsApp em escala, conectado a sistemas de atendimento, CRM e automações. Este guia explica como ela funciona e o que muda em relação ao aplicativo.\n## O que é a API do WhatsApp Business\nA API do WhatsApp Business, também chamada de WhatsApp Business Platform ou Cloud API, permite que um número de WhatsApp seja operado por software em vez de um celular. As mensagens chegam a uma plataforma, onde podem ser respondidas por várias pessoas, por bots ou por agentes de IA, e todas ficam registradas.\nEla é oferecida pela Meta e pode ser usada diretamente por desenvolvedores ou por meio de plataformas de atendimento que já fazem a integração, como a Ingrave.\n## Aplicativo WhatsApp Business x API oficial\n- Aplicativo: funciona em celular e poucos aparelhos vinculados, sem fila nem distribuição entre atendentes.\n- API: sem interface própria, funciona dentro de uma plataforma, com quantos atendentes a empresa precisar.\n- Aplicativo: envio em massa limitado a listas de transmissão de quem salvou o seu contato.\n- API: campanhas com templates aprovados, segmentação e relatórios de entrega e leitura.\n- Aplicativo: sem integração oficial com sistemas.\n- API: integra com CRM, e-commerce, chatbots e IA por webhooks.\n## A janela de 24 horas e os templates\nA regra mais importante da API é a janela de atendimento. Sempre que o cliente envia uma mensagem, abre-se uma janela de 24 horas em que a empresa pode responder livremente, com texto, imagens, áudios e documentos.\nFora dessa janela, ou para iniciar uma conversa, a empresa precisa usar um template: uma mensagem pré-aprovada pela Meta, com variáveis como nome e número do pedido. Templates são classificados em categorias, principalmente marketing, utilidade e autenticação.\n## Quanto custa a API oficial\nA cobrança da Meta é feita por mensagem de template entregue, com preço que varia pela categoria e pelo país do destinatário. Respostas dentro da janela de atendimento não são cobradas pela Meta, e templates de utilidade enviados dentro da janela aberta pelo cliente também não.\nComo a tabela muda periodicamente, consulte sempre os valores atuais publicados pela Meta para o Brasil. Além disso, a plataforma de atendimento cobra a própria assinatura. Na Ingrave, o plano é por agente, em reais, sem franquia de conversas.\n## Como começar\n1. Tenha uma conta empresarial da Meta: É a conta usada para gerenciar páginas, anúncios e ativos do WhatsApp da empresa.\n2. Escolha o número: Precisa receber SMS ou ligação para verificação e não pode estar ativo em outro WhatsApp no momento da conexão.\n3. Conecte na plataforma: Na Ingrave, a conexão é feita pelo painel, com o fluxo de autorização da Meta.\n4. Verifique a empresa: A verificação do negócio na Meta aumenta os limites de envio e é exigida para alguns recursos.\n5. Crie os primeiros templates: Comece por mensagens de utilidade, como confirmação de pedido e lembrete de agendamento.\nP: Preciso de um desenvolvedor para usar a API oficial?\nR: Não quando você usa uma plataforma que já integra a API. A conexão é feita pelo painel e a equipe começa a atender pela caixa de entrada.\nP: Posso continuar usando o aplicativo no mesmo número?\nR: Hoje a Meta permite em alguns casos usar o aplicativo e a API no mesmo número (coexistência), com limitações. Em geral, para operação em equipe, o número passa a ser usado pela plataforma.\nP: A API oficial evita bloqueios?\nR: Ela segue as regras da Meta, então não existe risco de bloqueio por uso de ferramenta não autorizada. Ainda assim, a qualidade do número depende de boas práticas, como enviar apenas para quem aceitou receber mensagens."
+  },
+  {
+   "id": "guia-atendimento-omnichannel",
+   "title": "Atendimento omnichannel: o que é, benefícios e como fazer",
+   "url": "https://ingrave.com.br/guias/atendimento-omnichannel",
+   "text": "Atendimento omnichannel é atender em vários canais com um só histórico. Veja a diferença para multicanal, os benefícios e um passo a passo para implantar na sua empresa.\nO cliente começa no Instagram, manda um e-mail e depois chama no WhatsApp. Se cada canal é tratado separadamente, ele precisa repetir tudo a cada contato. Atendimento omnichannel é o que evita isso.\n## O que é atendimento omnichannel\nAtendimento omnichannel é a estratégia de atender o cliente em vários canais, como WhatsApp, Instagram, chat no site, e-mail e telefone, de forma integrada. Todas as conversas chegam a um mesmo lugar e ficam ligadas ao mesmo perfil de cliente, então qualquer pessoa da equipe vê o histórico completo, não importa por onde o contato chegou.\n## Omnichannel x multicanal\nMulticanal é estar presente em vários canais. Omnichannel é conectar esses canais. Uma empresa multicanal pode ter WhatsApp, e-mail e chat, mas com ferramentas e equipes separadas. Em uma operação omnichannel, a conversa continua de onde parou, mesmo se o cliente mudar de canal.\n- Multicanal: um histórico por canal, cliente repete informações, métricas separadas.\n- Omnichannel: um histórico por cliente, contexto preservado, métricas da operação inteira.\n## Benefícios do atendimento omnichannel\n- Menos repetição para o cliente e respostas mais rápidas para a equipe.\n- Uma única fila para organizar prioridades, em vez de várias abas e aparelhos.\n- Regras de distribuição, SLA e automações valendo para todos os canais.\n- Relatórios que mostram a operação inteira e permitem comparar canais.\n- Mais facilidade para incluir um canal novo sem criar uma nova operação.\n## Como implantar em 5 passos\n1. Mapeie os canais: Liste por onde os clientes já procuram a empresa e o volume aproximado de cada canal.\n2. Centralize em uma plataforma: Conecte os canais a uma caixa de entrada compartilhada, como a da Ingrave, para que tudo chegue à mesma fila.\n3. Unifique o cadastro do cliente: Garanta que contatos com o mesmo telefone ou e-mail sejam reconhecidos como a mesma pessoa.\n4. Padronize processos: Crie etiquetas, respostas prontas e regras de atribuição comuns a todos os canais.\n5. Meça e ajuste: Acompanhe tempo de primeira resposta, resolução e satisfação por canal e mova pessoas para onde a demanda está.\nP: Quais canais um atendimento omnichannel deve ter?\nR: Os canais onde seus clientes já estão. No Brasil, WhatsApp costuma ser o principal, seguido por Instagram, chat no site e e-mail. Comece por eles e adicione outros conforme a demanda.\nP: Atendimento omnichannel é só para empresas grandes?\nR: Não. Equipes pequenas ganham ainda mais, porque evitam pular entre aplicativos. A Ingrave tem plano gratuito para começar."
+  },
+  {
+   "id": "guia-chatbot-whatsapp-ia",
+   "title": "Chatbot para WhatsApp com IA: como criar sem perder o atendimento humano",
+   "url": "https://ingrave.com.br/guias/chatbot-whatsapp-ia",
+   "text": "Como funciona um chatbot com IA no WhatsApp, quando usar bot de menu ou agente de IA, como preparar a base de conhecimento e quando passar a conversa para uma pessoa.\nUm bom chatbot resolve as perguntas repetidas na hora e entrega para a equipe só o que precisa de uma pessoa, com o contexto já coletado. Um chatbot ruim prende o cliente em menus. A diferença está no desenho.\n## Bot de menu x agente de IA\nOs chatbots de menu seguem um fluxo fixo: o cliente escolhe uma opção numerada e recebe a resposta correspondente. São previsíveis e úteis para triagem simples, como escolher o setor.\nAgentes de IA entendem perguntas escritas livremente e respondem com base em conteúdo da empresa, como artigos da central de ajuda, políticas e documentos. Eles lidam melhor com a variedade de perguntas reais, mas precisam de uma base de conhecimento bem cuidada e de regras claras de quando parar.\n## Prepare a base de conhecimento\nA qualidade das respostas da IA depende do que ela tem para consultar. Antes de ligar o agente, revise:\n- As 20 ou 30 perguntas mais frequentes, com respostas atualizadas.\n- Políticas de troca, entrega, pagamento e cancelamento.\n- Horários, endereços e canais de contato.\n- O que a IA não deve responder, como negociações de preço ou casos jurídicos.\nNa Ingrave, o Captain usa os artigos da central de ajuda e documentos que você adiciona, e cita de onde tirou cada resposta.\n## Quando passar para uma pessoa\nToda automação precisa de uma saída. Defina quando o bot entrega a conversa para a equipe:\n- Quando o cliente pede para falar com uma pessoa.\n- Quando a IA não encontra a resposta na base de conhecimento.\n- Em assuntos sensíveis, como reclamações, cobranças ou cancelamentos.\n- Fora do horário, informando quando a equipe vai retornar.\nNa transferência, o histórico completo e os dados coletados vão junto, para que o cliente não precise repetir nada.\n## Como medir se o chatbot está funcionando\nAcompanhe a taxa de conversas resolvidas sem transferência, a satisfação das conversas atendidas pelo bot, o tempo até a primeira resposta humana depois da transferência e os assuntos que mais geram transferência. Esses assuntos são a lista de conteúdo para melhorar na base.\nP: Chatbot no WhatsApp precisa da API oficial?\nR: Sim. Para automatizar respostas de forma permitida pela Meta, o número precisa estar na API oficial do WhatsApp Business.\nP: A IA pode errar?\nR: Pode, por isso a configuração importa: responda só com base no conteúdo da empresa, limite os assuntos e transfira para uma pessoa quando houver dúvida.\nP: Quanto custa um chatbot com IA?\nR: Na Ingrave, o Captain vem com créditos incluídos nos planos pagos e créditos adicionais podem ser comprados por pacote. Veja os valores na página de preços."
+  },
+  {
+   "id": "guia-metricas-de-atendimento",
+   "title": "Métricas de atendimento ao cliente: as 8 que todo gestor deve acompanhar",
+   "url": "https://ingrave.com.br/guias/metricas-de-atendimento",
+   "text": "Tempo de primeira resposta, TME, TMA, taxa de resolução, CSAT, NPS, SLA e volume: o que cada métrica de atendimento mede, como calcular e o que fazer com o resultado.\nSem números, a gestão do atendimento vira percepção. Com números demais, ninguém sabe onde agir. Estas são as métricas que mostram, de forma direta, se o cliente está sendo bem atendido e onde a operação precisa de ajuda.\n## As 8 métricas essenciais\n1. Tempo de primeira resposta (TPR): Quanto tempo o cliente espera até receber a primeira resposta de uma pessoa ou do bot. É a métrica que mais pesa na percepção de agilidade.\n2. Tempo médio de espera (TME): Tempo que a conversa fica na fila antes de alguém assumir. Mostra falta de pessoas ou distribuição ruim.\n3. Tempo médio de atendimento (TMA): Duração média do atendimento, da primeira resposta até a resolução. Muito alto pode indicar falta de informação ou processo confuso.\n4. Tempo de resolução: Tempo total desde a primeira mensagem até a conversa ser resolvida.\n5. Taxa de resolução no primeiro contato: Percentual de conversas resolvidas sem o cliente precisar voltar. Reflete qualidade e autonomia da equipe.\n6. CSAT: Satisfação medida logo depois do atendimento, geralmente de 1 a 5. Calcule o percentual de notas 4 e 5 sobre o total de respostas.\n7. Cumprimento de SLA: Percentual de conversas respondidas e resolvidas dentro dos prazos combinados.\n8. Volume por canal e por assunto: Quantas conversas chegam, por onde e sobre o quê. É a base para dimensionar a equipe e decidir o que automatizar.\n## Como transformar métricas em ação\n- Primeira resposta alta em horários específicos: ajuste escala ou use um agente de IA nesses horários.\n- Muitos assuntos repetidos: crie artigos na central de ajuda e respostas prontas.\n- CSAT baixo em um time: leia as conversas com nota baixa antes de tirar conclusões.\n- SLA estourando: revise prioridades e regras de atribuição.\nNa Ingrave, os relatórios de conversas, agentes, times, caixas de entrada, etiquetas e CSAT mostram essas métricas por período, com exportação para planilha.\nP: Qual a diferença entre TME e TMA?\nR: TME é o tempo que o cliente espera na fila até ser atendido. TMA é a duração do atendimento em si.\nP: Qual é um bom tempo de primeira resposta no WhatsApp?\nR: Depende do segmento, mas clientes de canais de mensagem esperam respostas em minutos, não horas. Defina uma meta realista para o seu horário de atendimento e acompanhe a evolução."
+  },
+  {
+   "id": "guia-como-escolher-software-de-atendimento",
+   "title": "Como escolher um software de atendimento ao cliente em 2026",
+   "url": "https://ingrave.com.br/guias/como-escolher-software-de-atendimento",
+   "text": "Checklist para escolher um software de atendimento: canais, WhatsApp oficial, IA, modelo de cobrança, relatórios, integrações, LGPD e custo total. Compare antes de contratar.\nTrocar de ferramenta de atendimento custa tempo e energia da equipe. Vale escolher bem na primeira vez. Este checklist reúne o que comparar antes de contratar, com atenção especial à forma de cobrança, onde estão as maiores surpresas.\n## Checklist de avaliação\n1. Canais: A ferramenta atende os canais que seus clientes usam hoje, com WhatsApp pela API oficial, Instagram, chat no site e e-mail na mesma caixa de entrada?\n2. Modelo de cobrança: É por agente, por conversa, por contato ou por resolução de IA? Simule o custo com o seu volume atual e com o dobro dele.\n3. IA e automação: A IA responde com base no seu conteúdo, transfere para pessoas e tem custo previsível?\n4. Gestão da equipe: Há times, filas, atribuição automática, capacidade por atendente e SLA?\n5. Relatórios: Dá para ver primeira resposta, resolução, CSAT e volume por canal, atendente e time?\n6. Integrações: Existe API, webhooks e integrações com as ferramentas que você já usa?\n7. Segurança e LGPD: Há papéis e permissões, logs de auditoria, SSO e ferramentas para atender pedidos de titulares?\n8. Teste real: É possível testar com a equipe antes de assinar, sem reunião obrigatória de vendas?\n## Calcule o custo total, não só a mensalidade\nSome a assinatura da plataforma, o custo das mensagens de template do WhatsApp cobradas pela Meta, créditos de IA, taxas de implantação e o custo de canais adicionais. Ferramentas com franquia de conversas ou contatos podem parecer baratas no começo e encarecer rapidamente com o crescimento.\nNa Ingrave, a cobrança é por agente, em reais, sem franquia de conversas, e o plano Hacker é gratuito para começar.\n## Planeje a migração\n- Exporte contatos e importe por CSV na nova plataforma.\n- Migre o número de WhatsApp para a API oficial com antecedência.\n- Recrie etiquetas, respostas prontas e regras de automação antes de virar a chave.\n- Treine a equipe com conversas reais em um período de transição.\nP: Qual o melhor software de atendimento ao cliente?\nR: O melhor é o que atende os seus canais, cabe no seu orçamento com o volume real e é fácil para a equipe usar. Compare ao menos três opções com o checklist acima.\nP: Vale a pena um software gratuito?\nR: Para começar, sim. Verifique se o plano gratuito permite crescer para um plano pago sem migrar de ferramenta."
+  },
+  {
+   "id": "ferramenta-calculadora-whatsapp",
+   "title": "Calculadora de preço do WhatsApp",
+   "url": "https://ingrave.com.br/ferramentas/calculadora-whatsapp",
+   "text": "Estime quanto a Meta cobra pelas mensagens da API oficial.\nInforme quantas mensagens de marketing, utilidade e autenticação você envia e veja a estimativa de custo da Meta em reais, com a assinatura da Ingrave somada se quiser.\nA Meta cobra por mensagem de template entregue: Desde julho de 2025 a cobrança é por mensagem, com preço diferente para cada categoria: marketing, utilidade e autenticação.\nRespostas dentro da janela são grátis: Quando o cliente escreve, abre-se uma janela de 24 horas. Responder dentro dela, sem template, não tem cobrança da Meta. Templates de utilidade enviados dentro da janela também são gratuitos.\nAnúncios de clique para o WhatsApp abrem 72 horas grátis: Conversas iniciadas por anúncios que levam ao WhatsApp ganham uma janela gratuita de 72 horas para todas as mensagens.\nA assinatura da plataforma é separada: Além da Meta, a ferramenta de atendimento cobra a própria assinatura. Na Ingrave ela é por agente, em reais, e você pode somá-la na calculadora.\nP: Quanto custa uma mensagem de WhatsApp para a empresa no Brasil?\nR: Pela tabela da Meta consultada em outubro de 2026, cada mensagem de marketing entregue custa cerca de R$ 0,32 e cada mensagem de utilidade ou autenticação cerca de R$ 0,035. Responder um cliente dentro da janela de 24 horas é gratuito.\nP: A Meta cobra em reais?\nR: Desde julho de 2026 a Meta permite contas do WhatsApp Business cobradas em reais (BRL) para empresas brasileiras elegíveis, e a migração se torna obrigatória até 30 de junho de 2027. Contas antigas continuam em dólar até migrarem.\nP: Os valores podem mudar?\nR: Sim. A Meta revisa a tabela periodicamente. Use a calculadora como estimativa e confirme os valores atuais na página oficial de preços da plataforma."
+  },
+  {
+   "id": "ferramenta-gerador-link-whatsapp",
+   "title": "Gerador de link do WhatsApp",
+   "url": "https://ingrave.com.br/ferramentas/gerador-link-whatsapp",
+   "text": "Crie um link wa.me com mensagem pronta para o cliente.\nDigite o número e a mensagem inicial. O link abre a conversa com a sua empresa no celular ou no computador, pronto para usar na bio, no site, em anúncios e no e-mail.\nUse o número completo: Inclua o código do país (55 no Brasil) e o DDD, só com números. Exemplo: 5511999998888.\nEscreva a primeira mensagem: O texto aparece preenchido para o cliente, que só precisa tocar em enviar. Mensagens curtas e específicas convertem melhor.\nAcompanhe a origem: Crie links diferentes para cada canal, como \"Vim pelo Instagram\" ou \"Vim pelo site\", e saiba de onde vêm as conversas.\nP: O link do WhatsApp funciona no computador?\nR: Sim. No computador, o link abre o WhatsApp Web ou o aplicativo para desktop, se estiver instalado.\nP: Preciso ter WhatsApp Business para usar o link?\nR: Não. O link wa.me funciona com qualquer número de WhatsApp, inclusive números conectados à API oficial em uma plataforma como a Ingrave.\nP: Posso usar emoji e quebra de linha na mensagem?\nR: Pode. O gerador codifica a mensagem automaticamente para que acentos, emojis e quebras de linha cheguem certos."
+  },
+  {
+   "id": "ferramenta-qr-code-whatsapp",
+   "title": "QR Code do WhatsApp",
+   "url": "https://ingrave.com.br/ferramentas/qr-code-whatsapp",
+   "text": "Gere um QR Code que abre a conversa com a sua empresa.\nIdeal para balcão, cardápio, embalagem, vitrine e material impresso. O cliente aponta a câmera e cai direto na conversa com a mensagem que você escolher.\nEscolha número e mensagem: O QR Code guarda um link wa.me. Ao ler, o cliente abre a conversa com o texto já preenchido.\nBaixe no formato certo: PNG para redes sociais e documentos; SVG para gráfica e materiais grandes, sem perder qualidade.\nTeste antes de imprimir: Leia o código com dois celulares diferentes e mantenha uma margem branca em volta para facilitar a leitura.\nP: O QR Code do WhatsApp expira?\nR: Não. Este QR Code guarda um link fixo para o seu número, então funciona enquanto o número estiver ativo.\nP: Qual o tamanho mínimo para imprimir?\nR: Recomendamos pelo menos 2 x 2 cm para leitura de perto e tamanhos maiores quando o cliente estiver mais distante, como em vitrines e banners."
+  },
+  {
+   "id": "ferramenta-botao-whatsapp-site",
+   "title": "Botão de WhatsApp para site",
+   "url": "https://ingrave.com.br/ferramentas/botao-whatsapp-site",
+   "text": "Monte um botão flutuante e copie o código para o seu site.\nPersonalize posição, cor e texto, veja a prévia e copie um código HTML leve, que funciona em WordPress, Wix, Shopify, Nuvemshop e qualquer site.\nPersonalize o botão: Escolha o lado da tela, a cor e se quer mostrar um texto ao lado do ícone.\nCopie o código: O código é HTML puro, sem scripts externos, e não deixa o site mais lento.\nCole antes de </body>: No WordPress, use um plugin de inserir código no rodapé ou o editor do tema. Em plataformas como Wix e Shopify, use a área de código personalizado.\nP: O botão deixa o site mais lento?\nR: Não. O código gerado é HTML e CSS embutidos, com o ícone em SVG, sem carregar arquivos de outros servidores.\nP: Qual a diferença para o chat no site da Ingrave?\nR: O botão só abre o WhatsApp. O chat no site da Ingrave atende direto na página, com bot, formulário pré-chat e histórico, e as conversas caem na mesma caixa de entrada do WhatsApp."
+  },
+  {
+   "id": "ferramenta-formatador-whatsapp",
+   "title": "Formatador de texto do WhatsApp",
+   "url": "https://ingrave.com.br/ferramentas/formatador-whatsapp",
+   "text": "Negrito, itálico, tachado e listas com prévia em tempo real.\nSelecione o trecho e aplique negrito, itálico, tachado, monoespaçado, citação ou listas. A prévia mostra a mensagem como o cliente vai ver.\nNegrito, itálico e tachado: O WhatsApp usa *asteriscos* para negrito, _sublinhados_ para itálico e ~tis~ para tachado, sem espaço entre o símbolo e a palavra.\nMonoespaçado e código: Três crases (```) antes e depois deixam o texto em fonte monoespaçada; uma crase marca código em linha.\nListas e citação: Comece a linha com \"- \" para lista, \"1. \" para lista numerada e \"> \" para citação.\nP: Por que a formatação não funcionou?\nR: O símbolo precisa encostar na palavra: *assim* funciona, * assim * não. Também não funciona no meio de uma palavra em alguns aparelhos.\nP: A formatação funciona em templates da API?\nR: Sim. Templates do WhatsApp Business aceitam negrito, itálico, tachado e monoespaçado com os mesmos símbolos."
+  },
+  {
+   "id": "ferramenta-modelos-mensagens-whatsapp",
+   "title": "Modelos de mensagens para WhatsApp",
+   "url": "https://ingrave.com.br/ferramentas/modelos-mensagens-whatsapp",
+   "text": "Boas-vindas, ausência, pedidos, lembretes e mais, prontos para copiar.\nMensagens de boas-vindas, ausência, confirmação de pedido, lembrete de agendamento, pesquisa de satisfação e cobrança, com o nome da sua empresa já preenchido.\nPreencha o nome da empresa: Os modelos usam o nome que você digitar. Campos entre chaves, como {{nome}}, viram variáveis nos templates da API.\nEscolha a categoria certa na Meta: Avisos sobre um pedido ou agendamento são de utilidade. Promoções e convites são de marketing, que tem preço maior.\nUse como resposta pronta: Na Ingrave, cadastre os textos como respostas prontas e insira qualquer um digitando / na conversa.\nP: Qual a diferença entre mensagem de ausência e de boas-vindas?\nR: A de boas-vindas é enviada no primeiro contato, a qualquer hora. A de ausência vai para quem escreve fora do horário de atendimento e informa quando a equipe volta.\nP: Posso enviar esses modelos para quem não falou comigo?\nR: Para iniciar uma conversa pela API oficial, o texto precisa estar aprovado como template na Meta e o cliente precisa ter aceitado receber mensagens da empresa."
+  },
+  {
+   "id": "ferramenta-dimensionamento-equipe",
+   "title": "Calculadora de dimensionamento de equipe",
+   "url": "https://ingrave.com.br/ferramentas/dimensionamento-equipe",
+   "text": "Quantos atendentes você precisa para cumprir o nível de serviço.\nInforme o volume no horário de pico, o tempo médio de atendimento e a meta de nível de serviço. A calculadora usa o modelo Erlang C, padrão em centrais de atendimento.\nUse o volume do horário de pico: Dimensione pela hora mais movimentada do dia, não pela média, para não deixar clientes esperando quando a demanda sobe.\nConsidere atendimentos simultâneos: Em mensagens, um atendente costuma conduzir mais de uma conversa ao mesmo tempo. Em telefone, use 1.\nSome as ausências: Pausas, treinamentos, férias e faltas (shrinkage) reduzem o tempo disponível. A calculadora aumenta a equipe para compensar.\nP: O que é Erlang C?\nR: É uma fórmula usada desde o início do século XX para calcular a probabilidade de espera em filas de atendimento e, a partir dela, quantas pessoas são necessárias para atingir um nível de serviço.\nP: O que é nível de serviço?\nR: É o percentual de contatos atendidos dentro de um tempo-alvo, por exemplo 80% das conversas respondidas em até 60 segundos.\nP: O resultado vale para WhatsApp?\nR: Sim, como estimativa. Em mensagens, o tempo de resposta tolerado é maior e um atendente atende várias conversas, por isso ajuste a meta e os atendimentos simultâneos."
+  },
+  {
+   "id": "ferramenta-calculadora-csat-nps",
+   "title": "Calculadora de CSAT e NPS",
+   "url": "https://ingrave.com.br/ferramentas/calculadora-csat-nps",
+   "text": "Calcule satisfação e Net Promoter Score a partir das respostas.\nDigite quantas respostas recebeu em cada nota e veja o CSAT, o NPS e como interpretar o resultado.\nCSAT: Pergunta \"Como você avalia o atendimento?\" com notas de 1 a 5. O CSAT é o percentual de notas 4 e 5 sobre o total de respostas.\nNPS: Pergunta \"De 0 a 10, quanto você recomendaria a empresa?\". Promotores dão 9 ou 10, neutros 7 ou 8 e detratores de 0 a 6. NPS = % de promotores − % de detratores.\nOlhe a tendência: Mais importante que o número isolado é a evolução mês a mês e o motivo das notas baixas.\nP: Qual é um bom NPS?\nR: Acima de 0 já indica mais promotores que detratores. Acima de 50 é considerado muito bom e acima de 75, excelente. Compare sempre com o seu próprio histórico e com o seu segmento.\nP: Qual a diferença entre CSAT e NPS?\nR: O CSAT mede a satisfação com uma interação específica, como um atendimento. O NPS mede a disposição de recomendar a empresa, uma visão mais ampla da relação.\nP: Como coletar CSAT automaticamente?\nR: Na Ingrave, a pesquisa de satisfação é enviada ao fim de cada conversa e os resultados aparecem no relatório de CSAT por atendente e time."
+  }
+ ]
+}
