@@ -57,7 +57,7 @@
     // LIVEAVATAR_SANDBOX="true" testa sem gastar créditos (avatar de teste, sessões de ~1 minuto).
     "LIVEAVATAR_AVATAR_ID": "10ba14ab-3911-4b89-8dfd-86b5ba25876f",
     "LIVEAVATAR_SANDBOX": "",
-    "VIDEO_MAX_SECONDS": "300"
+    "VIDEO_MAX_SECONDS": "120"
   },
   "observability": { "enabled": true }
   // Secrets (wrangler secret put): AI_GATEWAY_TOKEN, DGX_API_KEY (opcional), CHATWOOT_API_TOKEN,
