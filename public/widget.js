@@ -35,8 +35,8 @@
   var host = document.createElement("div");
   host.id = "ingrave-agent";
   var root = host.attachShadow ? host.attachShadow({ mode: "open" }) : host;
-  var mark =
-    '<svg viewBox="0 0 512 512" width="22" height="22" aria-hidden="true"><path fill="#fff" d="M403.3,218.6l-174.2,263.9c-11.8,17.9-38.4,17.3-49.3-1.3l-67.2-114.1-26.3-44.7-19.8-33.7c-4.5-9.1,5.8-18.3,14.4-13l25.9,15.9,50.2,30.8,39.6,24.2,156.7-158.7,50.2,30.7Z"/><path fill="#dbeafe" d="M509.5,57.7l-85.7,129.9-20.4,30.9-50.2-30.8,44.3-44.8,96.3-97.5c8.2-8.4,21.9,2.1,15.7,12.3Z"/><path fill="#dbeafe" d="M86.4,322.4l26.3,44.7-96.3,97.5c-8.4,8.5-22-2-15.9-12.3l85.8-129.9Z"/><path fill="#fff" d="M429.2,234.4l-25.9-15.9-50.2-30.8-39.6-24.2-156.7,158.7-50.2-30.8L280.8,27.5c11.8-17.9,38.4-17.3,49.2,1.3l67.2,114.1,26.3,44.7,19.8,33.7c4.5,9.2-5.6,18.4-14.2,13.1Z"/></svg>';
+  var avatar = origin + "/iris.webp";
+  var mark = '<img class="av" src="' + avatar + '" alt="" width="30" height="30">';
   var close = '<svg viewBox="0 0 256 256" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M205.7 194.3a8 8 0 0 1-11.4 11.4L128 139.3l-66.3 66.4a8 8 0 0 1-11.4-11.4l66.4-66.3-66.4-66.3a8 8 0 0 1 11.4-11.4l66.3 66.4 66.3-66.4a8 8 0 0 1 11.4 11.4L139.3 128Z"/></svg>';
 
   root.innerHTML =
@@ -46,19 +46,21 @@
     ".launch{display:flex;align-items:center;gap:10px;height:52px;padding:0 20px 0 15px;border:0;border-radius:999px;background:#0b6bcb;color:#fff;font:inherit;cursor:pointer;box-shadow:0 10px 30px -6px rgba(11,107,203,.55),0 2px 6px rgba(13,27,42,.15);transition:transform .15s,background .15s}" +
     ".launch:hover{background:#0a5aab;transform:translateY(-1px)}" +
     ".launch:focus-visible{outline:3px solid #9cc8ff;outline-offset:3px}" +
+    ".launch .m{position:relative;display:grid;margin-left:-6px}.launch .av{width:34px;height:34px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.85)}.launch .m::after{content:'';position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #0b6bcb}" +
     ".launch .x{display:none}.open .launch .x{display:block}.open .launch .m,.open .launch .t{display:none}.open .launch{width:52px;padding:0;justify-content:center}" +
     ".badge{position:absolute;top:-4px;" + (side === "left" ? "left" : "right") + ":-4px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#e5484d;color:#fff;font-size:12px;line-height:20px;text-align:center;display:none}" +
     ".panel{position:absolute;" + side + ":0;bottom:66px;width:400px;height:min(680px,calc(100vh - 110px));border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 24px 64px -12px rgba(13,27,42,.35),0 0 0 1px rgba(13,27,42,.06);opacity:0;transform:translateY(12px) scale(.98);transform-origin:bottom " + side + ";pointer-events:none;transition:opacity .18s,transform .18s;visibility:hidden}" +
     ".open .panel{opacity:1;transform:none;pointer-events:auto;visibility:visible}" +
     ".panel iframe{width:100%;height:100%;border:0;display:block;background:transparent}" +
-    ".hello{position:absolute;" + side + ":0;bottom:66px;width:260px;padding:14px 34px 14px 16px;border-radius:16px;background:#fff;color:#0d1b2a;font-weight:500;font-size:14px;line-height:1.45;box-shadow:0 12px 32px -8px rgba(13,27,42,.3),0 0 0 1px rgba(13,27,42,.06);cursor:pointer;display:none}" +
+    ".hello{position:absolute;" + side + ":0;bottom:66px;width:280px;padding:12px 34px 12px 12px;gap:10px;align-items:flex-start;border-radius:16px;background:#fff;color:#0d1b2a;font-weight:500;font-size:14px;line-height:1.45;box-shadow:0 12px 32px -8px rgba(13,27,42,.3),0 0 0 1px rgba(13,27,42,.06);cursor:pointer;display:none}" +
     ".hello button{position:absolute;top:6px;right:6px;width:24px;height:24px;border:0;border-radius:6px;background:transparent;color:#6b7686;cursor:pointer;font-size:16px;line-height:24px}" +
     ".open .hello{display:none!important}" +
+    ".hello .av{flex-shrink:0;width:36px;height:36px;border-radius:50%}.hello b{display:block;margin-bottom:2px;font-size:12.5px;font-weight:600;color:#6b7686}" +
     "@media (max-width:520px){.panel{position:fixed;inset:0;width:100%;height:100%;border-radius:0;bottom:0}.open .launch{display:none}}" +
     "@media (prefers-reduced-motion:reduce){.panel,.launch{transition:none}}" +
     "</style>" +
     '<div class="wrap">' +
-    '<div class="hello" role="status"><span></span><button type="button" aria-label="Dispensar">×</button></div>' +
+    '<div class="hello" role="status"><img class="av" src="' + avatar + '" alt=""><div><b>Íris · Ingrave</b><span class="msg"></span></div><button type="button" aria-label="Dispensar">×</button></div>' +
     '<div class="panel" role="dialog" aria-label="Assistente Ingrave"></div>' +
     '<button class="launch" type="button" aria-expanded="false" aria-label="' + label + '"><span class="m">' + mark + '</span><span class="t">' + label + '</span><span class="x">' + close + '</span></button>' +
     '<span class="badge"></span>' +
@@ -174,8 +176,8 @@
     setTimeout(function () {
       if (isOpen || frame) return;
       // Picked when shown, so it matches the page the visitor navigated to in the meantime.
-      hello.querySelector("span").textContent = data.greeting === undefined ? pageGreeting() : greeting;
-      hello.style.display = "block";
+      hello.querySelector(".msg").textContent = data.greeting === undefined ? pageGreeting() : greeting;
+      hello.style.display = "flex";
     }, 12000);
   }
 
