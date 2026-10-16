@@ -15,8 +15,11 @@ import {
   createUIMessageStreamResponse,
   generateId,
   pruneMessages,
+  hasToolCall,
   stepCountIs,
   streamText,
+  type StreamTextTransform,
+  type ToolSet,
   type UIMessage,
 } from "ai";
 import { ChatwootClient, chatwootEnabled, isTeamReply, type WebhookEvent } from "./chatwoot";
@@ -65,6 +68,18 @@ function cannedReply(text: string) {
     },
   });
   return createUIMessageStreamResponse({ stream });
+}
+
+/** Drops model text that follows a successful handoff (it tended to narrate the transfer to the team). */
+function silenceAfterHandoff<TOOLS extends ToolSet>(): ReturnType<StreamTextTransform<TOOLS>> {
+  let silenced = false;
+  return new TransformStream({
+    transform(chunk, controller) {
+      if (chunk.type === "tool-result" && chunk.toolName === "transferir_para_humano") silenced = true;
+      if (silenced && /^(text|reasoning)-/.test(chunk.type)) return;
+      controller.enqueue(chunk);
+    },
+  });
 }
 
 /** Messages that carry something for the model (drops empty turns and notices). */
@@ -141,7 +156,9 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
       tools,
       temperature: 0.3,
       maxOutputTokens: 900,
-      stopWhen: stepCountIs(6),
+      // The handoff card already tells the visitor what happens next, so nothing the model writes after it is shown or mirrored.
+      stopWhen: [stepCountIs(6), hasToolCall("transferir_para_humano")],
+      experimental_transform: () => silenceAfterHandoff<typeof tools>(),
       abortSignal: options?.abortSignal,
     });
 
