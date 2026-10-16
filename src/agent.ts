@@ -25,6 +25,7 @@ import {
 import { ChatwootClient, chatwootEnabled, isTeamReply, type WebhookEvent } from "./chatwoot";
 import { describeHours, isOpen } from "./hours";
 import { chatModel } from "./model";
+import { searchSite } from "./search";
 import { systemPrompt } from "./prompt";
 import { type AgentState, type ChatContext, initialAgentState, type MessageMeta } from "./shared";
 import { notifyTeams } from "./teams";
@@ -53,6 +54,14 @@ function describeOrigin(context?: ChatContext) {
   if (last.fbclid) return "Meta (Facebook/Instagram)";
   if (last.referrer) return `indicação: ${last.referrer}`;
   return "direto";
+}
+
+/** AI Gateway custom metadata (at most 5 entries, flat values) to filter logs by conversation. */
+function gatewayMetadata(session: string, context: ChatContext) {
+  const metadata: Record<string, string> = { app: "site-assistant", session };
+  if (context.page) metadata.page = context.page.slice(0, 120);
+  metadata.origin = describeOrigin(context).slice(0, 120);
+  return JSON.stringify(metadata);
 }
 
 /** A one-off assistant reply that does not call the model (limits). Empty text closes the turn
@@ -133,11 +142,13 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
     const context = await this.context();
     const { model, label } = chatModel(this.env, (error) => console.warn(`DGX Spark unavailable, using ${this.env.FALLBACK_MODEL}`, error));
     const tools = createTools({
+      search: (query) => searchSite(this.env, query),
       bookingUrl: this.env.BOOKINGS_URL,
       shareContact: (input) => this.shareContact(input),
       handoff: (input) => this.handoff(input),
     });
 
+    const gatewayLogs: string[] = [];
     const result = streamText({
       model,
       system: systemPrompt({
@@ -160,11 +171,49 @@ export class IngraveAgent extends AIChatAgent<Env, AgentState> {
       stopWhen: [stepCountIs(6), hasToolCall("transferir_para_humano")],
       experimental_transform: () => silenceAfterHandoff<typeof tools>(),
       abortSignal: options?.abortSignal,
+      // AI Gateway: searchable log metadata (Logs and User Insights) and the log ids for 👍/👎.
+      headers: { "cf-aig-metadata": gatewayMetadata(this.name, context) },
+      onStepFinish: (step) => {
+        const id = step.response?.headers?.["cf-aig-log-id"];
+        if (id) gatewayLogs.push(id);
+      },
     });
 
     return result.toUIMessageStreamResponse({
-      messageMetadata: ({ part }) => (part.type === "start" ? { createdAt: new Date().toISOString(), model: label } : undefined),
+      messageMetadata: ({ part }) => {
+        if (part.type === "start") return { createdAt: new Date().toISOString(), model: label };
+        if (part.type === "finish" && gatewayLogs.length) return { gatewayLogs: gatewayLogs.slice(-6) };
+        return undefined;
+      },
     });
+  }
+
+  /** 👍/👎 on an assistant reply: recorded on its AI Gateway logs and, when negative, flagged in
+      Chatwoot so the team can review the answer. */
+  async feedback(messageId: string, value: 1 | -1) {
+    const message = this.messages.find((item) => item.id === messageId && item.role === "assistant");
+    if (!message) return { ok: false };
+    const given = (await this.ctx.storage.get<Record<string, 1 | -1>>("feedback")) ?? {};
+    if (given[messageId] === value) return { ok: true };
+    given[messageId] = value;
+    await this.ctx.storage.put("feedback", given);
+
+    const logs = (message.metadata as MessageMeta | undefined)?.gatewayLogs ?? [];
+    if (this.env.AI && logs.length) {
+      const gateway = this.env.AI.gateway(this.env.AI_GATEWAY_ID);
+      await Promise.all(
+        logs.map((id) => gateway.patchLog(id, { feedback: value, metadata: { session: this.name } }).catch((error) => console.warn("gateway feedback failed", error)))
+      );
+    }
+
+    const link = await this.ctx.storage.get<ChatwootLink>("chatwoot");
+    const client = this.chatwoot;
+    if (value === -1 && link && client) {
+      const excerpt = textOf(message).slice(0, 600);
+      await client.note(link.conversationId, `👎 O visitante não gostou desta resposta do assistente:\n\n${excerpt}`).catch(() => undefined);
+      await client.addLabels(link.conversationId, ["ia-resposta-ruim"]).catch(() => undefined);
+    }
+    return { ok: true };
   }
 
   /** Mirrors finished AI turns to Chatwoot, so the team sees every conversation. */

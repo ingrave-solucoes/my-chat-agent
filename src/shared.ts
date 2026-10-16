@@ -35,6 +35,8 @@ export type MessageMeta = {
   author?: string;
   avatarUrl?: string;
   createdAt?: string;
+  /** AI Gateway log ids of the model calls behind an assistant reply (for 👍/👎). */
+  gatewayLogs?: string[];
 };
 
 /** Events broadcast from the agent to the UI outside of the chat stream. */

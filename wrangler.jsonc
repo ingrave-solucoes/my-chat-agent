@@ -9,10 +9,13 @@
   "routes": [{ "pattern": "agente.ingrave.com.br", "custom_domain": true }],
   // Workers AI: modelo reserva quando o DGX Spark não responde (também passa pelo AI Gateway).
   "ai": { "binding": "AI", "remote": true },
+  // AI Search (namespace "default"): busca híbrida com reranking no site ingrave.com.br.
+  // A instância é escolhida em AI_SEARCH_INSTANCE; se não existir, a busca local (BM25) responde.
+  "ai_search_namespaces": [{ "binding": "AI_SEARCH", "namespace": "default", "remote": true }],
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/agents/*", "/chatwoot/*", "/health", "/voice", "/transcribe"]
+    "run_worker_first": ["/agents/*", "/chatwoot/*", "/health", "/voice", "/transcribe", "/feedback"]
   },
   "durable_objects": {
     "bindings": [{ "class_name": "IngraveAgent", "name": "IngraveAgent" }]
@@ -28,6 +31,8 @@
     "DGX_MODEL": "gemma4:12b",
     "DGX_TIMEOUT_MS": "30000",
     "FALLBACK_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    // Instância do AI Search com o site rastreado (vazio desliga e usa só a busca local).
+    "AI_SEARCH_INSTANCE": "ingrave-site",
     // Chatwoot (app.ingrave.com.br): caixa do tipo API dedicada ao assistente.
     "CHATWOOT_BASE_URL": "https://app.ingrave.com.br",
     "CHATWOOT_ACCOUNT_ID": "1",

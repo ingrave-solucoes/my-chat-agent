@@ -3,9 +3,11 @@
    confirmation in the chat (needsApproval). */
 import { tool } from "ai";
 import { z } from "zod";
-import { plans, searchKnowledge, whatsappRates } from "./knowledge";
+import { plans, whatsappRates } from "./knowledge";
+import type { SiteSearch } from "./search";
 
 export type AgentActions = {
+  search: (query: string) => Promise<SiteSearch>;
   bookingUrl: string;
   shareContact: (input: ContactInput) => Promise<{ ok: boolean; message: string }>;
   handoff: (input: HandoffInput) => Promise<{ ok: boolean; outsideHours: boolean; message: string }>;
@@ -56,9 +58,9 @@ export function createTools(actions: AgentActions) {
         "Busca no conteúdo oficial do site da Ingrave (recursos, canais, planos, integrações, comparativos com concorrentes, guias e ferramentas). Use antes de responder dúvidas sobre o produto.",
       inputSchema: z.object({ consulta: z.string().min(2).max(300).describe("O que procurar, em português") }),
       execute: async ({ consulta }) => {
-        const results = searchKnowledge(consulta, 4);
-        if (!results.length) return { resultados: [], aviso: "Nada encontrado no site. Não invente; ofereça falar com a equipe." };
-        return { resultados: results.map(({ title, url, text }) => ({ titulo: title, url, trecho: text })) };
+        const { resultados } = await actions.search(consulta);
+        if (!resultados.length) return { resultados: [], aviso: "Nada encontrado no site. Não invente; ofereça falar com a equipe." };
+        return { resultados };
       },
     }),
 

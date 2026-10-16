@@ -8,6 +8,7 @@ const source = readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8
   .replace(/^\s*\/\/.*$/gm, "")
   .replace(/,(\s*[}\]])/g, "$1");
 const config = JSON.parse(source);
-delete config.ai; // Workers AI only exists remotely.
+delete config.ai; // Workers AI and AI Search only exist remotely.
+delete config.ai_search_namespaces;
 writeFileSync(new URL("../wrangler.local.jsonc", import.meta.url), JSON.stringify(config, null, 2) + "\n");
 console.log("wrangler.local.jsonc written");
