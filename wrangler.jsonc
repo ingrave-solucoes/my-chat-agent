@@ -22,8 +22,8 @@
   "ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "4207", "simple": { "limit": 40, "period": 60 } }],
   "vars": {
     // AI Gateway + provedor customizado apontando para o DGX Spark (API compatível com OpenAI).
-    "AI_GATEWAY_ACCOUNT_ID": "",
-    "AI_GATEWAY_ID": "ingrave",
+    "AI_GATEWAY_ACCOUNT_ID": "88903b729ba835b7dcc08993884c62c5",
+    "AI_GATEWAY_ID": "default",
     "DGX_PROVIDER_SLUG": "dgx-spark",
     "DGX_MODEL": "gpt-oss:120b",
     "DGX_TIMEOUT_MS": "30000",

@@ -85,17 +85,17 @@ Os eventos `chat_open`, `agent_chat_start`, `generate_lead` (`form=agente`), `ag
 
 ### 1. AI Gateway + DGX Spark
 
-1. Em **AI → AI Gateway**, crie o gateway `ingrave`, ou use outro e ajuste `AI_GATEWAY_ID`.
+1. Em **AI → AI Gateway**, use o gateway `default` (criado automaticamente) ou crie um próprio e ajuste `AI_GATEWAY_ID`.
 2. Ligue **Authenticated Gateway** e gere um token. Ele vira o secret `AI_GATEWAY_TOKEN`.
 3. Em **Custom Providers**, crie o provedor:
    - **slug:** `dgx-spark`;
    - **base_url:** a URL HTTPS do DGX, **sem** `/v1`. Por exemplo, o worker `ingrave-ollama-proxy` ou o túnel que expõe o Ollama.
 
-   As chamadas saem para `https://gateway.ai.cloudflare.com/v1/{conta}/ingrave/custom-dgx-spark/v1/chat/completions`.
+   As chamadas saem para `https://gateway.ai.cloudflare.com/v1/{conta}/default/custom-dgx-spark/v1/chat/completions`.
 4. Se o DGX exigir chave, guarde-a no gateway (BYOK) ou no secret `DGX_API_KEY`.
-5. Em `wrangler.jsonc`, preencha `AI_GATEWAY_ACCOUNT_ID` e ajuste `DGX_MODEL` para o modelo carregado no Ollama. Por exemplo, `gpt-oss:120b` ou `qwen3:32b`; o modelo precisa suportar *tool calling*.
+5. Em `wrangler.jsonc`, confira `AI_GATEWAY_ACCOUNT_ID` (já preenchido com a conta da Ingrave) e ajuste `DGX_MODEL` para o modelo carregado no Ollama. Por exemplo, `gpt-oss:120b` ou `qwen3:32b`; o modelo precisa suportar *tool calling*.
 
-Se `AI_GATEWAY_ACCOUNT_ID` estiver vazio, o assistente usa só o Workers AI (`FALLBACK_MODEL`). Isso serve para o primeiro deploy.
+Enquanto o custom provider não existir, a chamada ao DGX falha na hora e o assistente responde com o Workers AI (`FALLBACK_MODEL`). Por isso o primeiro deploy já funciona. Com `AI_GATEWAY_ACCOUNT_ID` vazio, ele usa só o Workers AI.
 
 > **Segurança do DGX:** hoje o `ingrave-ollama-proxy` aceita chamadas sem autenticação. Proteja o endpoint antes de colocá-lo no gateway: Cloudflare Access com *service token* ou uma chave verificada no proxy.
 
@@ -132,6 +132,11 @@ npx wrangler secret put DGX_API_KEY               # opcional
 npm install
 npm run deploy
 ```
+
+O repositório já tem o **Workers Builds** ligado ao worker antigo `my-chat-agent`. Como este projeto publica outro worker, esse build falha por diferença de nome. Para publicar automaticamente a cada merge:
+1. Em **Workers & Pages → Create → Import a repository**, escolha `ingrave-solucoes/my-chat-agent`.
+2. Dê ao worker o nome `ingrave-site-agent`, com build `npm run build` e deploy `npx wrangler deploy`.
+3. No worker antigo `my-chat-agent`, desconecte o repositório em **Settings → Builds**. Se ele não estiver mais em uso, pode apagá-lo.
 
 O worker se chama `ingrave-site-agent` e responde em `agente.ingrave.com.br`, porque o domínio próprio é criado no deploy. `GET /health` mostra o modelo ativo e se o Chatwoot está configurado.
 
