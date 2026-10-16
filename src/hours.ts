@@ -48,3 +48,18 @@ export function describeHours(spec: string) {
     })
     .join("; ");
 }
+
+/** The moment `minutes` of business time have passed after `from` (checked in 15-minute steps,
+    up to 14 days ahead). With no hours configured, plain minutes are added. */
+export function afterBusinessMinutes(spec: string, timeZone: string, from: Date, minutes: number) {
+  if (!parseHours(spec).length) return new Date(from.getTime() + minutes * 60_000);
+  const step = 15;
+  let left = minutes;
+  let at = from.getTime();
+  const limit = at + 14 * 24 * 60 * 60_000;
+  while (left > 0 && at < limit) {
+    if (isOpen(spec, timeZone, new Date(at))) left -= step;
+    at += step * 60_000;
+  }
+  return new Date(at);
+}
