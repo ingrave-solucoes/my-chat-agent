@@ -90,7 +90,7 @@
     if (!frame) {
       frame = document.createElement("iframe");
       frame.title = "Assistente Ingrave";
-      frame.allow = "clipboard-write";
+      frame.allow = "microphone; autoplay; clipboard-write";
       frame.src = origin + "/?embed=1&theme=" + theme();
       panel.appendChild(frame);
     }

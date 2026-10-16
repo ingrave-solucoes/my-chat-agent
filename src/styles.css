@@ -115,6 +115,15 @@ a { color: var(--ia-action); }
 .ia-btn-primary:hover { background: var(--ia-action-hover); }
 .ia-fineprint { margin: 0; color: var(--ia-ink-3); font-size: 11.5px; }
 
+/* Microphone */
+.ia-mic { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 0; border-radius: 11px; background: transparent; color: var(--ia-ink-2); cursor: pointer; }
+.ia-mic:hover:not(:disabled) { background: var(--ia-surface-2); color: var(--ia-ink); }
+.ia-mic.is-on, .ia-mic.is-on:hover:not(:disabled) { background: #e5484d; color: #fff; animation: ia-pulse 1.2s ease-in-out infinite; }
+.ia-mic:disabled { cursor: default; opacity: .6; }
+.ia-mic:focus-visible { outline: 2px solid var(--ia-action); outline-offset: 2px; }
+.ia-composer.is-recording { border-color: #e5484d; box-shadow: 0 0 0 3px rgba(229, 72, 77, .15); }
+.ia-composer.is-recording textarea::placeholder { color: #e5484d; }
+
 /* Voice */
 .ia-speak { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; margin-top: -2px; padding: 3px 8px 3px 6px; border: 0; border-radius: 999px; background: transparent; color: var(--ia-ink-3); font-size: 12px; cursor: pointer; }
 .ia-speak:hover { background: var(--ia-surface); color: var(--ia-ink-2); }
@@ -142,5 +151,5 @@ a { color: var(--ia-action); }
 
 @media (prefers-reduced-motion: reduce) {
   .ia-messages { scroll-behavior: auto; }
-  .ia-typing i, .ia-chip-busy, .ia-spin { animation: none; }
+  .ia-typing i, .ia-chip-busy, .ia-spin, .ia-mic.is-on { animation: none; }
 }

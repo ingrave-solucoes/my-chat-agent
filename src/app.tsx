@@ -15,6 +15,7 @@ import {
   StopIcon,
   UserCircleIcon,
   WhatsappLogoIcon,
+  MicrophoneIcon,
   SpeakerHighIcon,
   SpinnerGapIcon,
   StopCircleIcon,
@@ -83,11 +84,19 @@ function Avatar({ meta }: { meta?: MessageMeta }) {
 let player: { audio: HTMLAudioElement; stop: () => void } | null = null;
 
 /** "Ouvir" under a reply: the Worker turns the text into speech; one reply plays at a time. */
-function SpeakButton({ text, session }: { text: string; session: string }) {
+function SpeakButton({ text, session, autoPlay = false }: { text: string; session: string; autoPlay?: boolean }) {
   const [state, setState] = useState<"idle" | "loading" | "playing" | "error">("idle");
   const stopRef = useRef<() => void>(() => undefined);
+  const autoPlayed = useRef(false);
 
   useEffect(() => () => stopRef.current(), []);
+  // After a question asked by voice, the answer is read aloud once on its own.
+  useEffect(() => {
+    if (!autoPlay || autoPlayed.current) return;
+    autoPlayed.current = true;
+    void play();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay]);
 
   const play = async () => {
     if (state === "playing" || state === "loading") return stopRef.current();
@@ -128,6 +137,98 @@ function SpeakButton({ text, session }: { text: string; session: string }) {
     <button type="button" className={`ia-speak ${state === "playing" ? "is-on" : ""}`} onClick={play} aria-label={label} title={label}>
       {state === "playing" ? <StopCircleIcon size={15} weight="fill" /> : state === "loading" ? <SpinnerGapIcon size={15} className="ia-spin" /> : <SpeakerHighIcon size={15} />}
       <span>{label}</span>
+    </button>
+  );
+}
+
+/* ---------- microphone (Workers AI Whisper) ---------- */
+
+const MAX_RECORDING_SECONDS = 60;
+
+const recordingType = () =>
+  typeof MediaRecorder === "undefined"
+    ? null
+    : (["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"].find((type) => MediaRecorder.isTypeSupported(type)) ?? null);
+
+/** Tap to record, tap again to send: the recording is transcribed by the Worker and sent as a message. */
+function MicButton({ session, disabled, onText, onRecording }: { session: string; disabled: boolean; onText: (text: string) => void; onRecording: (label: string | null) => void }) {
+  const [state, setState] = useState<"idle" | "recording" | "working" | "error">("idle");
+  const recorder = useRef<MediaRecorder | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const type = useMemo(recordingType, []);
+
+  const cleanup = useCallback(() => {
+    window.clearInterval(timer.current);
+    recorder.current?.stream.getTracks().forEach((track) => track.stop());
+    recorder.current = null;
+  }, []);
+  useEffect(() => cleanup, [cleanup]);
+
+  if (!type || !navigator.mediaDevices?.getUserMedia) return null;
+
+  const fail = (message: string) => {
+    cleanup();
+    setState("error");
+    onRecording(message);
+    window.setTimeout(() => {
+      setState("idle");
+      onRecording(null);
+    }, 3000);
+  };
+
+  const upload = async (blob: Blob) => {
+    setState("working");
+    onRecording("Transcrevendo…");
+    try {
+      const response = await fetch("/transcribe", { method: "POST", headers: { "Content-Type": type.split(";")[0], "X-Session": session }, body: blob });
+      const data = (await response.json().catch(() => ({}))) as { text?: string; error?: string };
+      if (!response.ok) return fail(data.error === "audio_too_long" ? "Áudio muito longo. Tente em até 1 minuto." : "Não consegui transcrever agora.");
+      if (!data.text) return fail("Não entendi o áudio. Pode repetir?");
+      setState("idle");
+      onRecording(null);
+      track("agent_voice_input");
+      onText(data.text);
+    } catch {
+      fail("Não consegui transcrever agora.");
+    }
+  };
+
+  const start = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      const chunks: Blob[] = [];
+      const media = new MediaRecorder(stream, { mimeType: type, audioBitsPerSecond: 32000 });
+      media.addEventListener("dataavailable", (event) => event.data.size && chunks.push(event.data));
+      media.addEventListener("stop", () => {
+        const blob = new Blob(chunks, { type: type.split(";")[0] });
+        cleanup();
+        if (blob.size < 1200) return fail("Áudio muito curto. Segure um pouco mais.");
+        void upload(blob);
+      });
+      recorder.current = media;
+      media.start();
+      setState("recording");
+      const startedAt = Date.now();
+      onRecording("Gravando… 0:00 · toque para enviar");
+      timer.current = window.setInterval(() => {
+        const seconds = Math.floor((Date.now() - startedAt) / 1000);
+        onRecording(`Gravando… 0:${String(seconds).padStart(2, "0")} · toque para enviar`);
+        if (seconds >= MAX_RECORDING_SECONDS) media.state === "recording" && media.stop();
+      }, 250);
+    } catch {
+      fail("Permita o uso do microfone para falar com o assistente.");
+    }
+  };
+
+  const toggle = () => {
+    if (state === "recording") recorder.current?.state === "recording" && recorder.current.stop();
+    else if (state === "idle") void start();
+  };
+
+  const label = state === "recording" ? "Parar e enviar" : state === "working" ? "Transcrevendo" : "Falar";
+  return (
+    <button type="button" className={`ia-mic ${state === "recording" ? "is-on" : ""}`} onClick={toggle} disabled={disabled || state === "working" || state === "error"} aria-label={label} title={label}>
+      {state === "working" ? <SpinnerGapIcon size={17} className="ia-spin" /> : state === "recording" ? <StopIcon size={15} weight="fill" /> : <MicrophoneIcon size={18} />}
     </button>
   );
 }
@@ -242,6 +343,9 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const startedTracked = useRef(false);
   const [voiceOn, setVoiceOn] = useState(false);
+  const [recordingLabel, setRecordingLabel] = useState<string | null>(null);
+  const [autoSpeakId, setAutoSpeakId] = useState<string | null>(null);
+  const voiceTurn = useRef(false);
 
   // The "Ouvir" button only shows when the Worker has an ElevenLabs key.
   useEffect(() => {
@@ -310,13 +414,14 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   }, [messages, typing]);
 
   const send = useCallback(
-    (text: string) => {
+    (text: string, byVoice = false) => {
       const value = text.trim().slice(0, 2000);
       if (!value || (busy && agentState.mode === "ai")) return;
       if (!startedTracked.current) {
         startedTracked.current = true;
         track("agent_chat_start", { page: context.current.page ?? "" });
       }
+      voiceTurn.current = byVoice;
       sendMessage({ role: "user", parts: [{ type: "text", text: value }] });
       setInput("");
     },
@@ -328,6 +433,13 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
   }, []);
 
   const lastMessage = messages[messages.length - 1];
+
+  // A question asked by voice gets its answer read aloud when the reply is complete.
+  useEffect(() => {
+    if (busy || !voiceTurn.current || lastMessage?.role !== "assistant") return;
+    voiceTurn.current = false;
+    if (voiceOn) setAutoSpeakId(lastMessage.id);
+  }, [busy, lastMessage, voiceOn]);
   const waitingForModel = agentState.mode === "ai" && busy && (!lastMessage || lastMessage.role === "user");
   const banner = useMemo(() => {
     if (agentState.mode === "waiting") return agentState.outsideHours ? "Você está na fila da equipe. Estamos fora do horário agora, e a resposta chega aqui assim que voltarmos." : "Você está na fila. Alguém da equipe responde aqui em instantes.";
@@ -387,7 +499,7 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
                 })}
                 {voiceOn && !(busy && message === lastMessage) && (() => {
                   const spoken = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("\n").trim();
-                  return spoken ? <SpeakButton text={spoken} session={session} /> : null;
+                  return spoken ? <SpeakButton text={spoken} session={session} autoPlay={message.id === autoSpeakId} /> : null;
                 })()}
               </div>
             </div>
@@ -404,7 +516,7 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
       </main>
 
       <form
-        className="ia-composer"
+        className={`ia-composer ${recordingLabel ? "is-recording" : ""}`}
         onSubmit={(event) => {
           event.preventDefault();
           send(input);
@@ -415,7 +527,8 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
           value={input}
           rows={1}
           maxLength={2000}
-          placeholder={agentState.mode === "ai" ? "Pergunte sobre a Ingrave…" : "Escreva para a equipe…"}
+          placeholder={recordingLabel ?? (agentState.mode === "ai" ? "Pergunte ou fale com a Ingrave…" : "Escreva para a equipe…")}
+          readOnly={Boolean(recordingLabel)}
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
@@ -425,6 +538,9 @@ function Chat({ session, onReset }: { session: string; onReset: () => void }) {
           }}
           aria-label="Mensagem"
         />
+        {!input.trim() && !(busy && agentState.mode === "ai") && (
+          <MicButton session={session} disabled={busy && agentState.mode === "ai"} onText={(text) => send(text, true)} onRecording={setRecordingLabel} />
+        )}
         {busy && agentState.mode === "ai" ? (
           <button type="button" className="ia-send" onClick={() => stop()} aria-label="Parar"><StopIcon size={16} weight="fill" /></button>
         ) : (
